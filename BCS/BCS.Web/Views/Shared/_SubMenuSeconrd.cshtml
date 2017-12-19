@@ -1,0 +1,52 @@
+﻿<div class="col-xs-12 menu-seconrd ">
+    <div class="page-bar area-category-setting margin-top-10" style="display: none">
+        <a class="menu-category-setting" onclick="redirectToCategorySetting()" style="padding: 0px 0px 0px 50px;">Category Settings</a>
+        <a class="menu-budget-length" onclick="redirectToBudgetLength()" style="padding: 0px 50px 0px 50px;">Budget Length</a>
+        @*<a onclick="redirectToInputMethod()" style="padding: 0px 50px 0px 0px;">Input Method</a>*@
+        <a class="menu-linked-rest" onclick="linkedToYourRestaurant()">Link to Your Restaurant</a>
+    </div>
+    @*<div class="page-bar area-budget-detail margin-top-10" style="display: none">
+        <a class="menu-budget-input-sales" onclick="redirectToTargetAndSales()">Target &amp; Sales</a>
+        <a class="menu-budget-input-cogs" onclick="redirectToCogs()" style="padding: 0px 50px 0px 50px;">COGS</a>
+        <a class="menu-budget-input-payroll" onclick="redirectToPayrollExpenses()" style="padding: 0px 50px 0px 0px;">Payroll Expenses</a>
+        <a class="menu-budget-input-operation" onclick="redirectToOperationExpenses()">Operation Expenses</a>
+    </div>*@
+    <div class="page-bar area-review-page margin-top-10" style="display: none">
+        <a onclick="exportBudgetReport()" style="padding: 0px 50px 0px 50px;">Export</a>
+        <a onclick="openImportActualNumber()" style="padding: 0px 50px 0px 0px;">Import Actual Numbers</a>
+        <a onclick="openVarianceReportSettings();">Variance Report</a>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function (e) {
+        var pathName = window.location.pathname;
+        if (pathName == "/Budget/ImportActualNumber" || pathName == "/Budget/Mapping") {
+            $('.menu-seconrd').hide();
+        }
+        else if (pathName == "/Budget/ViewTagetAndSales") {
+            $('.menu-budget-details').addClass("highlight");
+
+            //$('.area-budget-detail').css('display', 'none');
+            $('.area-category-setting').css('display', 'none');
+            $('.area-review-page').css('display', 'block');
+            $('.menu-seconrd').css('display', 'block');
+        } else {
+            //$('.area-budget-detail').css('display', 'none');
+            $('.area-category-setting').css('display', 'block');
+            $('.area-review-page').css('display', 'none');
+            $('.menu-seconrd').css('display', 'block');
+
+            if (pathName == "/Budget/CategorySetting") {
+                $('.menu-budget-settings').addClass("highlight");
+                $('.menu-category-setting').addClass("highlight-secornd");
+            } else if (pathName == "/Budget/BudgetLength") {
+                $('.menu-budget-settings').addClass("highlight");
+                $('.menu-budget-length').addClass("highlight-secornd");
+            } else if (pathName == "/Budget/ViewLinkToYourRestaurant") {
+                $('.menu-budget-settings').addClass("highlight");
+                $('.menu-linked-rest').addClass("highlight-secornd");
+            }
+        }
+    });
+</script>

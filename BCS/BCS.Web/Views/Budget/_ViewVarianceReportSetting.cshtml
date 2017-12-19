@@ -1,0 +1,225 @@
+﻿@using Kendo.Mvc.UI
+@using BCS.Web.Models
+@using BCS.Commons
+
+@model BCS.Web.Models.BudgetModel
+
+<style>
+    .header-variance-report-setting {
+        overflow-y: auto !important;
+    }
+</style>
+
+<div class="col-xs-12 text-center">
+    @Html.Label("Variance Report Setting", new { @style = "font-size: 20pt; color: rgb(15, 18, 21)" })
+</div>
+
+<div class="clearfix col-xs-12" style="height: 600px; background-color: #fff; box-shadow: 0px 0px 5px #888888; border-radius: 3px !important;">
+    @{
+        // get profit loss
+        var profitLossParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_PROFIT_LOSS_TEXT);
+        var profitLossChildrenCategory = Model.CategorySettingModelList.Where(s => s.ParentCategoryId == profitLossParentCategory.CategorySettingId).OrderBy(s => s.SortOrder).ToList<CategorySettingModel>();
+
+        // get sales category
+        var salesParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_SALES_TEXT);
+        var salesChildrenCategory = Model.CategorySettingModelList.Where(s => s.ParentCategoryId == salesParentCategory.CategorySettingId).OrderBy(s => s.SortOrder).ToList<CategorySettingModel>();
+
+        // get cogs category
+        var cogsParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_COGS_TEXT);
+        var cogsChildrenCategory = Model.CategorySettingModelList.Where(s => s.ParentCategoryId == cogsParentCategory.CategorySettingId).OrderBy(s => s.SortOrder).ToList<CategorySettingModel>();
+
+        // get payroll expenses category
+        var payrollExpensesParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_PAYROLL_EXPENSES_TEXT);
+        var peIsNotTaxChildrenCategory = Model.CategorySettingModelList.Where(s => s.ParentCategoryId == payrollExpensesParentCategory.CategorySettingId && s.IsTaxCost == false).OrderBy(s => s.SortOrder).ToList<CategorySettingModel>();
+        var peIsTaxChildrenCategory = Model.CategorySettingModelList.Where(s => s.ParentCategoryId == payrollExpensesParentCategory.CategorySettingId && s.IsTaxCost == true).OrderBy(s => s.SortOrder).ToList<CategorySettingModel>();
+
+        // get operation category
+        var operationParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_OPERATION_EXPENSES_TEXT);
+        var operationChildrenCategory = Model.CategorySettingModelList.Where(s => s.ParentCategoryId == operationParentCategory.CategorySettingId).OrderBy(s => s.SortOrder).ToList<CategorySettingModel>();
+
+        // get max lenght category
+        var maxLengthCategory = 0;
+        maxLengthCategory = (maxLengthCategory > salesChildrenCategory.Count) ? maxLengthCategory : salesChildrenCategory.Count;
+        maxLengthCategory = (maxLengthCategory > cogsChildrenCategory.Count) ? maxLengthCategory : cogsChildrenCategory.Count;
+        maxLengthCategory = (maxLengthCategory > peIsNotTaxChildrenCategory.Count + peIsTaxChildrenCategory.Count) ? maxLengthCategory : peIsNotTaxChildrenCategory.Count + peIsTaxChildrenCategory.Count;
+        maxLengthCategory = (maxLengthCategory > operationChildrenCategory.Count) ? maxLengthCategory : operationChildrenCategory.Count;
+        maxLengthCategory = (maxLengthCategory > profitLossChildrenCategory.Count) ? maxLengthCategory : profitLossChildrenCategory.Count;
+
+        <div class="col-xs-12 inline-block" style="padding: 10px; white-space: nowrap">
+            <div class="col-xs-2" style="padding: 3px;">
+                @Html.Label("Report Length: ", new { @style = "font-size: 16pt; color: rgb(15, 18, 21)" })
+            </div>
+            <div class="col-xs-4">
+                @Html.Label("Start: ")
+                @(Html.Kendo().DropDownList()
+                    .Name("headerColumnStart")
+                    .HtmlAttributes(new { @style = "width: 100px" })
+                    .Value(Model.BudgetTabModelList[0].HeaderColumnList.First())
+                    .BindTo(Model.BudgetTabModelList[0].HeaderColumnList)
+                )
+                <span class="budget-tab-year text-center" style="margin-left: 5px"></span>
+            </div>
+            <div class="col-xs-4">
+                @Html.Label("End: ")
+                @(Html.Kendo().DropDownList()
+                    .Name("headerColumnEnd")
+                    .HtmlAttributes(new { @style = "width: 100px" })
+                    .Value(Model.BudgetTabModelList[0].HeaderColumnList.Last())
+                    .BindTo(Model.BudgetTabModelList[0].HeaderColumnList)
+                )
+                <span class="budget-tab-year text-center" style="margin-left: 5px"></span>
+            </div>
+            <br />
+        </div>
+
+        <p>@Html.Label("Please select the categories Variance report", new { @style = "font-size: 12pt; color: rgb(15, 18, 21)" })</p>
+
+        <div class="clearfix header-variance-report-setting" style="width: 100%; margin: 0;">
+            <table style="width: 100%; white-space: normal;">
+                <thead>
+                    <tr>
+                        <th style="width: 20%">
+                            <div class="col-xs-1" style="padding-left: 0">
+                                <input type="checkbox" id="salesCheckBox" onclick="setFlagCheckBox(this);" category-name="@salesParentCategory.CategoryName" />
+                            </div>
+                            <div class="col-xs-11 text-left" style="padding-left: 0">
+                                <label class="header-format" for="salesCheckBox">@salesParentCategory.CategoryName</label>
+                            </div>
+                        </th>
+                        <th style="width: 20%">
+                            <div class="col-xs-1" style="padding-left: 0">
+                                <input type="checkbox" id="cogsCheckBox" onclick="setFlagCheckBox(this);" category-name="@cogsParentCategory.CategoryName" />
+                            </div>
+                            <div class="col-xs-11 text-left" style="padding-left: 0">
+                                <label class="header-format" for="cogsCheckBox">@cogsParentCategory.CategoryName</label>
+                            </div>
+                        </th>
+                        <th style="width: 20%">
+                            <div class="col-xs-1" style="padding-left: 0">
+                                <input type="checkbox" id="peIsNotTaxCheckBox" onclick="setFlagCheckBox(this);" category-name="@payrollExpensesParentCategory.CategoryName" />
+                            </div>
+                            <div class="col-xs-11 text-left" style="padding-left: 0">
+                                <label class="header-format" for="peIsNotTaxCheckBox">@payrollExpensesParentCategory.CategoryName</label>
+                            </div>
+                        </th>
+                        <th style="width: 20%">
+                            <div class="col-xs-1" style="padding-left: 0">
+                                <input type="checkbox" id="operationExpensesCheckBox" onclick="setFlagCheckBox(this);" category-name="@operationParentCategory.CategoryName" />
+                            </div>
+                            <div class="col-xs-11 text-left" style="padding-left: 0">
+                                <label class="header-format" for="operationExpensesCheckBox">@operationParentCategory.CategoryName</label>
+                            </div>
+                        </th>
+                        <th style="width: 20%">
+                            <div class="col-xs-1" style="padding-left: 0">
+                                <input type="checkbox" id="profitLossCheckBox" onclick="setFlagCheckBox(this);" category-name="@profitLossParentCategory.CategoryName" />
+                            </div>
+                            <div class="col-xs-11 text-left" style="padding-left: 0">
+                                <label class="header-format" for="profitLossCheckBox">@profitLossParentCategory.CategoryName</label>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="clearfix header-variance-report-setting" style="height: 450px; width:100%;">
+            <table style="width: 100%; white-space: normal;">
+                <tbody>
+                    @{
+                    for (int i = 0; i < maxLengthCategory; i++)
+                    {
+                    <tr style="height:30px;">
+                        <td style="width: 20%">
+                            @if (i < salesChildrenCategory.Count)
+                                {
+                                    <div class="col-xs-1" style="padding-left: 0">
+                                        <input type="checkbox" class="salesCheckBox" id="checkbox-category-line-sales-@i" onclick="setFlagChildrenCheckBox(this)" value="@salesChildrenCategory[i].CategorySettingId" />
+                                    </div>
+                                    <div class="col-xs-11 text-left" style="padding-left: 0">
+                                        <label for="checkbox-category-line-sales-@i">@string.Format("{0}", salesChildrenCategory[i].CategoryName)</label>
+                                    </div>
+                                }
+                        </td>
+                        <td style="width: 20%">
+                            @if (i < cogsChildrenCategory.Count)
+                                {
+                                    <div class="col-xs-1" style="padding-left: 0">
+                                        <input type="checkbox" class="cogsCheckBox" id="checkbox-category-line-cogs-@i" onclick="setFlagChildrenCheckBox(this)" value="@cogsChildrenCategory[i].CategorySettingId" />
+                                    </div>
+                                    <div class="col-xs-11 text-left" style="padding-left: 0">
+                                        <label for="checkbox-category-line-cogs-@i">@string.Format("{0}", cogsChildrenCategory[i].CategoryName)</label>
+                                    </div>
+                                }
+                        </td>
+                        <td style="width: 20%">
+                            @if (i < peIsNotTaxChildrenCategory.Count)
+                                {
+                                    <div class="col-xs-1" style="padding-left: 0">
+                                        <input type="checkbox" class="peIsNotTaxCheckBox" id="checkbox-category-line-peIsNotTax-@i" onclick="setFlagChildrenCheckBox(this)" value="@peIsNotTaxChildrenCategory[i].CategorySettingId" />
+                                    </div>
+                                    <div class="col-xs-11 text-left" style="padding-left: 0">
+                                        <label for="checkbox-category-line-peIsNotTax-@i">@string.Format("{0}", peIsNotTaxChildrenCategory[i].CategoryName)</label>
+                                    </div>
+                                }
+                                else
+                                {
+                                    var newIndex = i - peIsNotTaxChildrenCategory.Count;
+                                    if (newIndex == 0)
+                                    {
+                                        <div class="col-xs-1" style="padding-left: 0">
+                                            <input type="checkbox" id="peIsTaxCheckBox" onclick="setFlagCheckBox(this);" category-name="@payrollExpensesParentCategory.CategoryName" />
+                                        </div>
+                                        <div class="col-xs-11 text-left" style="padding-left: 0">
+                                            <label class="header-format" for="peIsTaxCheckBox">@payrollExpensesParentCategory.CategoryName (IS TAX)</label>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        newIndex--;
+                                        if (newIndex < peIsTaxChildrenCategory.Count)
+                                        {
+                                            <div class="col-xs-1" style="padding-left: 0">
+                                                <input type="checkbox" class="peIsTaxCheckBox" id="checkbox-category-line-peIsTax-@newIndex" onclick="setFlagChildrenCheckBox(this)" value="@peIsTaxChildrenCategory[newIndex].CategorySettingId" />
+                                            </div>
+                                            <div class="col-xs-11 text-left" style="padding-left: 0">
+                                                <label for="checkbox-category-line-peIsTax-@newIndex">@string.Format("{0}", peIsTaxChildrenCategory[newIndex].CategoryName)</label>
+                                            </div>
+                                        }
+                                    }
+                                }
+                        </td>
+                        <td style="width: 20%">
+                            @if (i < operationChildrenCategory.Count)
+                            {
+                                <div class="col-xs-1" style="padding-left: 0">
+                                    <input type="checkbox" class="operationExpensesCheckBox" id="checkbox-category-line-operationExpenses-@i" onclick="setFlagChildrenCheckBox(this)" value="@operationChildrenCategory[i].CategorySettingId" />
+                                </div>
+                                <div class="col-xs-11 text-left" style="padding-left: 0">
+                                    <label for="checkbox-category-line-operationExpenses-@i">@string.Format("{0}", operationChildrenCategory[i].CategoryName)</label>
+                                </div>
+                            }
+                        </td>
+                        <td style="width: 20%">
+                            @if (i < profitLossChildrenCategory.Count)
+                                {
+                                    <div class="col-xs-1" style="padding-left: 0">
+                                        <input type="checkbox" class="profitLossCheckBox" id="checkbox-category-line-profitLoss-@i" onclick="setFlagChildrenCheckBox(this)" value="@profitLossChildrenCategory[i].CategorySettingId" />
+                                    </div>
+                                    <div class="col-xs-11 text-left" style="padding-left: 0">
+                                        <label for="checkbox-category-line-profitLoss-@i">@string.Format("{0}", profitLossChildrenCategory[i].CategoryName)</label>
+                                    </div>
+                                }
+                        </td>
+                    </tr>
+                    }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<div class="col-xs-12 margin-top-10 margin-bottom-10 text-right">
+    @Html.Label("Generate", new { @id = "act-accept-yes-genarate", @class = "btn btn-primary", @style = "width: 100px" })
+    @Html.Label("Close", new { @id = "act-accept-no", @class = "btn btn-accept-no", @style = "width: 100px" })
+</div>

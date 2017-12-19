@@ -1,0 +1,51 @@
+
+.k-ie8 body
+{
+    font-size: 12px;
+    font-family: Arial;
+}
+.k-ie8 .tab-search {        
+    width: 146px!important;
+}
+.k-ie8 #ActitityTimeline > .timeline-header form .pnFilter > div.k-textbox {
+    width: 108px!important;
+}
+.k-ie8 #login-wrap .header {
+    margin: 0;
+    width: 100%;
+}
+.k-ie8 #login-wrap .wrap {
+    background: none;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+.k-ie8 #login-wrap .botton {
+    background-color: #d9d9d9;
+    background-image: none;
+}
+.k-ie8 #login-wrap .btnForgot {
+    background-color: #f0f0f0;
+    background-image: none;
+}
+.k-ie8 #login-wrap .btnOk {
+    background: #0f6e84;
+    background-image: none;
+}
+.k-ie8 #login-wrap label {
+    width: 140px;
+}
+
+.k-ie8 #login-wrap .form-group div {
+    width: 200px;
+}
+.k-ie8 .btnForgot {
+    text-indent: 0px;
+    line-height: 35px;
+    font-weight: 14px;
+    font-weight: bold;
+}
+.k-ie8  .btnOk {
+        text-indent: 0px;
+        font-weight: 14px;
+    font-weight: bold;
+    }

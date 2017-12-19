@@ -1,0 +1,32 @@
+﻿.fa.btn-address-user {
+    border: 1px solid #cccccc;
+    font-size: 14px;
+    padding: 6px 7px 3px;
+}
+.k-detail-cell .k-pager-nav, .k-detail-cell .k-pager-numbers, .k-detail-cell .k-pager-sizes {
+    display: none;
+}
+.k-edit:before {
+  content: "\f044";
+}
+.k-delete:before {
+  content: "\f014";
+}
+#UserManagerGrid th[data-field="FirstName"] {
+    border-left: 0 none;
+}
+#details-container li {
+    display: block;
+    line-height: 1.9em;
+}
+#details-container ul{padding:10px;}
+#UserManagerGrid .k-state-selected .fa, .k-state-selected a{
+    color:#333333
+}
+#UserManagerGrid .k-detail-icon > span{
+    padding:4px 0 3px;
+}
+.editFileUserBan div > span {
+    display: block;
+    line-height: 30px;
+}

@@ -1,0 +1,84 @@
+﻿@using Kendo.Mvc.UI
+@using BCS.Web.Models
+
+@model BCS.Web.Models.BudgetModel
+
+@{
+    ViewBag.Title = string.Format("Input Method (Budget Name: {0})", Model.BudgetNameDisplay);
+    Layout = "~/Views/Shared/_LayoutNewBudget.cshtml";
+    var version = BCS.Framework.Configuration.Config.GetConfigByKey("webpages:Version");
+}
+
+@section Header {
+    @Scripts.Render("~/Assets/js/controller/importActualNumber.js" + "?v=" + version)
+}
+
+<div class="form-group clearfix dashboard-body" style="margin: 0 auto; -moz-border-radius: 2em">
+    @Html.Hidden("BudgetId", Model.BudgetId)
+    @if (!ViewBag.ShowOrHiddenHelpSettingInputMethod)
+    {
+        Html.RenderPartial("~/Views/HelpSetting/_InputMethodHelp.cshtml");
+    }
+    else
+    {
+        <div class="col-xs-12 text-right">
+            @Html.CheckBox("isShowHelp", true, new { @onclick = "showHiddenHelp(false, " + BCS.Commons.BCSCommonData.HELP_SETTING_INPUT_METHOD + ");" })
+            @Html.Label("Do not show again")
+        </div>
+    }
+    <div class="col-xs-12 category-setting">
+        <table style="margin: 0 auto;">
+            <tr>
+                <th colspan="2" class="text-center">@Html.Label("INPUT METHOD", new { @style = "font-size: 20pt; color: rgb(85, 150, 207)" })</th>
+            </tr>
+            <tr>
+                <td width="150px" class="text-right">Input Method:</td>
+                <td>
+                    @(Html.Kendo().DropDownList()
+                        .Name("InputMethod")
+                        .HtmlAttributes(new { @style = "width: 245px" })
+                        .DataTextField("DataText")
+                        .DataValueField("DataValue")
+                        .Value(Model.InputMethodId.ToString())
+                        .BindTo(ViewBag.InputMethod)
+                    )
+                </td>
+            </tr>
+            <tr>
+                <td class="text-right">Actual Numbers:</td>
+                <td>
+                    @Html.CheckBoxFor(m => m.ActualNumbersFlg)
+                </td>
+            </tr>
+            <tr>
+                <td class="text-right">Variance:</td>
+                <td>
+                    @Html.CheckBoxFor(m => m.VarianceFlg)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center">
+                    @{
+                        if (Model.EditFlg)
+                        {
+                            @Html.Label("SAVE", new { @id = "inputmethod", @class = "btn btn-primary", @onclick = "callSaveInputMethod();", @style = "width: 150px" })
+                        }
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("input[name='ActualNumbersFlg']").on("change", function (data) {
+            var ActualNumbersFlg = $('input[name="ActualNumbersFlg"]:checked').length > 0 ? true : false;
+            if (ActualNumbersFlg) {
+                $("#VarianceFlg").prop('checked', true);
+            }
+            else {
+                $("#VarianceFlg").prop('checked', false)
+            }
+        });
+    });
+</script>

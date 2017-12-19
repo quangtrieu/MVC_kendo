@@ -1,0 +1,220 @@
+﻿@using Kendo.Mvc.UI
+@using BCS.Web.Models
+
+@model BCS.Web.Models.BudgetModel
+
+@{
+    ViewBag.Title = string.Format("Import Actual Number (Budget Name: {0})", Model.BudgetNameDisplay);
+    Layout = "~/Views/Shared/_LayoutNewBudget.cshtml";
+    var version = BCS.Framework.Configuration.Config.GetConfigByKey("webpages:Version");
+}
+
+@section Header {
+    @Scripts.Render("~/Assets/js/controller/importActualNumber.js" + "?v=" + version)
+}
+<style>
+table.scroll {
+    margin: 0 auto;
+    width: auto; /* 140px * 5 column + 16px scrollbar width */
+    border-spacing: 0;
+    border: 0px solid black;
+}
+
+table.scroll tbody,
+table.scroll thead tr { display: block; }
+
+table.scroll tbody {
+    height: 450px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+table.scroll tbody td,
+table.scroll thead th {
+    width: 140px;
+    border-right: 0px solid black;
+}
+
+table.scroll thead th:last-child {
+    width: 156px; /* 140px + 16px scrollbar width */
+}
+
+thead tr th { 
+    height: 20px;
+    line-height: 20px;
+    /*text-align: left;*/
+}
+
+tbody { border-top: 0px solid black; }
+
+tbody td:last-child, thead th:last-child {
+    border-right: none !important;
+}
+#dvsspsystem{
+    margin: auto;
+    width: auto;
+}
+</style>
+<div class="form-group clearfix dashboard-body" style="margin: 0 auto; -moz-border-radius: 2em">
+    @Html.Hidden("fileName")
+    <input type="hidden" name="BudgetId" id="BudgetId" value="@Model.BudgetId" />
+    <input type="hidden" name="BudgetTabId" id="BudgetTabId" value="@ViewBag.budgetTabId" />
+    <input type="hidden" name="HeaderName" id="HeaderName" value="@ViewBag.HeaderName" />
+    <input type="hidden" name="BudgetName" id="BudgetName" value="@Model.BudgetName" />
+    <input type="hidden" name="RestCode" id="RestCode" value="@Model.RestCode" />
+    <input type="hidden" name="RestName" id="RestName" value="@ViewBag.RestName" />
+    <input type="hidden" name="BudgetLengthType" id="BudgetLengthType" value="@Model.BudgetLengthType" />
+    <input type="hidden" name="RedirectPage" id="RedirectPage" value="@ViewBag.RedirectPage" />
+
+    <div class="col-xs-12">
+        <div class="col-xs-8 text-center" style="margin-left: 16%">
+            @Html.Label("Import Actual Number", new { @style = "font-size: 20pt; color: rgb(15, 18, 21)" })
+        </div>
+    </div>
+
+    <div class="col-xs-12" style="height: 100%; background-color: #fff; box-shadow: 0px 0px 5px #888888; border-radius: 3px !important;">
+        <div style="height: 20px !important"> </div>
+        <p>@Html.Label("Welcome to Actual Number Import Wizard", new { @style = "font-size: 16pt; color: rgb(85, 150, 207)" })</p>
+        <p>@Html.Label("Please select 1 option you wish to import", new { @style = "font-size: 12pt; color: rgb(15, 18, 21)" })</p>
+        <p><label for="chkYes"><input type="radio" id="chkYes" name="chkPassPort" checked="checked" />From local file</label></p>
+        @if (Model.RestCode != null && Model.RestCode.Length > 0)
+        {
+            <p><label for="chkNo"><input type="radio" id="chkNo" name="chkPassPort" />From SSP system</label></p>
+        }
+
+        <div id="dvImportactual">
+            <p>Select Excel File</p>
+            <p style="width:350px;">
+                @(Html.Kendo().Upload()
+                    .Name("files")
+                    .Multiple(false)
+                    .Events(e => e.Select("onUpload").Success("onSuccess"))
+                    .Async(a => a
+                    .Save("Save", "Budget")
+                    .AutoUpload(true))
+                )
+            </p>
+            <p>Select sheet name</p>
+            <p>
+                @(Html.Kendo().DropDownList()
+                    .Name("sheetName")
+                    .HtmlAttributes(new { style = "width:350px;" })
+                    .OptionLabel("Select sheet name.")
+                    .DataTextField("Key")
+                    .DataValueField("Value")
+                )
+            </p>
+            <br />
+            <div>
+                @Html.Label("Cancel", new { @onclick = "returnEditBudget();", @class = "btn btn-accept-no", @style = "margin-right: 30px; width: 90px" })
+                @Html.Label("Continue", new { @id = "btnSubmit", @onclick = "callReadExcelFile();", @class = "btn btn-primary", @style = "width: 90px" })
+            </div>
+        </div>
+        <div id="dvsspsystem" style="display: none">
+            <div class="col-xs-12" style="height: 550px; background-color: #fff; box-shadow: 0px 0px 5px #888888; border-radius: 3px !important;">
+                @{
+                    var count =0;
+                    <div class="col-xs-12 text-center" style="padding-top:10px;">
+                        <p>@Html.Label("Select month/period to be imported into your budget", new { @style = "font-size: 13pt; color: rgb(15, 18, 21)" })</p>
+                    </div>
+                    <div class="col-xs-12" style="width: 100%; margin: 0;">
+                    <table class="scroll">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label style="font-weight:bold;">Tab#</label>
+                                </th>
+                                @{
+                                    foreach (var budgetTab in Model.BudgetTabModelList)
+                                    {
+                                        count = count > budgetTab.HeaderColumnList.Count ? count : budgetTab.HeaderColumnList.Count;
+                                        <th>
+                                            <input type="checkbox" id="tabIndex_@budgetTab.TabIndex" onclick="setFlagHeaderCheckBox(this);" tab-name="@budgetTab.TabName" checked="checked" value="@budgetTab.BudgetTabId" />
+                                            <label style="font-weight:bold;" for="tabIndex_@budgetTab.TabIndex">@budgetTab.TabName.Replace("Period budget - ", "")</label>
+                                        </th>
+                                    }
+                                }
+                            </tr>
+                        </thead>
+                            <tbody>
+                                @{
+                                    for (int i = 0; i < count; i++)
+                                    {
+                                        <tr>
+                                            @{
+                                                for (int j = 0; j < Model.BudgetTabModelList.Count + 1; j++)
+                                                {
+                                                    if (j == 0)
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        var headerColumnList = Model.BudgetTabModelList[j - 1].HeaderColumnList;
+                                                        if (headerColumnList.Count > i)
+                                                        {
+                                                            <td>
+                                                                <input type="checkbox" row-index="@i" class="tabIndex_@Model.BudgetTabModelList[j-1].TabIndex" id="checkbox_tabIndex-@Model.BudgetTabModelList[j-1].TabIndex-@i" onclick="setFlagHeaderChildrenCheckBox(this)" value="@Model.BudgetTabModelList[j - 1].HeaderColumnList[i]" checked="checked" />
+                                                                <label for="checkbox_tabIndex-@Model.BudgetTabModelList[j-1].TabIndex-@i">@string.Format("{0}", @Model.BudgetTabModelList[j - 1].HeaderColumnList[i])</label>
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td></td>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                               
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+            <br />
+            <div class="col-xs-12 text-right" style="padding-top:15px; padding-bottom:15px;">
+                <div>
+                    @Html.Label("Cancel", new { @class = "btn btn-accept-no", @onclick = "returnEditBudget();", @style = "margin-right: 30px; width: 90px" })
+                    @Html.Label("Import", new { @id = "btnStartSync", @onclick = "SyncBudgetActualFromSSP();", @class = "btn btn-primary", @style = "width: 90px" })
+                </div>
+            </div>
+        </div>
+
+        <div style="height: 30px !important"> </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        // Change the selector if needed
+        var $table = $('table.scroll'),
+            $bodyCells = $table.find('tbody tr:first').children(),
+            colWidth;
+
+        // Adjust the width of thead cells when window resizes
+        $(window).resize(function () {
+            // Get the tbody columns width array
+            colWidth = $bodyCells.map(function () {
+                return $(this).width();
+            }).get();
+
+            // Set the width of thead columns
+            $table.find('thead tr').children().each(function (i, v) {
+                $(v).width(colWidth[i]);
+            });
+        }).resize(); // Trigger resize handler
+    });
+    $(function () {
+        $("input[name='chkPassPort']").click(function () {
+            if ($("#chkYes").is(":checked")) {
+                $("#dvImportactual").show();
+                $("#dvsspsystem").hide();
+            } else {
+                $("#dvImportactual").hide();
+                $("#dvsspsystem").show();
+            }
+        });
+    });
+</script>

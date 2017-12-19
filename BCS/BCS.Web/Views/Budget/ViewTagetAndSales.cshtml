@@ -1,0 +1,1590 @@
+﻿@using Kendo.Mvc.UI
+@using BCS.Web.Models
+@using BCS.Commons
+
+@model BCS.Web.Models.BudgetModel
+
+@{
+    ViewBag.Title = string.Format("Budget Details (Budget Name: {0})", Model.BudgetNameDisplay);
+    Layout = "~/Views/Shared/_LayoutNewBudget.cshtml";
+    var version = BCS.Framework.Configuration.Config.GetConfigByKey("webpages:Version");
+}
+
+@section Header {
+    @Scripts.Render("~/Assets/js/controller/targetAndSales.js" + "?v=" + version)
+    @Styles.Render("~/Assets/css/style/targetAndSales.css" + "?v=" + version)
+}
+
+@Html.Hidden("inputMethodDollar", BCSCommonData.INPUT_METHOD_DOLLAR)
+@Html.Hidden("budgetLenthTypeMonth", BCSCommonData.BUDGET_TYPE_MONTH)
+
+<div class="form-group clearfix col-xs-12" style="margin: 0 auto; -moz-border-radius: 2em">
+    @Html.Hidden("BudgetId", Model.BudgetId)
+    @Html.Hidden("BudgetNameDisplay", Model.BudgetNameDisplay)
+    @Html.Hidden("SectionViewName", Model.Section)
+    @Html.Hidden("BudgetTabIndex", Model.BudgetTabIndex)
+    @Html.Hidden("BudgetLengthType", Model.BudgetLengthType)
+    @Html.Hidden("ActualNumbersFlg-hidden", Model.ActualNumbersFlg)
+    @Html.Hidden("VarianceFlg-hidden", Model.VarianceFlg)
+    @Html.Hidden("InputMethod-hidden", Model.InputMethodId)
+    @Html.Hidden("EditFlag", Model.EditFlg)
+    <input type="hidden" name="ShowOrHiddenHelpSetting" value="@ViewBag.ShowOrHiddenHelpSetting.ToString()" />
+    @*<div class="Show-HelpSettingTargetAndSales @(ViewBag.ShowOrHiddenHelpSetting ? "display-none" : "")">
+        @{
+            Html.RenderPartial("~/Views/HelpSetting/_TagetAndSalesHelp.cshtml");
+        }
+    </div>
+    <div class="Hide-HelpSettingTargetAndSales text-right @(ViewBag.ShowOrHiddenHelpSetting ? "" : "display-none")">
+        @Html.CheckBox("isShowHelp", true)
+        @Html.Label("Do not show again")
+    </div>*@
+    @*header area*@
+    <div class="col-xs-12 text-center hidden">
+        <p>@Html.Label("TARGET & SALES", new { @id = "headerLaber", @style = "font-size: 20pt; color: rgb(85, 150, 207)" })</p>
+    </div>
+
+    <div class="col-xs-12" style="background-color: #FFF; box-shadow: 0px 0px 5px #888888;">
+    @if (Model.BudgetTabModelList.Count > 0){
+        <div class="budget-detail-grid">
+            @*tab by budget*@
+            <ul class="nav nav-tabs">
+                @{foreach (var budgetTab in Model.BudgetTabModelList){
+                      var tabIndex = "tabIndex_" + budgetTab.TabIndex ;
+                    <li><a data-toggle="tab" href="#@tabIndex">@budgetTab.TabName</a></li>
+                }}
+            </ul>
+
+            <div class="tab-content">
+            @{
+            var startDate = Model.BudgetLengthStart;
+            int countMonthByBudget = 0;
+
+            foreach (var budgetTab in Model.BudgetTabModelList)
+            {
+                // get sales category
+                var salesParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_SALES_TEXT);
+                var salesChildrenCategory = Model.CategorySettingModelList.Where(s => s.ParentCategoryId == salesParentCategory.CategorySettingId).OrderBy(s => s.SortOrder).ToList<CategorySettingModel>();
+                var classShowOrHiddenSalesSection = salesChildrenCategory.Count > 0 ? "" : "hidden";
+
+                // get cogs category
+                var cogsParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_COGS_TEXT);
+                var cogsChildrenCategory = Model.CategorySettingModelList.Where(s => s.ParentCategoryId == cogsParentCategory.CategorySettingId).OrderBy(s => s.SortOrder).ToList<CategorySettingModel>();
+                var classShowOrHiddenCogsSection = cogsChildrenCategory.Count > 0 ? "" : "hidden";
+
+                // get payroll expenses category
+                var payrollExpensesParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_PAYROLL_EXPENSES_TEXT);
+                var peIsNotTaxChildrenCategory = Model.CategorySettingModelList.Where(s => s.ParentCategoryId == payrollExpensesParentCategory.CategorySettingId && s.IsTaxCost == false).OrderBy(s => s.SortOrder).ToList<CategorySettingModel>();
+                var peIsTaxChildrenCategory = Model.CategorySettingModelList.Where(s => s.ParentCategoryId == payrollExpensesParentCategory.CategorySettingId && s.IsTaxCost == true).OrderBy(s => s.SortOrder).ToList<CategorySettingModel>();
+                var classShowOrHiddenPayrollExpensesSection = peIsNotTaxChildrenCategory.Count > 0 || peIsTaxChildrenCategory.Count > 0 ? "" : "hidden";
+
+                // get operation category
+                var operationParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_OPERATION_EXPENSES_TEXT);
+                var operationChildrenCategory = Model.CategorySettingModelList.Where(s => s.ParentCategoryId == operationParentCategory.CategorySettingId).OrderBy(s => s.SortOrder).ToList<CategorySettingModel>();
+                var classShowOrHiddenOperationSection = operationChildrenCategory.Count > 0 ? "" : "hidden";
+
+                // get profit loss
+                var profitLossParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_PROFIT_LOSS_TEXT);
+                var profitLossChildrenCategory = Model.CategorySettingModelList.Where(s => s.ParentCategoryId == profitLossParentCategory.CategorySettingId).OrderBy(s => s.SortOrder).ToList<CategorySettingModel>();
+
+                // data table in tab
+                System.Data.DataTable salesTable = budgetTab.SalesDataTable;
+                System.Data.DataTable cogsTable = budgetTab.CogsDataTable;
+                System.Data.DataTable payrollTable = budgetTab.PayrollDataTable;
+                System.Data.DataTable payrollIsTaxTable = budgetTab.PayrollIsTaxDataTable;
+                System.Data.DataTable operationTable = budgetTab.OperationDataTable;
+                System.Data.DataTable profitLossTable = budgetTab.ProfitLossDataTable;
+
+                var grandTotalProjectionSalesBySectionSales = budgetTab.SalesTotal.Sum(s => s.ProjectionSales);
+                var totalSalesVariance = grandTotalProjectionSalesBySectionSales - budgetTab.AnnualSales;
+
+                decimal totalSalesTarget = 0;
+                budgetTab.TargetColumnList.ForEach(s => totalSalesTarget += s.TargetSales);
+                var totalSalesTargetVariance = totalSalesTarget - budgetTab.AnnualSales;
+                var newStyleColor = string.Format("{0:C}", totalSalesTargetVariance) == "$0.00" ? "color: black" : (totalSalesTargetVariance > 0 ? "color: green" : "color: red");
+                var newStyleColorTotalSalesVariance = string.Format("{0:C}", totalSalesVariance) == "$0.00" ? "color: black" : (totalSalesVariance > 0 ? "color: green" : "color: red");
+
+                var tabIndex = "tabIndex_" + budgetTab.TabIndex;
+                <div id="@tabIndex" budgetTabId="@budgetTab.BudgetTabId" budget-tab-index="@budgetTab.TabIndex" budget-tab-name="@budgetTab.TabName" class="tab-pane fade in tab-area-by-section">
+                    <div class="col-xs-12" style="border-bottom: 1px solid #A7A7A7; padding-bottom: 10px">
+                        <div class="col-xs-3">
+                            @Html.Label("Annual sales:")
+                            <br />
+                            <input type="text" class="bcs-currency-textbox numerictextbox" style="width: 165px" id="Annual_Sales_@budgetTab.TabIndex" value="@string.Format("{0:C}", budgetTab.AnnualSales)" re-value="@budgetTab.AnnualSales" onchange="onChangeAnnualSales(this);" maxlength="15" />
+                        </div>
+                        <div class="col-xs-3">
+                            @Html.Label("Sales target total:")
+                            <br />
+                            <input class="bcs-currency-textbox" id="TotalSalesTarget_@budgetTab.TabIndex" readonly="readonly" value="@string.Format("{0:C}", totalSalesTarget)" />
+                            <input class="bcs-currency-textbox" id="TotalSalesTargetVariance_@budgetTab.TabIndex" readonly="readonly" style="@newStyleColor" value="@string.Format("{0:C}",totalSalesTargetVariance)" />
+                        </div>
+                        <div class="col-xs-3">
+                            @Html.Label("Sales total:")
+                            <br />
+                            <input class="bcs-currency-textbox" id="TotalSales_@budgetTab.TabIndex" readonly="readonly" value="@string.Format("{0:C}", grandTotalProjectionSalesBySectionSales)" />
+                            
+                            <input class="bcs-currency-textbox" id="TotalSalesVariance_@budgetTab.TabIndex" readonly="readonly" style="@newStyleColorTotalSalesVariance" value="@string.Format("{0:C}", totalSalesVariance)" />
+                        </div>
+                        <div class="col-xs-3 text-right margin-top-10">
+                            <a onclick="showOrHiddenTrendline();"><span>Trendline</span></a>
+                            <a onclick="refreshTrendline();"><span><i class="fa fa-refresh"></i></span></a>
+                            @Html.Label(" | ", new { @class = "separate-number" })
+                            <a onclick="showOrHiddenAnnualGraphs();"><span>Annual Graphs</span></a>
+                            <a onclick="refreshAnnualGraphs();"><span><i class="fa fa-refresh"></i></span></a>
+                            @Html.Label(" | ", new { @class = "separate-number" })
+                            <a onclick="showOrHiddenGrandTotal(this);"><span>Hide Grand Total</span></a>
+                            <a onclick="showOrHiddenGrandTotal(this);"><i class="fa fa-angle-double-down"></i></a>
+                        </div>
+                    </div>
+                    @*Annual Graphs*@
+                    <div class="col-xs-12 annualGraphs" style="display:none;">
+                        <div class="col-xs-3 salesChart" style="width: 20%"></div>
+                        <div class="col-xs-3 cogsChart" style="width: 20%"></div>
+                        <div class="col-xs-3 payrollChart" style="width: 20%"></div>
+                        <div class="col-xs-3 operatingChart" style="width: 20%"></div>
+                        <div class="col-xs-3 profilLossChart" style="width: 20%"></div>
+                    </div>
+                    @*area show line chart*@
+                    <div class="col-xs-12">
+                        <div class="lineChart" style="display:none"></div>
+                    </div>
+                    @*Area budget data*@
+                    <div style="padding: 0 !important; font-size: 9pt;">
+                    @{
+                        string[] colorArray = { "background-color: #347ebd", "background-color: #9fd5f1" };
+                        var headerCount = budgetTab.HeaderColumnList.Count;
+                        var tableWidth = "width: " + headerCount * 496 + "px";
+                        var customColumnHeader = "width: 495px";
+
+                        var index = 0;
+
+                        // write header
+                        <div class="col-xs-12 header-area" style="padding: 0px">
+                            <div class="col-xs-2" style="padding: 0;">
+                                <div style="width: 100%; padding: 14px">
+                                    <a onclick="showFullScreen(this);"><span>Full Screen</span></a>
+                                    <a onclick="showFullScreen(this);"><i class="fa fa-arrows-alt" aria-hidden="true"></i></a>
+                                </div>
+                                <div class="col-xs-12" style="width: 186px; padding-top: 5px; height: 69px !important; border: 1px solid #A7A7A7; "><span class="header-format">Target</span></div>
+                                <div class="col-xs-12 category-item category-total @classShowOrHiddenSalesSection" style="border: 1px solid #A7A7A7; border-top: 0px;width: 186px;">
+                                    <div style="width: 90%; float:left; white-space: nowrap;">
+                                        <input type="checkbox" name="checkbox-category-line-@budgetTab.TabIndex" is-parent-category="true" parent-categorysetting-id="@salesParentCategory.CategorySettingId" category-name="@salesParentCategory.CategoryName" section-name="" />
+                                        <span class="header-format">@salesParentCategory.CategoryName</span>
+                                    </div>
+                                    <div style="width: 10%; float:left">
+                                        <a onclick="showOrHideDiv(this)" section-name="Sales">
+                                            <i class="fa fa-angle-double-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-7" style="padding: 0px">
+                                <div class="budget-item-container" style="overflow-x: hidden !important;">
+                                    <div class="budget-item-container" style="overflow-x: hidden !important; height: 153px; @tableWidth">
+                                        <div class="header-row" style="width: 100%;">
+                                        @{
+                                            var headerIndex = 0;
+                                            var headerName = "HeaderName_" + budgetTab.TabIndex;
+                                            foreach (string header in budgetTab.HeaderColumnList)
+                                            {
+                                                var customStyle = customColumnHeader + "; border-left: 1px solid #A7A7A7; " + colorArray[headerIndex % 2];
+                                                var headerExport = (Model.BudgetLengthType == BCSCommonData.BUDGET_TYPE_MONTH) ? startDate.AddMonths(countMonthByBudget++).ToString("MMMM - yyyy") : header;
+                                                <div class="text-center header-format budget-item header-name" style="@customStyle" budget-tab-id="@budgetTab.BudgetTabId" budget-tab-index="@budgetTab.TabIndex" header-index="@headerIndex" header-month-year="@headerExport">
+                                                    <span name="@headerName">@header</span>
+                                                </div>
+                                                headerIndex++;
+                                            }
+                                        }
+                                        </div>
+                                        @* Target row *@
+                                        <div class="target-row">
+                                            @for (int i = 0; i < headerCount; i++)
+                                            {
+                                                var targetSalesVariance = budgetTab.SalesTotal[i].ProjectionSales - budgetTab.TargetColumnList[i].TargetSales;
+                                                var targetPercentVariance = budgetTab.TargetColumnList[i].TargetSales == 0 ? 0 : targetSalesVariance * 100 / budgetTab.TargetColumnList[i].TargetSales;
+                                                newStyleColor = string.Format("{0:C}", targetSalesVariance) == "$0.00" ? "color: black" : (targetSalesVariance > 0 ? "color: green" : "color: red");
+                                                <div class="text-center budget-item target-data" budget-tab-index="@budgetTab.TabIndex" style="height: 62px !important; border-left: 1px solid #A7A7A7;" header-index="@i">
+                                                    <input class="bcs-currency-textbox readonly" readonly="readonly" maxlength="15" onchange="onChangeTargetSales(this);" id="@string.Format("Target_Sales_{0}_{1}", budgetTab.TabIndex, i)" value="@string.Format("{0:C}", budgetTab.TargetColumnList[i].TargetSales)" re-value="@budgetTab.TargetColumnList[i].TargetSales" />
+                                                    <input class="bcs-percent-textbox readonly" readonly="readonly" maxlength="8" onchange="onChangeTargetPercent(this);" id="@string.Format("Target_Percent_{0}_{1}", budgetTab.TabIndex, i)" value="@string.Format("{0:#,##0.00}%", budgetTab.TargetColumnList[i].TargetPercent)" re-value="@budgetTab.TargetColumnList[i].TargetPercent" />
+                                                    <input class="bcs-currency-textbox readonly" readonly="readonly" style="@newStyleColor" id="@string.Format("Variance_Target_Sales_{0}_{1}", budgetTab.TabIndex, i)" value="@string.Format("{0:C}", targetSalesVariance)" />
+                                                    <input class="bcs-percent-textbox readonly" readonly="readonly" style="@newStyleColor" id="@string.Format("Variance_Target_Percent_{0}_{1}", budgetTab.TabIndex, i)" value="@string.Format("{0:#,##0.00}%", targetPercentVariance)" />
+                                                </div>
+                                                <div class="text-center header-format budget-item actual-div" style="height: 62px !important">Actual</div>
+                                                <div class="text-center header-format budget-item variance-div" style="height: 62px !important">Variance</div>
+                                            }
+                                        </div>
+                                        @* total sales row *@
+                                        <div class="sales-row @classShowOrHiddenSalesSection" section-name="Sales">
+                                            @for (int i = 0; i < headerCount; i++)
+                                            {
+                                                var totalProjectionSalesName = "Total__ProjectionSales_" + budgetTab.TabIndex + "_" + i;
+                                                var totalProjectionPercentName = "Total__ProjectionPercent_" + budgetTab.TabIndex + "_" + i;
+                                                var totalActualSalesName = "Total__ActualSales_" + budgetTab.TabIndex + "_" + i;
+                                                var totalActualPercentName = "Total__ActualPercent_" + budgetTab.TabIndex + "_" + i;
+                                                var totalVarianceSalesName = "Total__VarianceSales_" + budgetTab.TabIndex + "_" + i;
+                                                var totalVariancePercentName = "Total__VariancePercent_" + budgetTab.TabIndex + "_" + i;
+                                                var budgetItem = budgetTab.SalesTotal[i];
+                                                newStyleColor = string.Format("{0:C}", budgetItem.VarianceSales) == "$0.00" ? "color: black" : (budgetItem.VarianceSales > 0 ? "color: green" : "color: red");
+
+                                                <div class="text-center header-format budget-item total-sales-data" budget-tab-index="@budgetTab.TabIndex" header-index="@i" style="border-left: 1px solid #A7A7A7;">
+                                                    <input class="bcs-currency-textbox" id="@totalProjectionSalesName" value="@string.Format("{0:C}", budgetItem.ProjectionSales)" re-value="@budgetItem.ProjectionSales" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@totalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", budgetItem.ProjectionPercent)" re-value="@budgetItem.ProjectionPercent" readonly="readonly" />
+                                                </div>
+                                                <div class="text-center header-format budget-item actual-div">
+                                                    <input class="bcs-currency-textbox" id="@totalActualSalesName" style="@newStyleColor" value="@string.Format("{0:C}", budgetItem.ActualSales)" re-value="@budgetItem.ActualSales" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@totalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetItem.ActualPercent)" re-value="@budgetItem.ActualPercent" readonly="readonly" />
+                                                </div>
+                                                <div class="text-center header-format budget-item variance-div">
+                                                    <input class="bcs-currency-textbox" id="@totalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", budgetItem.VarianceSales)" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@totalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetItem.VariancePercent)" readonly="readonly" />
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-3 grand-total-panel" style="padding: 0;">
+                                <div style="width: 100%; height: 46px;"></div>
+                                @* grand total header*@
+                                <div class="grand-total-header" style="border: 1px solid #A7A7A7; height: 67px">
+                                    <div class="text-center header-format" style="float:left; width: 165px ; padding-top: 5px; height: 55px !important;">Grand Total</div>
+                                    <div class="text-center header-format actual-div" style="float:left; width: 165px ; padding-top: 5px; height: 55px !important;">Total Actual</div>
+                                    <div class="text-center header-format variance-div" style="float:left; width: 165px ; padding-top: 5px; height: 55px !important;">Total Variance</div>
+                                </div>
+                                @* grand total Sales*@
+                                <div class="grand-total-sales @classShowOrHiddenSalesSection" style="border-left: 1px solid #A7A7A7; border-right: 1px solid #A7A7A7; height: 38px">
+                                    @{
+                                        var grandTotalProjectionSalesName = "GrandTotal__ProjectionSales_" + budgetTab.TabIndex;
+                                        var grandTotalProjectionPercentName = "GrandTotal__ProjectionPercent_" + budgetTab.TabIndex;
+                                        var grandTotalActualSalesName = "GrandTotal__ActualSales_" + budgetTab.TabIndex;
+                                        var grandTotalActualPercentName = "GrandTotal__ActualPercent_" + budgetTab.TabIndex;
+                                        var grandTotalVarianceSalesName = "GrandTotal__VarianceSales_" + budgetTab.TabIndex;
+                                        var grandTotalVariancePercentName = "GrandTotal__VariancePercent_" + budgetTab.TabIndex;
+
+                                        decimal grandTotalProjectionPercent = grandTotalProjectionSalesBySectionSales > 0 ? 100 : 0;
+                                        var grandTotalActualSales = budgetTab.SalesTotal.Sum(s => s.ActualSales);
+                                        var grandTotalActualPercent = (grandTotalProjectionSalesBySectionSales == 0) ? 0 : grandTotalActualSales * 100 / grandTotalProjectionSalesBySectionSales;
+                                        var grandTotalVarianceSales = grandTotalActualSales - grandTotalProjectionSalesBySectionSales;
+                                        var grandTotalVariancePercent = (grandTotalProjectionSalesBySectionSales == 0) ? 0 : grandTotalVarianceSales * 100 / grandTotalProjectionSalesBySectionSales;
+                                        newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="text-center header-format budget-item">
+                                            <input class="bcs-currency-textbox" id="@grandTotalProjectionSalesName" value="@string.Format("{0:C}", grandTotalProjectionSalesBySectionSales)" re-value="@grandTotalProjectionSalesBySectionSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" re-value="@grandTotalProjectionPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item actual-div">
+                                            <input class="bcs-currency-textbox" id="@grandTotalActualSalesName" value="@string.Format("{0:C}", grandTotalActualSales)" re-value="@grandTotalActualSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" re-value="@grandTotalActualPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item variance-div">
+                                            <input class="bcs-currency-textbox" id="@grandTotalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        // write budget detail item
+                        <div class="col-xs-12 budget-area" style="overflow-y: auto; padding: 0px; ">
+                        <div class="col-xs-2 category-name-column" style="white-space: nowrap; padding: 0px !important; border-right: 1px solid #A7A7A7; border-left: 1px solid #A7A7A7;">
+
+                            @* write sales category *@
+                            <div class="Area_Category_Sales @classShowOrHiddenSalesSection" parent-category-id="@salesParentCategory.CategorySettingId" parent-category-name="@salesParentCategory.CategoryName">
+                            @{
+                                index = 0;
+                                foreach (var item in salesChildrenCategory)
+                                {
+                                    var formatRowCategory = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                                    var categoryName = "CategoryName_" + budgetTab.TabIndex;
+                                    <div class="col-xs-12 category-item category-name-data" style="@formatRowCategory" category-setting-id="@item.CategorySettingId" category-name="@item.CategoryName">
+                                        <input type="checkbox" name="checkbox-category-line-@budgetTab.TabIndex" value="@item.CategorySettingId" section-name="" />
+                                        <span name="@categoryName">@string.Format("{0}", item.CategoryName.Length <= 20 ? item.CategoryName : item.CategoryName.Substring(0, 20))</span>
+                                    </div>
+
+                                    index++;
+                                }
+                            }
+                            </div>
+
+                            @* write cogs category *@
+                            <div class="col-xs-12 category-item category-total @classShowOrHiddenCogsSection">
+                                <div style="width: 90%; float:left; white-space: nowrap;">
+                                    <input type="checkbox" name="checkbox-category-line-@budgetTab.TabIndex" is-parent-category="true" parent-categorysetting-id="@cogsParentCategory.CategorySettingId" category-name="@cogsParentCategory.CategoryName" section-name="COGS_" />
+                                    <span class="header-format">@cogsParentCategory.CategoryName</span>
+                                </div>
+                                <div style="width: 10%; float:left">
+                                    <a onclick="showOrHideDiv(this)" section-name="COGS">
+                                        <i class="fa fa-angle-double-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="Area_Category_COGS @classShowOrHiddenCogsSection" parent-category-id="@cogsParentCategory.CategorySettingId" parent-category-name="@cogsParentCategory.CategoryName">
+                            @{
+                                index = 0;
+                                foreach (var item in cogsChildrenCategory)
+                                {
+                                    var formatRowCategory = item.IsPrimeCost ? "color: red;" : "";
+                                    formatRowCategory = (index % 2 == 0) ? formatRowCategory : formatRowCategory + "background-color: #F0FCFF";
+                                    var categoryName = "CategoryName_" + budgetTab.TabIndex;
+                                    <div class="col-xs-12 category-item category-name-data" style="@formatRowCategory" category-setting-id="@item.CategorySettingId" category-name="@item.CategoryName" sales-category-ref-id="@item.SalesCategoryRefId">
+                                        <input type="checkbox" name="checkbox-category-line-@budgetTab.TabIndex" value="@item.CategorySettingId" section-name="COGS_" />
+                                        <span name="@categoryName">@string.Format("{0}", item.CategoryName.Length <= 20 ? item.CategoryName : item.CategoryName.Substring(0, 20))</span>
+                                    </div>
+
+                                    index++;
+                                }
+                            }
+                            </div>
+
+                            @*write payroll expenses category*@
+                            <div class="col-xs-12 category-item category-total @classShowOrHiddenPayrollExpensesSection">
+                                <div style="width: 90%; float:left; white-space: nowrap;">
+                                    <input type="checkbox" name="checkbox-category-line-@budgetTab.TabIndex" is-parent-category="true" parent-categorysetting-id="@payrollExpensesParentCategory.CategorySettingId" category-name="@payrollExpensesParentCategory.CategoryName" section-name="Payroll_Expenses_" />
+                                    <span class="header-format">@payrollExpensesParentCategory.CategoryName</span>
+                                </div>
+                                <div style="width: 10%; float:left">
+                                    <a onclick="showOrHideDiv(this)" section-name="Payroll_Expenses">
+                                        <i class="fa fa-angle-double-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="Area_Category_Payroll_Expenses @classShowOrHiddenPayrollExpensesSection" parent-category-id="@payrollExpensesParentCategory.CategorySettingId" parent-category-name="@payrollExpensesParentCategory.CategoryName">
+                                @{
+                                    index = 0;
+                                    foreach (var item in peIsNotTaxChildrenCategory)
+                                    {
+                                        var formatRowCategory = item.IsPrimeCost ? "color: red;" : "";
+                                        formatRowCategory = (index % 2 == 0) ? formatRowCategory : formatRowCategory + "background-color: #F0FCFF";
+                                        var categoryName = "CategoryName_" + budgetTab.TabIndex;
+                                        <div class="col-xs-12 category-item category-name-data" style="@formatRowCategory" category-setting-id="@item.CategorySettingId" category-name="@item.CategoryName">
+                                            <input type="checkbox" name="checkbox-category-line-@budgetTab.TabIndex" value="@item.CategorySettingId" section-name="Payroll_Expenses_" />
+                                            <span name="@categoryName">@string.Format("{0}", item.CategoryName.Length <= 20 ? item.CategoryName : item.CategoryName.Substring(0, 20))</span>
+                                            <input type="hidden" name="IsPrimeCost" value="@string.Format(item.IsPrimeCost ? "true" : "false")" />
+                                        </div>
+
+                                        index++;
+                                    }
+                                }
+                                <div class="col-xs-12 category-item category-total"><span class="header-format">Total</span></div>
+                                @{
+                                    index = 0;
+                                    foreach (var item in peIsTaxChildrenCategory)
+                                    {
+                                        var formatRowCategory = item.IsPrimeCost ? "color: red;" : "";
+                                        formatRowCategory = (index % 2 == 0) ? formatRowCategory : formatRowCategory + "background-color: #F0FCFF";
+                                        var categoryName = "CategoryName_" + budgetTab.TabIndex;
+                                        <div class="col-xs-12 category-item category-name-data" style="@formatRowCategory" category-setting-id="@item.CategorySettingId" category-name="@item.CategoryName">
+                                            <input type="checkbox" name="checkbox-category-line-@budgetTab.TabIndex" value="@item.CategorySettingId" section-name="IsTax_Payroll_Expenses_" />
+                                            <span name="@categoryName">@string.Format("{0}", item.CategoryName.Length <= 20 ? item.CategoryName : item.CategoryName.Substring(0, 20))</span>
+                                            <input type="hidden" name="IsPrimeCost" value="@string.Format(item.IsPrimeCost ? "true" : "false")" />
+                                        </div>
+
+                                        index++;
+                                    }
+                                }
+                                <div class="col-xs-12 category-item category-total"><span class="header-format">Total</span></div>
+                            </div>
+
+                            @*write operation category*@
+                            <div class="col-xs-12 category-item category-total @classShowOrHiddenOperationSection">
+                                <div style="width: 90%; float:left; white-space: nowrap;">
+                                    <input type="checkbox" name="checkbox-category-line-@budgetTab.TabIndex" is-parent-category="true" parent-categorysetting-id="@operationParentCategory.CategorySettingId" category-name="@operationParentCategory.CategoryName" section-name="Operation_Expenses_" />
+                                    <span class="header-format">@operationParentCategory.CategoryName</span>
+                                </div>
+                                <div style="width: 10%; float:left">
+                                    <a onclick="showOrHideDiv(this)" section-name="Operation_Expenses">
+                                        <i class="fa fa-angle-double-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="Area_Category_Operation_Expenses @classShowOrHiddenOperationSection" parent-category-id="@operationParentCategory.CategorySettingId" parent-category-name="@operationParentCategory.CategoryName">
+                            @{
+                                index = 0;
+                                foreach (var item in operationChildrenCategory)
+                                {
+                                    var formatRowCategory = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                                    var categoryName = "CategoryName_" + budgetTab.TabIndex;
+                                    <div class="col-xs-12 category-item category-name-data" style="@formatRowCategory" category-setting-id="@item.CategorySettingId" category-name="@item.CategoryName">
+                                        <input type="checkbox" name="checkbox-category-line-@budgetTab.TabIndex" value="@item.CategorySettingId" section-name="Operation_Expenses_" />
+                                        <span name="@categoryName">@string.Format("{0}", item.CategoryName.Length <= 20 ? item.CategoryName : item.CategoryName.Substring(0, 20))</span>
+                                    </div>
+
+                                    index++;
+                                }
+                            }
+                            </div>
+
+                            @* write sales profit loss *@
+                            <div class="col-xs-12 category-item category-total">
+                                <div style="width: 90%; float:left; white-space: nowrap;">
+                                    <input type="checkbox" name="checkbox-category-line-@budgetTab.TabIndex" is-parent-category="true" category-name="@profitLossParentCategory.CategoryName" section-name="Profit_Loss_" />
+                                    <span class="header-format">@profitLossParentCategory.CategoryName</span>
+                                </div>
+                                <div style="width: 10%; float:left">
+                                    <a onclick="showOrHideDiv(this)" section-name="Profit_Loss">
+                                        <i class="fa fa-angle-double-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="Area_Category_Profit_Loss" parent-category-id="@profitLossParentCategory.CategorySettingId" parent-category-name="@profitLossParentCategory.CategoryName">
+                            @{
+                                index = 0;
+                                foreach (var item in profitLossChildrenCategory)
+                                {
+                                    var formatRowCategory = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                                    var categoryName = "CategoryName_" + budgetTab.TabIndex;
+                                    <div class="col-xs-12 category-item category-name-data" style="@formatRowCategory" category-setting-id="@item.CategorySettingId" category-name="@item.CategoryName">
+                                        <input type="checkbox" name="checkbox-category-line-@budgetTab.TabIndex" value="@item.CategorySettingId" section-name="Profit_Loss_" />
+                                        <span name="@categoryName">@item.CategoryName</span>
+                                    </div>
+
+                                    index++;
+                                }
+                            }
+                            </div>
+                        </div>
+                        <div class="col-xs-7" style="padding: 0px">
+                            <div class="budget-item-container" style="overflow: hidden;">
+                            <div class="budget-detail-item clearfix budget-item-container" style="overflow: hidden; @tableWidth">
+                            <div style="width: 100%">
+                                @*data item row by sales category*@
+                                <div class="Area_Category_Sales @classShowOrHiddenSalesSection">
+                                @{
+                                    index = 0;
+                                    foreach (System.Data.DataRow dataRow in salesTable.Rows)
+                                    {
+                                        var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                                        headerIndex = 0;
+
+                                        <div class="data-row-by-category" category-name="@dataRow["CategoryName"]" parent-category-id="@dataRow["ParentCategoryId"]" parent-category-name="@dataRow["ParentCategoryName"]"
+                                                category-setting-id="@dataRow["CategorySettingId"]" budget-item-id="@dataRow["BudgetItemId"]" budget-tab-index="@budgetTab.TabIndex" section-name="">
+                                            @foreach (string header in budgetTab.HeaderColumnList)
+                                            {
+                                                var projectionSalesName = string.Format("ProjectionSales_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var projectionPercentName = string.Format("ProjectionPercent_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var actualSalesName = string.Format("ActualSales_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var actualPercentName = string.Format("ActualPercent_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var varianceSalesName = "VarianceSales_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index;
+                                                var variancePercentName = "VariancePercent_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index;
+                                                var projectionSales = Convert.ToDecimal(dataRow[header + "_ProjectionSales"]);
+                                                var projectionPercent = Convert.ToDecimal(dataRow[header + "_ProjectionPercent"]);
+                                                var actualSales = Convert.ToDecimal(dataRow[header + "_ActualSales"]);
+                                                var actualPercent = Convert.ToDecimal(dataRow[header + "_ActualPercent"]);
+                                                var varianceSales = Convert.ToDecimal(dataRow[header + "_VarianceSales"]);
+                                                var variancePercent = Convert.ToDecimal(dataRow[header + "_VariancePercent"]);
+                                                newStyleColor = string.Format("{0:C}", varianceSales) == "$0.00" ? "color: black" : (varianceSales > 0 ? "color: green" : "color: red");
+
+                                                <div class="text-center budget-item projection-data" style="border-left: 1px solid #A7A7A7;@formatRow" header-index="@headerIndex">
+                                                    @Html.Hidden("HeaderName", header)
+                                                    @Html.Hidden("IsPercentage_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index, dataRow[header + "_IsPercentage"])
+                                                    @if (Convert.ToBoolean(dataRow[header + "_IsPercentage"]))
+                                                    {
+                                                        <input class="bcs-currency-textbox readonly" readonly="readonly" maxlength="15" onchange="onChangeProjectionSales(this);" id="@projectionSalesName" value="@string.Format("{0:C}", projectionSales)" re-value="@projectionSales" />
+                                                        <input class="bcs-percent-textbox numerictextbox" maxlength="8" onchange="onChangeProjectionPercent(this);" id="@projectionPercentName" value="@string.Format("{0:#,##0.00}%", projectionPercent)" re-value="@projectionPercent" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input class="bcs-currency-textbox numerictextbox" maxlength="15" onchange="onChangeProjectionSales(this);" id="@projectionSalesName" value="@string.Format("{0:C}", projectionSales)" re-value="@projectionSales" />
+                                                        <input class="bcs-percent-textbox readonly" readonly="readonly" maxlength="8" onchange="onChangeProjectionPercent(this);" id="@projectionPercentName" value="@string.Format("{0:#,##0.00}%", projectionPercent)" re-value="@projectionPercent" />
+                                                    }
+                                                </div>
+                                                <div class="text-center budget-item actual-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox numerictextbox" maxlength="15" onchange="onChangeActualSales(this);" id="@actualSalesName" value="@string.Format("{0:C}", actualSales)" re-value="@actualSales" />
+                                                    <input class="bcs-percent-textbox readonly" style="@newStyleColor" readonly="readonly" maxlength="8" id="@actualPercentName" value="@string.Format("{0:#,##0.00}%", actualPercent)" re-value="@actualPercent" />
+                                                </div>
+                                                <div class="text-center budget-item variance-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" style="@newStyleColor" id="@varianceSalesName" value="@string.Format("{0:C}", (varianceSales))" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" style="@newStyleColor" id="@variancePercentName" value="@string.Format("{0:#,##0.00}%", (variancePercent))" readonly="readonly" />
+                                                </div>
+
+                                                headerIndex++;
+                                            }
+                                        </div>
+
+                                        index++;
+                                    }
+                                }
+                                </div>
+
+                                @*total cogs row*@
+                                <div class="sales-row @classShowOrHiddenCogsSection" section-name="COGS">
+                                    @for (int i = 0; i < headerCount; i++)
+                                    {
+                                        var totalProjectionSalesName = "COGS_Total__ProjectionSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalProjectionPercentName = "COGS_Total__ProjectionPercent_" + budgetTab.TabIndex + "_" + i;
+                                        var totalActualSalesName = "COGS_Total__ActualSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalActualPercentName = "COGS_Total__ActualPercent_" + budgetTab.TabIndex + "_" + i;
+                                        var totalVarianceSalesName = "COGS_Total__VarianceSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalVariancePercentName = "COGS_Total__VariancePercent_" + budgetTab.TabIndex + "_" + i;
+                                        var projectionSales = budgetTab.CogsTotal[i].ProjectionSales;
+                                        var projectionPercent = budgetTab.CogsTotal[i].ProjectionPercent;
+                                        var actualSales = budgetTab.CogsTotal[i].ActualSales;
+                                        var actualPercent = budgetTab.CogsTotal[i].ActualPercent;
+                                        var varianceSales = projectionSales - actualSales;
+                                        var variancePercent = projectionPercent - actualPercent;
+                                        newStyleColor = string.Format("{0:C}", varianceSales) == "$0.00" ? "color: black" : (varianceSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="text-center header-format budget-item total-sales-data" budget-tab-index="@budgetTab.TabIndex" header-index="@i" style="border-left: 1px solid #A7A7A7;">
+                                            <input class="bcs-currency-textbox" id="@totalProjectionSalesName" value="@string.Format("{0:C}", projectionSales)" re-value="@projectionSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", projectionPercent)" re-value="@projectionPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item actual-div">
+                                            <input class="bcs-currency-textbox" id="@totalActualSalesName" style="@newStyleColor" value="@string.Format("{0:C}", actualSales)" re-value="@actualSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", actualPercent)" re-value="@actualPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item variance-div">
+                                            <input class="bcs-currency-textbox" id="@totalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", varianceSales)" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", variancePercent)" readonly="readonly" />
+                                        </div>
+                                    }
+                                </div>
+
+                                @*data item row by cogs category*@
+                                <div class="Area_Category_COGS @classShowOrHiddenCogsSection">
+                                @{
+                                    index = 0;
+                                    foreach (System.Data.DataRow dataRow in cogsTable.Rows)
+                                    {
+                                        var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                                        headerIndex = 0;
+
+                                        <div class="data-row-by-category" category-name="@dataRow["CategoryName"]" parent-category-id="@dataRow["ParentCategoryId"]" parent-category-name="@dataRow["ParentCategoryName"]"
+                                                category-setting-id="@dataRow["CategorySettingId"]" sales-category-ref-id="@dataRow["SalesCategoryRefId"]" budget-item-id="@dataRow["BudgetItemId"]" budget-tab-index="@budgetTab.TabIndex" section-name="COGS_">
+                                        @foreach (string header in budgetTab.HeaderColumnList)
+                                        {
+                                            var projectionSalesName = string.Format("COGS_ProjectionSales_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                            var projectionPercentName = string.Format("COGS_ProjectionPercent_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                            var actualSalesName = string.Format("COGS_ActualSales_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                            var actualPercentName = string.Format("COGS_ActualPercent_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                            var varianceSalesName = "COGS_VarianceSales_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index;
+                                            var variancePercentName = "COGS_VariancePercent_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index;
+                                            var projectionSales = Convert.ToDecimal(dataRow[header + "_ProjectionSales"]);
+                                            var projectionPercent = Convert.ToDecimal(dataRow[header + "_ProjectionPercent"]);
+                                            var actualSales = Convert.ToDecimal(dataRow[header + "_ActualSales"]);
+                                            var actualPercent = Convert.ToDecimal(dataRow[header + "_ActualPercent"]);
+                                            var varianceSales = projectionSales - actualSales;
+                                            var variancePercent = projectionPercent - actualPercent;
+                                            newStyleColor = string.Format("{0:C}", varianceSales) == "$0.00" ? "color: black" : (varianceSales > 0 ? "color: green" : "color: red");
+
+                                            <div class="text-center budget-item projection-data" style="border-left: 1px solid #A7A7A7;@formatRow" header-index="@headerIndex">
+                                                @Html.Hidden("HeaderName", header)
+                                                @Html.Hidden("COGS_IsPercentage_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index, dataRow[header + "_IsPercentage"])
+                                                @if (Convert.ToBoolean(dataRow[header + "_IsPercentage"]))
+                                                {
+                                                    <input class="bcs-currency-textbox readonly" readonly="readonly" maxlength="15" onchange="onChangeCogsProjectionSales(this);" id="@projectionSalesName" value="@string.Format("{0:C}", projectionSales)" re-value="@projectionSales" />
+                                                    <input class="bcs-percent-textbox numerictextbox" maxlength="8" onchange="onChangeCogsProjectionPercent(this);" id="@projectionPercentName" value="@string.Format("{0:#,##0.00}%", projectionPercent)" re-value="@projectionPercent" />
+                                                }
+                                                else
+                                                {
+                                                    <input class="bcs-currency-textbox numerictextbox" maxlength="15" onchange="onChangeCogsProjectionSales(this);" id="@projectionSalesName" value="@string.Format("{0:C}", projectionSales)" re-value="@projectionSales" />
+                                                    <input class="bcs-percent-textbox readonly" readonly="readonly" maxlength="8" onchange="onChangeCogsProjectionPercent(this);" id="@projectionPercentName" value="@string.Format("{0:#,##0.00}%", projectionPercent)" re-value="@projectionPercent" />
+                                                }
+                                            </div>
+                                            <div class="text-center budget-item actual-div" style="@formatRow">
+                                                <input class="bcs-currency-textbox numerictextbox" maxlength="15" onchange="onChangeCogsActualSales(this);" id="@actualSalesName" value="@string.Format("{0:C}", actualSales)" re-value="@actualSales" />
+                                                <input class="bcs-percent-textbox readonly" style="@newStyleColor" readonly="readonly" maxlength="8" id="@actualPercentName" value="@string.Format("{0:#,##0.00}%", actualPercent)" re-value="@actualPercent" />
+                                            </div>
+                                            <div class="text-center budget-item variance-div" style="@formatRow">
+                                                <input class="bcs-currency-textbox" style="@newStyleColor" id="@varianceSalesName" value="@string.Format("{0:C}", varianceSales)" readonly="readonly" />
+                                                <input class="bcs-percent-textbox" style="@newStyleColor" id="@variancePercentName" value="@string.Format("{0:#,##0.00}%", variancePercent)" readonly="readonly" />
+                                            </div>
+
+                                            headerIndex++;
+                                        }
+                                        </div>
+
+                                        index++;
+                                    }
+                                }
+                                </div>
+
+                                @*total payroll expenses row*@
+                                <div class="sales-row @classShowOrHiddenPayrollExpensesSection" section-name="Payroll_Expenses">
+                                    @for (int i = 0; i < headerCount; i++)
+                                    {
+                                        var totalProjectionSalesName = "All_Payroll_Expenses_Total__ProjectionSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalProjectionPercentName = "All_Payroll_Expenses_Total__ProjectionPercent_" + budgetTab.TabIndex + "_" + i;
+                                        var totalActualSalesName = "All_Payroll_Expenses_Total__ActualSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalActualPercentName = "All_Payroll_Expenses_Total__ActualPercent_" + budgetTab.TabIndex + "_" + i;
+                                        var totalVarianceSalesName = "All_Payroll_Expenses_Total__VarianceSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalVariancePercentName = "All_Payroll_Expenses_Total__VariancePercent_" + budgetTab.TabIndex + "_" + i;
+                                        newStyleColor = string.Format("{0:C}", budgetTab.PayrollAllTotal[i].VarianceOtherSales) == "$0.00" ? "color: black" : (budgetTab.PayrollAllTotal[i].VarianceOtherSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="text-center header-format budget-item total-sales-data" budget-tab-index="@budgetTab.TabIndex" header-index="@i" style="border-left: 1px solid #A7A7A7;">
+                                            <input class="bcs-currency-textbox" id="@totalProjectionSalesName" value="@string.Format("{0:C}", budgetTab.PayrollAllTotal[i].ProjectionSales)" re-value="@budgetTab.PayrollAllTotal[i].ProjectionSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", budgetTab.PayrollAllTotal[i].ProjectionPercent)" re-value="@budgetTab.PayrollAllTotal[i].ProjectionPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item actual-div">
+                                            <input class="bcs-currency-textbox" id="@totalActualSalesName" style="@newStyleColor" value="@string.Format("{0:C}", budgetTab.PayrollAllTotal[i].ActualSales)" re-value="@budgetTab.PayrollAllTotal[i].ActualSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetTab.PayrollAllTotal[i].ActualPercent)" re-value="@budgetTab.PayrollAllTotal[i].ActualPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item variance-div">
+                                            <input class="bcs-currency-textbox" id="@totalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (budgetTab.PayrollAllTotal[i].VarianceOtherSales))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (budgetTab.PayrollAllTotal[i].VarianceOtherPercent))" readonly="readonly" />
+                                        </div>
+                                    }
+                                </div>
+
+                                @*data item row by payroll expenses category*@
+                                <div class="Area_Category_Payroll_Expenses @classShowOrHiddenPayrollExpensesSection">
+                                    @{
+                                        index = 0;
+                                        foreach (System.Data.DataRow dataRow in payrollTable.Rows)
+                                        {
+                                            var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                                            headerIndex = 0;
+
+                                            <div class="data-row-by-category" category-name="@dataRow["CategoryName"]" parent-category-id="@dataRow["ParentCategoryId"]" parent-category-name="@dataRow["ParentCategoryName"]"
+                                                    category-setting-id="@dataRow["CategorySettingId"]" budget-item-id="@dataRow["BudgetItemId"]" budget-tab-index="@budgetTab.TabIndex" section-name="Payroll_Expenses_">
+                                            @foreach (string header in budgetTab.HeaderColumnList)
+                                            {
+                                                var projectionSalesName = string.Format("Payroll_Expenses_ProjectionSales_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var projectionPercentName = string.Format("Payroll_Expenses_ProjectionPercent_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var actualSalesName = string.Format("Payroll_Expenses_ActualSales_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var actualPercentName = string.Format("Payroll_Expenses_ActualPercent_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var varianceSalesName = "Payroll_Expenses_VarianceSales_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index;
+                                                var variancePercentName = "Payroll_Expenses_VariancePercent_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index;
+                                                var projectionSales = Convert.ToDecimal(dataRow[header + "_ProjectionSales"]);
+                                                var projectionPercent = Convert.ToDecimal(dataRow[header + "_ProjectionPercent"]);
+                                                var actualSales = Convert.ToDecimal(dataRow[header + "_ActualSales"]);
+                                                var actualPercent = Convert.ToDecimal(dataRow[header + "_ActualPercent"]);
+                                                var varianceSales = Convert.ToDecimal(dataRow[header + "_VarianceSales"]);
+                                                var variancePercent = Convert.ToDecimal(dataRow[header + "_VariancePercent"]);
+                                                newStyleColor = string.Format("{0:C}", varianceSales) == "$0.00" ? "color: black" : (varianceSales > 0 ? "color: green" : "color: red");
+
+                                                <div class="text-center budget-item projection-data" style="border-left: 1px solid #A7A7A7;@formatRow" header-index="@headerIndex">
+                                                    @Html.Hidden("HeaderName", header)
+                                                    @Html.Hidden("Payroll_Expenses_IsPercentage_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index, dataRow[header + "_IsPercentage"])
+                                                    @if (Convert.ToBoolean(dataRow[header + "_IsPercentage"]))
+                                                    {
+                                                        <input class="bcs-currency-textbox readonly" readonly="readonly" maxlength="15" onchange="onChangePayrollProjectionSales(this);" id="@projectionSalesName" value="@string.Format("{0:C}", projectionSales)" re-value="@projectionSales" />
+                                                        <input class="bcs-percent-textbox numerictextbox" maxlength="8" onchange="onChangePayrollProjectionPercent(this);" id="@projectionPercentName" value="@string.Format("{0:#,##0.00}%", projectionPercent)" re-value="@projectionPercent" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input class="bcs-currency-textbox numerictextbox" maxlength="15" onchange="onChangePayrollProjectionSales(this);" id="@projectionSalesName" value="@string.Format("{0:C}", projectionSales)" re-value="@projectionSales" />
+                                                        <input class="bcs-percent-textbox readonly" readonly="readonly" maxlength="8" onchange="onChangePayrollProjectionPercent(this);" id="@projectionPercentName" value="@string.Format("{0:#,##0.00}%", projectionPercent)" re-value="@projectionPercent" />
+                                                    }
+                                                </div>
+                                                <div class="text-center budget-item actual-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox numerictextbox" maxlength="15" onchange="onChangePayrollActualSales(this);" id="@actualSalesName" value="@string.Format("{0:C}", actualSales)" re-value="@actualSales" />
+                                                    <input class="bcs-percent-textbox readonly" style="@newStyleColor" readonly="readonly" maxlength="8" id="@actualPercentName" value="@string.Format("{0:#,##0.00}%", actualPercent)" re-value="@actualPercent" />
+                                                </div>
+                                                <div class="text-center budget-item variance-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" style="@newStyleColor" id="@varianceSalesName" value="@string.Format("{0:C}", (varianceSales))" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" style="@newStyleColor" id="@variancePercentName" value="@string.Format("{0:#,##0.00}%", (variancePercent))" readonly="readonly" />
+                                                </div>
+
+                                                headerIndex++;
+                                            }
+                                            </div>
+
+                                            index++;
+                                        }
+                                    }
+                                    <div class="sales-row">
+                                    @for (int i = 0; i < headerCount; i++)
+                                    {
+                                        var totalProjectionSalesName = "Payroll_Expenses_Total__ProjectionSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalProjectionPercentName = "Payroll_Expenses_Total__ProjectionPercent_" + budgetTab.TabIndex + "_" + i;
+                                        var totalActualSalesName = "Payroll_Expenses_Total__ActualSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalActualPercentName = "Payroll_Expenses_Total__ActualPercent_" + budgetTab.TabIndex + "_" + i;
+                                        var totalVarianceSalesName = "Payroll_Expenses_Total__VarianceSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalVariancePercentName = "Payroll_Expenses_Total__VariancePercent_" + budgetTab.TabIndex + "_" + i;
+                                        newStyleColor = string.Format("{0:C}", budgetTab.PayrollTotal[i].VarianceOtherSales) == "$0.00" ? "color: black" : (budgetTab.PayrollTotal[i].VarianceOtherSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="text-center header-format budget-item" style="border-left: 1px solid #A7A7A7;">
+                                            <input class="bcs-currency-textbox" id="@totalProjectionSalesName" value="@string.Format("{0:C}", budgetTab.PayrollTotal[i].ProjectionSales)" re-value="@budgetTab.PayrollTotal[i].ProjectionSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", budgetTab.PayrollTotal[i].ProjectionPercent)" re-value="@budgetTab.PayrollTotal[i].ProjectionPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item actual-div">
+                                            <input class="bcs-currency-textbox" id="@totalActualSalesName" style="@newStyleColor" value="@string.Format("{0:C}", budgetTab.PayrollTotal[i].ActualSales)" re-value="@budgetTab.PayrollTotal[i].ActualSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetTab.PayrollTotal[i].ActualPercent)" re-value="@budgetTab.PayrollTotal[i].ActualPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item variance-div">
+                                            <input class="bcs-currency-textbox" id="@totalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (budgetTab.PayrollTotal[i].VarianceOtherSales))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (budgetTab.PayrollTotal[i].VarianceOtherPercent))" readonly="readonly" />
+                                        </div>
+                                    }
+                                    </div>
+                                    @{
+                                        index = 0;
+                                        foreach (System.Data.DataRow dataRow in payrollIsTaxTable.Rows)
+                                        {
+                                            var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                                            headerIndex = 0;
+
+                                            <div class="data-row-by-category is-tax-row" category-name="@dataRow["CategoryName"]" parent-category-id="@dataRow["ParentCategoryId"]" parent-category-name="@dataRow["ParentCategoryName"]"
+                                                    category-setting-id="@dataRow["CategorySettingId"]" budget-item-id="@dataRow["BudgetItemId"]" budget-tab-index="@budgetTab.TabIndex" section-name="IsTax_Payroll_Expenses_">
+                                            @foreach (string header in budgetTab.HeaderColumnList)
+                                            {
+                                                var projectionSalesName = string.Format("IsTax_Payroll_Expenses_ProjectionSales_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var projectionPercentName = string.Format("IsTax_Payroll_Expenses_ProjectionPercent_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var actualSalesName = string.Format("IsTax_Payroll_Expenses_ActualSales_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var actualPercentName = string.Format("IsTax_Payroll_Expenses_ActualPercent_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var varianceSalesName = "IsTax_Payroll_Expenses_VarianceSales_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index;
+                                                var variancePercentName = "IsTax_Payroll_Expenses_VariancePercent_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index;
+                                                var projectionSales = Convert.ToDecimal(dataRow[header + "_ProjectionSales"]);
+                                                var projectionPercent = Convert.ToDecimal(dataRow[header + "_ProjectionPercent"]);
+                                                var actualSales = Convert.ToDecimal(dataRow[header + "_ActualSales"]);
+                                                var actualPercent = Convert.ToDecimal(dataRow[header + "_ActualPercent"]);
+                                                var varianceSales = Convert.ToDecimal(dataRow[header + "_VarianceSales"]);
+                                                var variancePercent = Convert.ToDecimal(dataRow[header + "_VariancePercent"]);
+                                                newStyleColor = string.Format("{0:C}", varianceSales) == "$0.00" ? "color: black" : (varianceSales > 0 ? "color: green" : "color: red");
+
+                                                <div class="text-center budget-item projection-data" style="border-left: 1px solid #A7A7A7;@formatRow" header-index="@headerIndex">
+                                                    @Html.Hidden("HeaderName", header)
+                                                    @Html.Hidden("Payroll_Expenses_IsPercentage_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index, dataRow[header + "_IsPercentage"])
+                                                    @if (Convert.ToBoolean(dataRow[header + "_IsPercentage"]))
+                                                    {
+                                                        <input class="bcs-currency-textbox readonly" readonly="readonly" maxlength="15" onchange="onChangePayrollIsTaxProjectionSales(this);" id="@projectionSalesName" value="@string.Format("{0:C}", projectionSales)" re-value="@projectionSales" />
+                                                        <input class="bcs-percent-textbox numerictextbox" maxlength="8" onchange="onChangePayrollIsTaxProjectionPercent(this);" id="@projectionPercentName" value="@string.Format("{0:#,##0.00}%", projectionPercent)" re-value="@projectionPercent" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input class="bcs-currency-textbox numerictextbox" maxlength="15" onchange="onChangePayrollIsTaxProjectionSales(this);" id="@projectionSalesName" value="@string.Format("{0:C}", projectionSales)" re-value="@projectionSales" />
+                                                        <input class="bcs-percent-textbox readonly" readonly="readonly" maxlength="8" onchange="onChangePayrollIsTaxProjectionPercent(this);" id="@projectionPercentName" value="@string.Format("{0:#,##0.00}%", projectionPercent)" re-value="@projectionPercent" />
+                                                    }
+                                                </div>
+                                                <div class="text-center budget-item actual-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox numerictextbox" maxlength="15" onchange="onChangePayrollIsTaxActualSales(this);" id="@actualSalesName" value="@string.Format("{0:C}", actualSales)" re-value="@actualSales" />
+                                                    <input class="bcs-percent-textbox readonly" style="@newStyleColor" readonly="readonly" maxlength="8" id="@actualPercentName" value="@string.Format("{0:#,##0.00}%", actualPercent)" re-value="@actualPercent" />
+                                                </div>
+                                                <div class="text-center budget-item variance-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" style="@newStyleColor" id="@varianceSalesName" value="@string.Format("{0:C}", (varianceSales))" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" style="@newStyleColor" id="@variancePercentName" value="@string.Format("{0:#,##0.00}%", (variancePercent))" readonly="readonly" />
+                                                </div>
+
+                                                headerIndex++;
+                                            }
+                                            </div>
+
+                                            index++;
+                                        }
+                                    }
+                                    <div class="sales-row">
+                                    @for (int i = 0; i < headerCount; i++)
+                                    {
+                                        var totalProjectionSalesName = "IsTax_Payroll_Expenses_Total__ProjectionSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalProjectionPercentName = "IsTax_Payroll_Expenses_Total__ProjectionPercent_" + budgetTab.TabIndex + "_" + i;
+                                        var totalActualSalesName = "IsTax_Payroll_Expenses_Total__ActualSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalActualPercentName = "IsTax_Payroll_Expenses_Total__ActualPercent_" + budgetTab.TabIndex + "_" + i;
+                                        var totalVarianceSalesName = "IsTax_Payroll_Expenses_Total__VarianceSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalVariancePercentName = "IsTax_Payroll_Expenses_Total__VariancePercent_" + budgetTab.TabIndex + "_" + i;
+                                        newStyleColor = string.Format("{0:C}", budgetTab.PayrollIsTaxTotal[i].VarianceOtherSales) == "$0.00" ? "color: black" : (budgetTab.PayrollIsTaxTotal[i].VarianceOtherSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="text-center header-format budget-item" style="border-left: 1px solid #A7A7A7;">
+                                            <input class="bcs-currency-textbox" id="@totalProjectionSalesName" value="@string.Format("{0:C}", budgetTab.PayrollIsTaxTotal[i].ProjectionSales)" re-value="@budgetTab.PayrollIsTaxTotal[i].ProjectionSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", budgetTab.PayrollIsTaxTotal[i].ProjectionPercent)" re-value="@budgetTab.PayrollIsTaxTotal[i].ProjectionPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item actual-div">
+                                            <input class="bcs-currency-textbox" id="@totalActualSalesName" style="@newStyleColor" value="@string.Format("{0:C}", budgetTab.PayrollIsTaxTotal[i].ActualSales)" re-value="@budgetTab.PayrollIsTaxTotal[i].ActualSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetTab.PayrollIsTaxTotal[i].ActualPercent)" re-value="@budgetTab.PayrollIsTaxTotal[i].ActualPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item variance-div">
+                                            <input class="bcs-currency-textbox" id="@totalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (budgetTab.PayrollIsTaxTotal[i].VarianceOtherSales))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (budgetTab.PayrollIsTaxTotal[i].VarianceOtherPercent))" readonly="readonly" />
+                                        </div>
+                                    }
+                                    </div>
+                                </div>
+
+                                @*total operation row*@
+                                <div class="sales-row @classShowOrHiddenOperationSection" section-name="Operation_Expenses">
+                                    @for (int i = 0; i < headerCount; i++)
+                                    {
+                                        var totalProjectionSalesName = "Operation_Expenses_Total__ProjectionSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalProjectionPercentName = "Operation_Expenses_Total__ProjectionPercent_" + budgetTab.TabIndex + "_" + i;
+                                        var totalActualSalesName = "Operation_Expenses_Total__ActualSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalActualPercentName = "Operation_Expenses_Total__ActualPercent_" + budgetTab.TabIndex + "_" + i;
+                                        var totalVarianceSalesName = "Operation_Expenses_Total__VarianceSales_" + budgetTab.TabIndex + "_" + i;
+                                        var totalVariancePercentName = "Operation_Expenses_Total__VariancePercent_" + budgetTab.TabIndex + "_" + i;
+                                        newStyleColor = string.Format("{0:C}", budgetTab.OperationTotal[i].VarianceOtherSales) == "$0.00" ? "color: black" : (budgetTab.OperationTotal[i].VarianceOtherSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="text-center header-format budget-item total-sales-data" budget-tab-index="@budgetTab.TabIndex" header-index="@i" style="border-left: 1px solid #A7A7A7;">
+                                            <input class="bcs-currency-textbox" id="@totalProjectionSalesName" value="@string.Format("{0:C}", budgetTab.OperationTotal[i].ProjectionSales)" re-value="@budgetTab.OperationTotal[i].ProjectionSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", budgetTab.OperationTotal[i].ProjectionPercent)" re-value="@budgetTab.OperationTotal[i].ProjectionPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item actual-div">
+                                            <input class="bcs-currency-textbox" id="@totalActualSalesName" style="@newStyleColor" value="@string.Format("{0:C}", budgetTab.OperationTotal[i].ActualSales)" re-value="@budgetTab.OperationTotal[i].ActualSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetTab.OperationTotal[i].ActualPercent)" re-value="@budgetTab.OperationTotal[i].ActualPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item variance-div">
+                                            <input class="bcs-currency-textbox" id="@totalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (budgetTab.OperationTotal[i].VarianceOtherSales))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@totalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (budgetTab.OperationTotal[i].VarianceOtherPercent))" readonly="readonly" />
+                                        </div>
+                                    }
+                                </div>
+
+                                @*data item row by operation category*@
+                                <div class="Area_Category_Operation_Expenses @classShowOrHiddenOperationSection">
+                                    @{
+                                        index = 0;
+                                        foreach (System.Data.DataRow dataRow in operationTable.Rows)
+                                        {
+                                            var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                                            headerIndex = 0;
+
+                                            <div class="data-row-by-category" category-name="@dataRow["CategoryName"]" parent-category-id="@dataRow["ParentCategoryId"]" parent-category-name="@dataRow["ParentCategoryName"]"
+                                                    category-setting-id="@dataRow["CategorySettingId"]" budget-item-id="@dataRow["BudgetItemId"]" budget-tab-index="@budgetTab.TabIndex" section-name="Operation_Expenses_">
+                                            @foreach (string header in budgetTab.HeaderColumnList)
+                                            {
+                                                var projectionSalesName = string.Format("Operation_Expenses_ProjectionSales_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var projectionPercentName = string.Format("Operation_Expenses_ProjectionPercent_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var actualSalesName = string.Format("Operation_Expenses_ActualSales_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var actualPercentName = string.Format("Operation_Expenses_ActualPercent_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                                var varianceSalesName = "Operation_Expenses_VarianceSales_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index;
+                                                var variancePercentName = "Operation_Expenses_VariancePercent_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index;
+                                                var projectionSales = Convert.ToDecimal(dataRow[header + "_ProjectionSales"]);
+                                                var projectionPercent = Convert.ToDecimal(dataRow[header + "_ProjectionPercent"]);
+                                                var actualSales = Convert.ToDecimal(dataRow[header + "_ActualSales"]);
+                                                var actualPercent = Convert.ToDecimal(dataRow[header + "_ActualPercent"]);
+                                                var varianceSales = Convert.ToDecimal(dataRow[header + "_VarianceSales"]);
+                                                var variancePercent = Convert.ToDecimal(dataRow[header + "_VariancePercent"]);
+                                                newStyleColor = string.Format("{0:C}", varianceSales) == "$0.00" ? "color: black" : (varianceSales > 0 ? "color: green" : "color: red");
+
+                                                <div class="text-center budget-item projection-data" style="border-left: 1px solid #A7A7A7;@formatRow" header-index="@headerIndex">
+                                                    @Html.Hidden("HeaderName", header)
+                                                    @Html.Hidden("Operation_Expenses_IsPercentage_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index, dataRow[header + "_IsPercentage"])
+                                                    @if (Convert.ToBoolean(dataRow[header + "_IsPercentage"]))
+                                                    {
+                                                        <input class="bcs-currency-textbox readonly" readonly="readonly" maxlength="15" onchange="onChangeOperationProjectionSales(this);" id="@projectionSalesName" value="@string.Format("{0:C}", projectionSales)" re-value="@projectionSales" />
+                                                        <input class="bcs-percent-textbox numerictextbox" maxlength="8" onchange="onChangeOperationProjectionPercent(this);" id="@projectionPercentName" value="@string.Format("{0:#,##0.00}%", projectionPercent)" re-value="@projectionPercent" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input class="bcs-currency-textbox numerictextbox" maxlength="15" onchange="onChangeOperationProjectionSales(this);" id="@projectionSalesName" value="@string.Format("{0:C}", projectionSales)" re-value="@projectionSales" />
+                                                        <input class="bcs-percent-textbox readonly" readonly="readonly" maxlength="8" onchange="onChangeOperationProjectionPercent(this);" id="@projectionPercentName" value="@string.Format("{0:#,##0.00}%", projectionPercent)" re-value="@projectionPercent" />
+                                                    }
+                                                </div>
+                                                <div class="text-center budget-item actual-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox numerictextbox" maxlength="15" onchange="onChangeOperationActualSales(this);" id="@actualSalesName" value="@string.Format("{0:C}", actualSales)" re-value="@actualSales" />
+                                                    <input class="bcs-percent-textbox readonly" style="@newStyleColor" readonly="readonly" maxlength="8" id="@actualPercentName" value="@string.Format("{0:#,##0.00}%", actualPercent)" re-value="@actualPercent" />
+                                                </div>
+                                                <div class="text-center budget-item variance-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" style="@newStyleColor" id="@varianceSalesName" value="@string.Format("{0:C}", (Convert.ToDecimal(dataRow[header + "_VarianceSales"])))" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" style="@newStyleColor" id="@variancePercentName" value="@string.Format("{0:#,##0.00}%", (Convert.ToDecimal(dataRow[header + "_VariancePercent"])))" readonly="readonly" />
+                                                </div>
+
+                                                headerIndex++;
+                                            }
+                                            </div>
+
+                                            index++;
+                                        }
+                                    }
+                                </div>
+
+                                @*total profit loss row*@
+                                <div class="sales-row">
+                                @for (int i = 0; i < headerCount; i++)
+                                {
+                                    var totalProjectionSalesName = "Profit_Loss_Total__ProjectionSales_" + budgetTab.TabIndex + "_" + i;
+                                    var totalProjectionPercentName = "Profit_Loss_Total__ProjectionPercent_" + budgetTab.TabIndex + "_" + i;
+                                    var totalActualSalesName = "Profit_Loss_Total__ActualSales_" + budgetTab.TabIndex + "_" + i;
+                                    var totalActualPercentName = "Profit_Loss_Total__ActualPercent_" + budgetTab.TabIndex + "_" + i;
+                                    var totalVarianceSalesName = "Profit_Loss_Total__VarianceSales_" + budgetTab.TabIndex + "_" + i;
+                                    var totalVariancePercentName = "Profit_Loss_Total__VariancePercent_" + budgetTab.TabIndex + "_" + i;
+                                    newStyleColor = string.Format("{0:C}", budgetTab.ProfitLossTotal[i].VarianceSales) == "$0.00" ? "color: black" : (budgetTab.ProfitLossTotal[i].VarianceSales > 0 ? "color: green" : "color: red");
+
+                                    <div class="text-center header-format budget-item total-sales-data" budget-tab-index="@budgetTab.TabIndex" header-index="@i" style="border-left: 1px solid #A7A7A7;">
+                                        <input class="bcs-currency-textbox" id="@totalProjectionSalesName" value="@string.Format("{0:C}", budgetTab.ProfitLossTotal[i].ProjectionSales)" re-value="@budgetTab.ProfitLossTotal[i].ProjectionSales" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" id="@totalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", budgetTab.ProfitLossTotal[i].ProjectionPercent)" re-value="@budgetTab.ProfitLossTotal[i].ProjectionPercent" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item actual-div">
+                                        <input class="bcs-currency-textbox" id="@totalActualSalesName" style="@newStyleColor" value="@string.Format("{0:C}", budgetTab.ProfitLossTotal[i].ActualSales)" re-value="@budgetTab.ProfitLossTotal[i].ActualSales" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" id="@totalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetTab.ProfitLossTotal[i].ActualPercent)" re-value="@budgetTab.ProfitLossTotal[i].ActualPercent" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item variance-div">
+                                        <input class="bcs-currency-textbox" id="@totalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (budgetTab.ProfitLossTotal[i].VarianceSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" id="@totalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (budgetTab.ProfitLossTotal[i].VariancePercent))" readonly="readonly" />
+                                    </div>
+                                }
+                                </div>
+
+                                @*data item row by profit loss category*@
+                                <div class="Area_Category_Profit_Loss">
+                                @{
+                                    index = 0;
+                                    foreach (System.Data.DataRow dataRow in profitLossTable.Rows)
+                                    {
+                                        var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                                        headerIndex = 0;
+
+                                        <div class="data-row-by-category" category-name="@dataRow["CategoryName"].ToString()" parent-category-id="@dataRow["ParentCategoryId"].ToString()" parent-category-name="@dataRow["ParentCategoryName"]"
+                                             category-setting-id="@dataRow["CategorySettingId"].ToString()" budget-item-id="@dataRow["BudgetItemId"].ToString()" budget-tab-index="@budgetTab.TabIndex" section-name="">
+                                        @foreach (string header in budgetTab.HeaderColumnList)
+                                        {
+                                            var projectionSalesName = string.Format("Profit_Loss_ProjectionSales_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                            var projectionPercentName = string.Format("Profit_Loss_ProjectionPercent_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                            var actualSalesName = string.Format("Profit_Loss_ActualSales_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                            var actualPercentName = string.Format("Profit_Loss_ActualPercent_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                            var varianceSalesName = string.Format("Profit_Loss_VarianceSales_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                            var variancePercentName = string.Format("Profit_Loss_VariancePercent_{0}_{1}_{2}", budgetTab.TabIndex, headerIndex, index);
+                                            var projectionSales = Convert.ToDecimal(dataRow[header + "_ProjectionSales"]);
+                                            var projectionPercent = Convert.ToDecimal(dataRow[header + "_ProjectionPercent"]);
+                                            var actualSales = Convert.ToDecimal(dataRow[header + "_ActualSales"]);
+                                            var actualPercent = Convert.ToDecimal(dataRow[header + "_ActualPercent"]);
+                                            var varianceSales = Convert.ToDecimal(dataRow[header + "_VarianceSales"]);
+                                            var variancePercent = Convert.ToDecimal(dataRow[header + "_VariancePercent"]);
+                                            newStyleColor = string.Format("{0:C}", varianceSales) == "$0.00" ? "color: black" : (varianceSales > 0 ? "color: green" : "color: red");
+
+                                            <div class="text-center budget-item projection-data" style="border-left: 1px solid #A7A7A7;@formatRow" header-index="@headerIndex">
+                                                @Html.Hidden("HeaderName", header)
+                                                @Html.Hidden("Profit_Loss_IsPercentage_" + budgetTab.TabIndex + "_" + headerIndex + "_" + index, dataRow[header + "_IsPercentage"])
+                                                <input class="bcs-currency-textbox" id="@projectionSalesName" value="@string.Format("{0:C}", projectionSales)" re-value="@projectionSales" readonly="readonly" />
+                                                <input class="bcs-percent-textbox" id="@projectionPercentName" value="@string.Format("{0:#,##0.00}%", projectionPercent)" re-value="@projectionPercent" readonly="readonly" />
+                                            </div>
+                                            <div class="text-center budget-item actual-div" style="@formatRow">
+                                                <input class="bcs-currency-textbox" id="@actualSalesName" value="@string.Format("{0:C}", actualSales)" re-value="@actualSales" readonly="readonly" />
+                                                <input class="bcs-percent-textbox" style="@newStyleColor" id="@actualPercentName" value="@string.Format("{0:#,##0.00}%", actualPercent)" re-value="@actualPercent" readonly="readonly" />
+                                            </div>
+                                                
+                                            <div class="text-center budget-item variance-div" style="@formatRow">
+                                                <input class="bcs-currency-textbox" style="@newStyleColor" id="@varianceSalesName" value="@string.Format("{0:C}", varianceSales)" readonly="readonly" />
+                                                <input class="bcs-percent-textbox" style="@newStyleColor" id="@variancePercentName" value="@string.Format("{0:#,##0.00}%", variancePercent)" readonly="readonly" />
+                                            </div>
+
+                                            headerIndex++;
+                                        }
+                                        </div>
+
+                                        index++;
+                                    }
+                                }
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 grand-total-panel" style="padding: 0 !important; border-left: 1px solid #A7A7A7; border-right: 1px solid #A7A7A7;">
+                            <div class="budget-detail-item" style="@customColumnHeader">
+                                @* grand total by sales category *@
+                                <div class="Area_Category_Sales @classShowOrHiddenSalesSection">
+                                @{
+                                    index = 0;
+                                    foreach (System.Data.DataRow dataRow in salesTable.Rows)
+                                    {
+                                        // grand total row: data row by category id
+                                        var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+
+                                        var grandTotalRowProjectionSalesName = "GrandTotalRow_ProjectionSales_" + budgetTab.TabIndex + "_" + index;
+                                        var grandTotalRowProjectionPercentName = "GrandTotalRow_ProjectionPercent_" + budgetTab.TabIndex + "_" + index;
+                                        var grandTotalRowActualSalesName = "GrandTotalRow_ActualSales_" + budgetTab.TabIndex + "_" + index;
+                                        var grandTotalRowActualPercentName = "GrandTotalRow_ActualPercent_" + budgetTab.TabIndex + "_" + index;
+                                        var grandTotalRowVarianceSalesName = "GrandTotalRow_VarianceSales_" + budgetTab.TabIndex + "_" + index;
+                                        var grandTotalRowVariancePercentName = "GrandTotalRow_VariancePercent_" + budgetTab.TabIndex + "_" + index;
+
+                                        var totalProjectionSales = Convert.ToDecimal(dataRow["GrandTotal_ProjectionSales"]);
+                                        var totalProjectionPercent = (grandTotalProjectionSalesBySectionSales == 0) ? 0 : totalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales;
+                                        var totalActualSales = Convert.ToDecimal(dataRow["GrandTotal_ActualSales"]);
+                                        var totalActualPercent = Convert.ToDecimal(dataRow["GrandTotal_ActualPercent"]);
+                                        var totalVarianceSales = Convert.ToDecimal(dataRow["GrandTotal_VarianceSales"]);
+                                        var totalVariancePercent = Convert.ToDecimal(dataRow["GrandTotal_VariancePercent"]);
+                                        newStyleColor = string.Format("{0:C}", totalVarianceSales) == "$0.00" ? "color: black" : (totalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="grand-total-category-by-row">
+                                            <div class="text-center budget-item" style="@formatRow">
+                                                <input class="bcs-currency-textbox" category-setting-id="@dataRow["CategorySettingId"]" category-name="@dataRow["CategoryName"]" id="@grandTotalRowProjectionSalesName" value="@string.Format("{0:C}", totalProjectionSales)" re-value="@totalProjectionSales" readonly="readonly" />
+                                                <input class="bcs-percent-textbox" id="@grandTotalRowProjectionPercentName" value="@string.Format("{0:#,##0.00}%", totalProjectionPercent)" re-value="@totalProjectionPercent" readonly="readonly" />
+                                            </div>
+                                            <div class="text-center budget-item actual-div" style="@formatRow">
+                                                <input class="bcs-currency-textbox" id="@grandTotalRowActualSalesName" value="@string.Format("{0:C}", totalActualSales)" re-value="@totalActualSales" readonly="readonly" />
+                                                <input class="bcs-percent-textbox" id="@grandTotalRowActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", totalActualPercent)" re-value="@totalActualPercent" readonly="readonly" />
+                                            </div>
+                                            <div class="text-center budget-item variance-div" style="@formatRow">
+                                                <input class="bcs-currency-textbox" id="@grandTotalRowVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (totalVarianceSales))" readonly="readonly" />
+                                                <input class="bcs-percent-textbox" id="@grandTotalRowVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (totalVariancePercent))" readonly="readonly" />
+                                            </div>
+                                        </div>
+
+                                        index++;
+                                    }
+                                }
+                                </div>
+
+                                @* grand total COGS*@
+                                <div class="grand-total-sales @classShowOrHiddenCogsSection">
+                                    @{
+                                        // get grand total actual sales of section Sales
+                                        var actualSalesOfSalesSection = budgetTab.SalesTotal.Sum(s => s.ActualSales);
+
+                                        grandTotalProjectionSalesName = "COGS_GrandTotal__ProjectionSales_" + budgetTab.TabIndex;
+                                        grandTotalProjectionPercentName = "COGS_GrandTotal__ProjectionPercent_" + budgetTab.TabIndex;
+                                        grandTotalActualSalesName = "COGS_GrandTotal__ActualSales_" + budgetTab.TabIndex;
+                                        grandTotalActualPercentName = "COGS_GrandTotal__ActualPercent_" + budgetTab.TabIndex;
+                                        grandTotalVarianceSalesName = "COGS_GrandTotal__VarianceSales_" + budgetTab.TabIndex;
+                                        grandTotalVariancePercentName = "COGS_GrandTotal__VariancePercent_" + budgetTab.TabIndex;
+
+                                        var grandTotalProjectionSales = budgetTab.CogsTotal.Sum(s => s.ProjectionSales);
+                                        grandTotalProjectionPercent = actualSalesOfSalesSection == 0 ? 0 : (grandTotalProjectionSales * 100 / actualSalesOfSalesSection);
+                                        grandTotalActualSales = budgetTab.CogsTotal.Sum(s => s.ActualSales);
+                                        grandTotalActualPercent = actualSalesOfSalesSection == 0 ? 0 : (grandTotalActualSales * 100 / actualSalesOfSalesSection);
+                                        grandTotalVarianceSales = grandTotalProjectionSales - grandTotalActualSales;
+                                        grandTotalVariancePercent = grandTotalProjectionPercent - grandTotalActualPercent;
+                                        newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="text-center header-format budget-item">
+                                            <input class="bcs-currency-textbox" id="@grandTotalProjectionSalesName" value="@string.Format("{0:C}", grandTotalProjectionSales)" re-value="@grandTotalProjectionSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" re-value="@grandTotalProjectionPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item actual-div">
+                                            <input class="bcs-currency-textbox" id="@grandTotalActualSalesName" value="@string.Format("{0:C}", grandTotalActualSales)" re-value="@grandTotalActualSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" re-value="@grandTotalActualPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item variance-div">
+                                            <input class="bcs-currency-textbox" id="@grandTotalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                                        </div>
+                                    }
+                                </div>
+
+                                @* grand total by cogs category *@
+                                <div class="Area_Category_COGS @classShowOrHiddenCogsSection">
+                                    @{
+                                        index = 0;
+                                        foreach (System.Data.DataRow dataRow in cogsTable.Rows)
+                                        {
+                                            // grand total row: data row by category id
+                                            var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+
+                                            var grandTotalRowProjectionSalesName = "COGS_GrandTotalRow_ProjectionSales_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowProjectionPercentName = "COGS_GrandTotalRow_ProjectionPercent_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowActualSalesName = "COGS_GrandTotalRow_ActualSales_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowActualPercentName = "COGS_GrandTotalRow_ActualPercent_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowVarianceSalesName = "COGS_GrandTotalRow_VarianceSales_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowVariancePercentName = "COGS_GrandTotalRow_VariancePercent_" + budgetTab.TabIndex + "_" + index;
+
+                                            var totalProjectionSales = Convert.ToDecimal(dataRow["GrandTotal_ProjectionSales"]);
+                                            var totalProjectionPercent = Convert.ToDecimal(dataRow["GrandTotal_ProjectionPercent"]);
+                                            var totalActualSales = Convert.ToDecimal(dataRow["GrandTotal_ActualSales"]);
+                                            var totalActualPercent = Convert.ToDecimal(dataRow["GrandTotal_ActualPercent"]);
+                                            var totalVarianceSales = Convert.ToDecimal(dataRow["GrandTotal_VarianceSales"]);
+                                            var totalVariancePercent = Convert.ToDecimal(dataRow["GrandTotal_VariancePercent"]);
+                                            newStyleColor = string.Format("{0:C}", totalVarianceSales) == "$0.00" ? "color: black" : (totalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                            <div class="grand-total-category-by-row">
+                                                <div class="text-center budget-item" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" category-setting-id="@dataRow["CategorySettingId"]" category-name="@dataRow["CategoryName"]" id="@grandTotalRowProjectionSalesName" value="@string.Format("{0:C}", totalProjectionSales)" re-value="@totalProjectionSales" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@grandTotalRowProjectionPercentName" value="@string.Format("{0:#,##0.00}%", totalProjectionPercent)" re-value="@totalProjectionPercent" readonly="readonly" />
+                                                </div>
+                                                <div class="text-center budget-item actual-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" id="@grandTotalRowActualSalesName" value="@string.Format("{0:C}", totalActualSales)" re-value="@totalActualSales" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@grandTotalRowActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", totalActualPercent)" re-value="@totalActualPercent" readonly="readonly" />
+                                                </div>
+                                                <div class="text-center budget-item variance-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" id="@grandTotalRowVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (totalVarianceSales))" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@grandTotalRowVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (totalVariancePercent))" readonly="readonly" />
+                                                </div>
+                                            </div>
+
+                                            index++;
+                                        }
+                                    }
+                                </div>
+
+                                @* grand total payroll expenses*@
+                                <div class="grand-total-sales @classShowOrHiddenPayrollExpensesSection">
+                                    @{
+                                        grandTotalProjectionSalesName = "All_Payroll_Expenses_GrandTotal__ProjectionSales_" + budgetTab.TabIndex;
+                                        grandTotalProjectionPercentName = "All_Payroll_Expenses_GrandTotal__ProjectionPercent_" + budgetTab.TabIndex;
+                                        grandTotalActualSalesName = "All_Payroll_Expenses_GrandTotal__ActualSales_" + budgetTab.TabIndex;
+                                        grandTotalActualPercentName = "All_Payroll_Expenses_GrandTotal__ActualPercent_" + budgetTab.TabIndex;
+                                        grandTotalVarianceSalesName = "All_Payroll_Expenses_GrandTotal__VarianceSales_" + budgetTab.TabIndex;
+                                        grandTotalVariancePercentName = "All_Payroll_Expenses_GrandTotal__VariancePercent_" + budgetTab.TabIndex;
+
+                                        grandTotalProjectionSales = budgetTab.PayrollAllTotal.Sum(s => s.ProjectionSales);
+                                        grandTotalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : (grandTotalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales);
+                                        grandTotalActualSales = budgetTab.PayrollAllTotal.Sum(s => s.ActualSales);
+                                        grandTotalActualPercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalActualSales * 100 / grandTotalProjectionSales);
+                                        grandTotalVarianceSales = grandTotalProjectionSales - grandTotalActualSales;
+                                        grandTotalVariancePercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalVarianceSales * 100 / grandTotalProjectionSales);
+                                        newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="text-center header-format budget-item">
+                                            <input class="bcs-currency-textbox" id="@grandTotalProjectionSalesName" value="@string.Format("{0:C}", grandTotalProjectionSales)" re-value="@grandTotalProjectionSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" re-value="@grandTotalProjectionPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item actual-div">
+                                            <input class="bcs-currency-textbox" id="@grandTotalActualSalesName" value="@string.Format("{0:C}", grandTotalActualSales)" re-value="@grandTotalActualSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" re-value="@grandTotalActualPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item variance-div">
+                                            <input class="bcs-currency-textbox" id="@grandTotalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                                        </div>
+                                    }
+                                </div>
+
+                                @* grand total by payroll expenses category *@
+                                <div class="Area_Category_Payroll_Expenses @classShowOrHiddenPayrollExpensesSection">
+                                    @{
+                                        index = 0;
+                                        foreach (System.Data.DataRow dataRow in payrollTable.Rows)
+                                        {
+                                            // grand total row: data row by category id
+                                            var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+
+                                            var grandTotalRowProjectionSalesName = "Payroll_Expenses_GrandTotalRow_ProjectionSales_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowProjectionPercentName = "Payroll_Expenses_GrandTotalRow_ProjectionPercent_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowActualSalesName = "Payroll_Expenses_GrandTotalRow_ActualSales_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowActualPercentName = "Payroll_Expenses_GrandTotalRow_ActualPercent_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowVarianceSalesName = "Payroll_Expenses_GrandTotalRow_VarianceSales_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowVariancePercentName = "Payroll_Expenses_GrandTotalRow_VariancePercent_" + budgetTab.TabIndex + "_" + index;
+
+                                            var totalProjectionSales = Convert.ToDecimal(dataRow["GrandTotal_ProjectionSales"]);
+                                            var totalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : (totalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales);
+                                            var totalActualSales = Convert.ToDecimal(dataRow["GrandTotal_ActualSales"]);
+                                            var totalActualPercent = Convert.ToDecimal(dataRow["GrandTotal_ActualPercent"]);
+                                            var totalVarianceSales = Convert.ToDecimal(dataRow["GrandTotal_VarianceSales"]);
+                                            var totalVariancePercent = Convert.ToDecimal(dataRow["GrandTotal_VariancePercent"]);
+                                            newStyleColor = string.Format("{0:C}", totalVarianceSales) == "$0.00" ? "color: black" : (totalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                            <div class="grand-total-category-by-row">
+                                                <div class="text-center budget-item" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" category-setting-id="@dataRow["CategorySettingId"]" category-name="@dataRow["CategoryName"]" id="@grandTotalRowProjectionSalesName" value="@string.Format("{0:C}", totalProjectionSales)" re-value="@totalProjectionSales" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@grandTotalRowProjectionPercentName" value="@string.Format("{0:#,##0.00}%", totalProjectionPercent)" re-value="@totalProjectionPercent" readonly="readonly" />
+                                                </div>
+                                                <div class="text-center budget-item actual-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" id="@grandTotalRowActualSalesName" value="@string.Format("{0:C}", totalActualSales)" re-value="@totalActualSales" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@grandTotalRowActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", totalActualPercent)" re-value="@totalActualPercent" readonly="readonly" />
+                                                </div>
+                                                <div class="text-center budget-item variance-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" id="@grandTotalRowVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (totalVarianceSales))" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@grandTotalRowVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (totalVariancePercent))" readonly="readonly" />
+                                                </div>
+                                            </div>
+
+                                            index++;
+                                        }
+                                    }
+
+                                    <div class="grand-total-sales">
+                                    @{
+                                        grandTotalProjectionSalesName = "Payroll_Expenses_GrandTotal__ProjectionSales_" + budgetTab.TabIndex;
+                                        grandTotalProjectionPercentName = "Payroll_Expenses_GrandTotal__ProjectionPercent_" + budgetTab.TabIndex;
+                                        grandTotalActualSalesName = "Payroll_Expenses_GrandTotal__ActualSales_" + budgetTab.TabIndex;
+                                        grandTotalActualPercentName = "Payroll_Expenses_GrandTotal__ActualPercent_" + budgetTab.TabIndex;
+                                        grandTotalVarianceSalesName = "Payroll_Expenses_GrandTotal__VarianceSales_" + budgetTab.TabIndex;
+                                        grandTotalVariancePercentName = "Payroll_Expenses_GrandTotal__VariancePercent_" + budgetTab.TabIndex;
+
+                                        grandTotalProjectionSales = budgetTab.PayrollTotal.Sum(s => s.ProjectionSales);
+                                        grandTotalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : (grandTotalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales);
+                                        grandTotalActualSales = budgetTab.PayrollTotal.Sum(s => s.ActualSales);
+                                        grandTotalActualPercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalActualSales * 100 / grandTotalProjectionSales);
+                                        grandTotalVarianceSales = grandTotalProjectionSales - grandTotalActualSales;
+                                        grandTotalVariancePercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalVarianceSales * 100 / grandTotalProjectionSales);
+                                        newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="text-center header-format budget-item">
+                                            <input class="bcs-currency-textbox" id="@grandTotalProjectionSalesName" value="@string.Format("{0:C}", grandTotalProjectionSales)" re-value="@grandTotalProjectionSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" re-value="@grandTotalProjectionPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item actual-div">
+                                            <input class="bcs-currency-textbox" id="@grandTotalActualSalesName" value="@string.Format("{0:C}", grandTotalActualSales)" re-value="@grandTotalActualSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" re-value="@grandTotalActualPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item variance-div">
+                                            <input class="bcs-currency-textbox" id="@grandTotalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                                        </div>
+                                    }
+                                    </div>
+
+                                    @{
+                                        index = 0;
+                                        foreach (System.Data.DataRow dataRow in payrollIsTaxTable.Rows)
+                                        {
+                                            // grand total row: data row by category id
+                                            var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+
+                                            var grandTotalRowProjectionSalesName = "IsTax_Payroll_Expenses_GrandTotalRow_ProjectionSales_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowProjectionPercentName = "IsTax_Payroll_Expenses_GrandTotalRow_ProjectionPercent_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowActualSalesName = "IsTax_Payroll_Expenses_GrandTotalRow_ActualSales_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowActualPercentName = "IsTax_Payroll_Expenses_GrandTotalRow_ActualPercent_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowVarianceSalesName = "IsTax_Payroll_Expenses_GrandTotalRow_VarianceSales_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowVariancePercentName = "IsTax_Payroll_Expenses_GrandTotalRow_VariancePercent_" + budgetTab.TabIndex + "_" + index;
+
+                                            var totalProjectionSales = Convert.ToDecimal(dataRow["GrandTotal_ProjectionSales"]);
+                                            var totalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : (totalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales);
+                                            var totalActualSales = Convert.ToDecimal(dataRow["GrandTotal_ActualSales"]);
+                                            var totalActualPercent = Convert.ToDecimal(dataRow["GrandTotal_ActualPercent"]);
+                                            var totalVarianceSales = Convert.ToDecimal(dataRow["GrandTotal_VarianceSales"]);
+                                            var totalVariancePercent = Convert.ToDecimal(dataRow["GrandTotal_VariancePercent"]);
+                                            newStyleColor = string.Format("{0:C}", totalVarianceSales) == "$0.00" ? "color: black" : (totalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                            <div class="grand-total-category-by-row">
+                                                <div class="text-center budget-item" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" category-setting-id="@dataRow["CategorySettingId"]" category-name="@dataRow["CategoryName"]" id="@grandTotalRowProjectionSalesName" value="@string.Format("{0:C}", totalProjectionSales)" re-value="@totalProjectionSales" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@grandTotalRowProjectionPercentName" value="@string.Format("{0:#,##0.00}%", totalProjectionPercent)" re-value="@totalProjectionPercent" readonly="readonly" />
+                                                </div>
+                                                <div class="text-center budget-item actual-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" id="@grandTotalRowActualSalesName" value="@string.Format("{0:C}", totalActualSales)" re-value="@totalActualSales" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@grandTotalRowActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", totalActualPercent)" re-value="@totalActualPercent" readonly="readonly" />
+                                                </div>
+                                                <div class="text-center budget-item variance-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" id="@grandTotalRowVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (totalVarianceSales))" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@grandTotalRowVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (totalVariancePercent))" readonly="readonly" />
+                                                </div>
+                                            </div>
+
+                                            index++;
+                                        }
+                                    }
+
+                                    <div class="grand-total-sales">
+                                    @{
+                                        grandTotalProjectionSalesName = "IsTax_Payroll_Expenses_GrandTotal__ProjectionSales_" + budgetTab.TabIndex;
+                                        grandTotalProjectionPercentName = "IsTax_Payroll_Expenses_GrandTotal__ProjectionPercent_" + budgetTab.TabIndex;
+                                        grandTotalActualSalesName = "IsTax_Payroll_Expenses_GrandTotal__ActualSales_" + budgetTab.TabIndex;
+                                        grandTotalActualPercentName = "IsTax_Payroll_Expenses_GrandTotal__ActualPercent_" + budgetTab.TabIndex;
+                                        grandTotalVarianceSalesName = "IsTax_Payroll_Expenses_GrandTotal__VarianceSales_" + budgetTab.TabIndex;
+                                        grandTotalVariancePercentName = "IsTax_Payroll_Expenses_GrandTotal__VariancePercent_" + budgetTab.TabIndex;
+
+                                        grandTotalProjectionSales = budgetTab.PayrollIsTaxTotal.Sum(s => s.ProjectionSales);
+                                        grandTotalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : (grandTotalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales);
+                                        grandTotalActualSales = budgetTab.PayrollIsTaxTotal.Sum(s => s.ActualSales);
+                                        grandTotalActualPercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalActualSales * 100 / grandTotalProjectionSales);
+                                        grandTotalVarianceSales = grandTotalProjectionSales - grandTotalActualSales;
+                                        grandTotalVariancePercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalVarianceSales * 100 / grandTotalProjectionSales);
+                                        newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="text-center header-format budget-item">
+                                            <input class="bcs-currency-textbox" id="@grandTotalProjectionSalesName" value="@string.Format("{0:C}", grandTotalProjectionSales)" re-value="@grandTotalProjectionSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" re-value="@grandTotalProjectionPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item actual-div">
+                                            <input class="bcs-currency-textbox" id="@grandTotalActualSalesName" value="@string.Format("{0:C}", grandTotalActualSales)" re-value="@grandTotalActualSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" re-value="@grandTotalActualPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item variance-div">
+                                            <input class="bcs-currency-textbox" id="@grandTotalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                                        </div>
+                                    }
+                                    </div>
+                                </div>
+
+                                @* grand total Operation*@
+                                <div class="grand-total-sales @classShowOrHiddenOperationSection">
+                                    @{
+                                        grandTotalProjectionSalesName = "Operation_Expenses_GrandTotal__ProjectionSales_" + budgetTab.TabIndex;
+                                        grandTotalProjectionPercentName = "Operation_Expenses_GrandTotal__ProjectionPercent_" + budgetTab.TabIndex;
+                                        grandTotalActualSalesName = "Operation_Expenses_GrandTotal__ActualSales_" + budgetTab.TabIndex;
+                                        grandTotalActualPercentName = "Operation_Expenses_GrandTotal__ActualPercent_" + budgetTab.TabIndex;
+                                        grandTotalVarianceSalesName = "Operation_Expenses_GrandTotal__VarianceSales_" + budgetTab.TabIndex;
+                                        grandTotalVariancePercentName = "Operation_Expenses_GrandTotal__VariancePercent_" + budgetTab.TabIndex;
+
+                                        grandTotalProjectionSales = budgetTab.OperationTotal.Sum(s => s.ProjectionSales);
+                                        grandTotalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : (grandTotalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales);
+                                        grandTotalActualSales = budgetTab.OperationTotal.Sum(s => s.ActualSales);
+                                        grandTotalActualPercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalActualSales * 100 / grandTotalProjectionSales);
+                                        grandTotalVarianceSales = grandTotalProjectionSales - grandTotalActualSales;
+                                        grandTotalVariancePercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalVarianceSales * 100 / grandTotalProjectionSales);
+                                        newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="text-center header-format budget-item">
+                                            <input class="bcs-currency-textbox" id="@grandTotalProjectionSalesName" value="@string.Format("{0:C}", grandTotalProjectionSales)" re-value="@grandTotalProjectionSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" re-value="@grandTotalProjectionPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item actual-div">
+                                            <input class="bcs-currency-textbox" id="@grandTotalActualSalesName" value="@string.Format("{0:C}", grandTotalActualSales)" re-value="@grandTotalActualSales" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" re-value="@grandTotalActualPercent" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center header-format budget-item variance-div">
+                                            <input class="bcs-currency-textbox" id="@grandTotalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" id="@grandTotalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                                        </div>
+                                    }
+                                </div>
+
+                                @* grand total by operation category *@
+                                <div class="Area_Category_Operation_Expenses @classShowOrHiddenOperationSection">
+                                    @{
+                                        index = 0;
+                                        foreach (System.Data.DataRow dataRow in operationTable.Rows)
+                                        {
+                                            // grand total row: data row by category id
+                                            var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+
+                                            var grandTotalRowProjectionSalesName = "Operation_Expenses_GrandTotalRow_ProjectionSales_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowProjectionPercentName = "Operation_Expenses_GrandTotalRow_ProjectionPercent_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowActualSalesName = "Operation_Expenses_GrandTotalRow_ActualSales_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowActualPercentName = "Operation_Expenses_GrandTotalRow_ActualPercent_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowVarianceSalesName = "Operation_Expenses_GrandTotalRow_VarianceSales_" + budgetTab.TabIndex + "_" + index;
+                                            var grandTotalRowVariancePercentName = "Operation_Expenses_GrandTotalRow_VariancePercent_" + budgetTab.TabIndex + "_" + index;
+
+                                            var totalProjectionSales = Convert.ToDecimal(dataRow["GrandTotal_ProjectionSales"]);
+                                            var totalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : (totalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales);
+                                            var totalActualSales = Convert.ToDecimal(dataRow["GrandTotal_ActualSales"]);
+                                            var totalActualPercent = Convert.ToDecimal(dataRow["GrandTotal_ActualPercent"]);
+                                            var totalVarianceSales = Convert.ToDecimal(dataRow["GrandTotal_VarianceSales"]);
+                                            var totalVariancePercent = Convert.ToDecimal(dataRow["GrandTotal_VariancePercent"]);
+                                            newStyleColor = string.Format("{0:C}", totalVarianceSales) == "$0.00" ? "color: black" : (totalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                            <div class="grand-total-category-by-row">
+                                                <div class="text-center budget-item" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" category-setting-id="@dataRow["CategorySettingId"]" category-name="@dataRow["CategoryName"]" id="@grandTotalRowProjectionSalesName" value="@string.Format("{0:C}", totalProjectionSales)" re-value="@totalProjectionSales" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@grandTotalRowProjectionPercentName" value="@string.Format("{0:#,##0.00}%", totalProjectionPercent)" re-value="@totalProjectionPercent" readonly="readonly" />
+                                                </div>
+                                                <div class="text-center budget-item actual-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" id="@grandTotalRowActualSalesName" value="@string.Format("{0:C}", totalActualSales)" re-value="@totalActualSales" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@grandTotalRowActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", totalActualPercent)" re-value="@totalActualPercent" readonly="readonly" />
+                                                </div>
+                                                <div class="text-center budget-item variance-div" style="@formatRow">
+                                                    <input class="bcs-currency-textbox" id="@grandTotalRowVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (totalVarianceSales))" readonly="readonly" />
+                                                    <input class="bcs-percent-textbox" id="@grandTotalRowVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (totalVariancePercent))" readonly="readonly" />
+                                                </div>
+                                            </div>
+
+                                            index++;
+                                        }
+                                    }
+                                </div>
+
+                                @* grand total profit loss*@
+                                <div class="grand-total-sales">
+                                @{
+                                    grandTotalProjectionSalesName = "Profit_Loss_GrandTotal__ProjectionSales_" + budgetTab.TabIndex;
+                                    grandTotalProjectionPercentName = "Profit_Loss_GrandTotal__ProjectionPercent_" + budgetTab.TabIndex;
+                                    grandTotalActualSalesName = "Profit_Loss_GrandTotal__ActualSales_" + budgetTab.TabIndex;
+                                    grandTotalActualPercentName = "Profit_Loss_GrandTotal__ActualPercent_" + budgetTab.TabIndex;
+                                    grandTotalVarianceSalesName = "Profit_Loss_GrandTotal__VarianceSales_" + budgetTab.TabIndex;
+                                    grandTotalVariancePercentName = "Profit_Loss_GrandTotal__VariancePercent_" + budgetTab.TabIndex;
+
+                                    grandTotalProjectionSales = budgetTab.ProfitLossTotal.Sum(s => s.ProjectionSales);
+                                    grandTotalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : grandTotalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales;
+                                    grandTotalActualSales = budgetTab.ProfitLossTotal.Sum(s => s.ActualSales);
+                                    grandTotalActualPercent = (grandTotalProjectionSales == 0) ? 0 : grandTotalActualSales * 100 / grandTotalProjectionSales;
+                                    grandTotalVarianceSales = grandTotalActualSales - grandTotalProjectionSales;
+                                    grandTotalVariancePercent = (grandTotalProjectionSales == 0) ? 0 : grandTotalVarianceSales * 100 / grandTotalProjectionSales;
+                                    newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                    <div class="text-center header-format budget-item">
+                                        <input class="bcs-currency-textbox" id="@grandTotalProjectionSalesName" value="@string.Format("{0:C}", grandTotalProjectionSales)" re-value="@grandTotalProjectionSales" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" id="@grandTotalProjectionPercentName" value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" re-value="@grandTotalProjectionPercent" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item actual-div">
+                                        <input class="bcs-currency-textbox" id="@grandTotalActualSalesName" value="@string.Format("{0:C}", grandTotalActualSales)" re-value="@grandTotalActualSales" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" id="@grandTotalActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" re-value="@grandTotalActualPercent" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item variance-div">
+                                        <input class="bcs-currency-textbox" id="@grandTotalVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" id="@grandTotalVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                                    </div>
+                                }
+                                </div>
+
+                                @* grand total by profit loss category *@
+                                <div class="Area_Category_Profit_Loss">
+                                @{
+                                    index = 0;
+                                    foreach (System.Data.DataRow dataRow in profitLossTable.Rows)
+                                    {
+                                        // grand total row: data row by category id
+                                        var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+
+                                        var grandTotalRowProjectionSalesName = "Profit_Loss_GrandTotalRow_ProjectionSales_" + budgetTab.TabIndex + "_" + index;
+                                        var grandTotalRowProjectionPercentName = "Profit_Loss_GrandTotalRow_ProjectionPercent_" + budgetTab.TabIndex + "_" + index;
+                                        var grandTotalRowActualSalesName = "Profit_Loss_GrandTotalRow_ActualSales_" + budgetTab.TabIndex + "_" + index;
+                                        var grandTotalRowActualPercentName = "Profit_Loss_GrandTotalRow_ActualPercent_" + budgetTab.TabIndex + "_" + index;
+                                        var grandTotalRowVarianceSalesName = "Profit_Loss_GrandTotalRow_VarianceSales_" + budgetTab.TabIndex + "_" + index;
+                                        var grandTotalRowVariancePercentName = "Profit_Loss_GrandTotalRow_VariancePercent_" + budgetTab.TabIndex + "_" + index;
+
+                                        var totalProjectionSales = Convert.ToDecimal(dataRow["GrandTotal_ProjectionSales"]);
+                                        var totalProjectionPercent = Convert.ToDecimal(dataRow["GrandTotal_ProjectionPercent"]);
+                                        var totalActualSales = Convert.ToDecimal(dataRow["GrandTotal_ActualSales"]);
+                                        var totalActualPercent = Convert.ToDecimal(dataRow["GrandTotal_ActualPercent"]);
+                                        var totalVarianceSales = Convert.ToDecimal(dataRow["GrandTotal_VarianceSales"]);
+                                        var totalVariancePercent = Convert.ToDecimal(dataRow["GrandTotal_VariancePercent"]);
+                                        newStyleColor = string.Format("{0:C}", totalVarianceSales) == "$0.00" ? "color: black" : (totalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="grand-total-category-by-row">
+                                            <div class="text-center budget-item" style="@formatRow">
+                                                <input class="bcs-currency-textbox" id="@grandTotalRowProjectionSalesName" value="@string.Format("{0:C}", totalProjectionSales)" re-value="@totalProjectionSales" category-setting-id="@dataRow["CategorySettingId"]" category-name="@dataRow["CategoryName"]" readonly="readonly" />
+                                                <input class="bcs-percent-textbox" id="@grandTotalRowProjectionPercentName" value="@string.Format("{0:#,##0.00}%", totalProjectionPercent)" re-value="@totalProjectionPercent" readonly="readonly" />
+                                            </div>
+                                            <div class="text-center budget-item actual-div" style="@formatRow">
+                                                <input class="bcs-currency-textbox" id="@grandTotalRowActualSalesName" value="@string.Format("{0:C}", totalActualSales)" re-value="@totalActualSales" readonly="readonly" />
+                                                <input class="bcs-percent-textbox" id="@grandTotalRowActualPercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", totalActualPercent)" re-value="@totalActualPercent" readonly="readonly" />
+                                            </div>
+                                            <div class="text-center budget-item variance-div" style="@formatRow">
+                                                <input class="bcs-currency-textbox" id="@grandTotalRowVarianceSalesName" style="@newStyleColor" value="@string.Format("{0:C}", (totalVarianceSales))" readonly="readonly" />
+                                                <input class="bcs-percent-textbox" id="@grandTotalRowVariancePercentName" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (totalVariancePercent))" readonly="readonly" />
+                                            </div>
+                                        </div>
+
+                                        index++;
+                                    }
+                                }
+                                </div>
+
+                            </div>
+                        </div>
+                        </div>
+
+                        // write footer scroll
+                        <div class="col-xs-12 footer-area" style="padding: 0px;">
+                            <div class="col-xs-2"><span></span></div>
+                            @* header row*@
+                            <div class="col-xs-7" style="padding: 0px">
+                                <div class="budget-item-container">
+                                    <div class="budget-item-container" style="height: 1px;@tableWidth">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-3 grand-total-panel"><span></span></div>
+                        </div>
+                    }
+                    </div>
+                </div>
+            }}
+            </div>
+        </div>
+    }
+    </div>
+</div>
+
+<div id="headerContextMenu" style="display: none;">
+    <div class="col-xs-12" style="border-bottom: 1px solid #A7A7A7; padding: 10px;">
+        <div><a onclick="contextMenuAction(this);" menu-name="headerMenu_UserBudgetBasis"><span>Use as budget basis</span></a></div>
+        <div><a onclick="contextMenuAction(this);" menu-name="headerMenu_UseBudgetBasisAllYears"><span>Use as budget basis (for all years)</span></a></div>
+    </div>
+    <div class="col-xs-12" style="border-bottom: 1px solid #A7A7A7; padding: 10px;">
+        <div><a onclick="contextMenuAction(this);" menu-name="headerMenu_ShowVarianceReport"><span>Show variance report</span></a></div>
+        <div><a onclick="contextMenuAction(this);" menu-name="headerMenu_ShowVarianceReportYear"><span>Show variance report (year budget)</span></a></div>
+    </div>
+    <div class="col-xs-12" style="padding: 10px;">
+        <a onclick="contextMenuAction(this);" menu-name="headerMenu_ImportActualNumber"><span>Import actual number</span></a>
+    </div>
+    <input type="hidden" name="BudgetTabId" value="" />
+    <input type="hidden" name="HeaderName" value="">
+    <input type="hidden" name="BudgetTabIndex" value="" />
+    <input type="hidden" name="HeaderIndex" value="" />
+</div>
+
+<div id="targetContextMenu" style="display: none;">
+    <div class="col-xs-12" style="border-bottom: 1px solid #A7A7A7; padding: 10px;">
+        <div><span name="sectionNameInContextMenu">Category group: Sales</span></div>
+        <div><span name="targetSalesInContextMenu">Total: $0.00</span></div>
+    </div>
+    <div class="col-xs-12" style="padding: 10px;">
+        <a onclick="contextMenuAction(this);" menu-name="targetMenu_ShowVarianceReport"><span>Show variance report</span></a>
+    </div>
+    <input type="hidden" name="BudgetTabIndex" value="" />
+    <input type="hidden" name="HeaderIndex" value="" />
+</div>
+
+<div id="salesContextMenu" style="display: none;">
+    <div class="col-xs-12" style="border-bottom: 1px solid #A7A7A7; padding: 10px;">
+        <div><span name="sectionNameInContextMenu">Category group: Sales</span></div>
+        <div><span name="totalSalesInContextMenu">Total: $0.00</span></div>
+    </div>
+    <div class="col-xs-12 sales-menu-use-budget" style="border-bottom: 1px solid #A7A7A7; padding: 10px;">
+        <div><a onclick="contextMenuAction(this);" menu-name="salesMenu_UseBudgetBasis"><span>Use as budget basis</span></a></div>
+        <div><a onclick="contextMenuAction(this);" menu-name="salesMenu_UseBudgetBasisAllYears"><span>Use as budget basis (for all years)</span></a></div>
+    </div>
+    <div class="col-xs-12" style="padding: 10px;">
+        <div><a onclick="contextMenuAction(this);" menu-name="salesMenu_ShowVarianceReport"><span>Show variance report</span></a></div>
+        <div><a onclick="contextMenuAction(this);" menu-name="salesMenu_ShowVarianceReportGroupMonths"><span>Show variance report (group months)</span></a></div>
+    </div>
+    <input type="hidden" name="BudgetTabIndex" value="" />
+    <input type="hidden" name="HeaderIndex" value="" />
+    <input type="hidden" name="CopyItemName" value="" />
+    <input type="hidden" name="SectionName" value="" />
+</div>
+
+<div id="projectionItemContextMenu" style="display: none;">
+    <div class="col-xs-12" style="border-bottom: 1px solid #A7A7A7; padding: 10px; white-space: nowrap;">
+        <div><span name="sectionNameInContextMenu">Category group: Sales</span></div>
+        <div><span name="categoryNameInContextMenu">Category: </span></div>
+        <div><span name="headerNameInContextMenu">Month: header name</span>&emsp;&emsp;&emsp;<span name="projectionSalesInContextMenu">Total: $0.00</span></div>
+    </div>
+    <div class="col-xs-12" style="border-bottom: 1px solid #A7A7A7; padding: 10px;">
+        <a onclick="contextMenuAction(this);" menu-name="projectionItem_ShowVarianceReport"><span>Show variance report</span></a>
+    </div>
+    <div class="col-xs-12 projection-menu-use-budget" style="padding: 10px;">
+        <div><a onclick="contextMenuAction(this);" menu-name="projectionItem_UseBudgetBasisColumn"><span>Use as budget basis (columns)</span></a></div>
+        <div><a onclick="contextMenuAction(this);" menu-name="projectionItem_UseBudgetBasisColumnAllYears"><span>Use as budget basis (columns, for all years)</span></a></div>
+    </div>
+    <input type="hidden" name="CopyItemName" value="" />
+    <input type="hidden" name="CategorySettingId" value="" />
+    <input type="hidden" name="BudgetTabIndex" value="" />
+    <input type="hidden" name="HeaderIndex" value="" />
+</div>
+
+<div id="categoryItemContextMenu" style="display: none;">
+    <div class="col-xs-12" style="border-bottom: 1px solid #A7A7A7; padding: 10px;white-space: nowrap;">
+        <div><span name="sectionNameInContextMenu">Category group: Sales</span></div>
+        <div><span name="categoryNameInContextMenu">Category: </span></div>
+        <div><span name="grandTotalProjectionSalesInContextMenu">Grand Total: $0.00</span></div>
+    </div>
+    <div class="col-xs-12" style="border-bottom: 1px solid #A7A7A7; padding: 10px;">
+        <div><a onclick="contextMenuAction(this);" menu-name="categoryMenu_PrimeCost" style="display: none;"><span>Prime Cost</span></a></div>
+        <div><a onclick="contextMenuAction(this);" menu-name="categoryMenu_TrendLine"><span>Show in Trend line</span></a></div>
+        <div class="sales-category-mapping" style="display: none">
+            <nav>
+                <ul class="nav">
+                    <li class="dropright">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <span style="font-weight: normal; font-size: 10pt;">Sales Category</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-default">
+                            @{
+                                var salesCategoryParent = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_SALES_TEXT);
+                                var salesCategoryChildren = Model.CategorySettingModelList.Where(s => s.ParentCategoryId == salesCategoryParent.CategorySettingId).OrderBy(s => s.SortOrder).ToList<CategorySettingModel>();
+                                foreach (var item in salesCategoryChildren)
+                                {
+                                    <li><a onclick="contextMenuAction(this);" menu-name="categoryMenu_ChangeSalesCategoryRefId" sales-category-id="@item.CategorySettingId"><span>@item.CategoryName</span></a></li>
+                                }
+                            }
+                            <li class="divider"></li>
+                            <li><a onclick="contextMenuAction(this);" menu-name="categoryMenu_ChangeSalesCategoryRefId" sales-category-id="0"><span>Total Sales</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="col-xs-12" style="border-bottom: 1px solid #A7A7A7; padding: 10px;">
+        <a onclick="contextMenuAction(this);" menu-name="categoryMenu_ShowVarianceReport"><span>Show variance report</span></a>
+    </div>
+    <div class="col-xs-12" style="padding: 10px;">
+        <a onclick="contextMenuAction(this);" menu-name="categoryMenu_ShowEditCategory"><span>Edit Category</span></a>
+    </div>
+    <input type="hidden" name="BudgetTabIndex" value="" />
+    <input type="hidden" name="ParentCategorySettingId" value="" />
+    <input type="hidden" name="SalesCategoryRefId" value="" />
+    <input type="hidden" name="CategorySettingId" value="" />
+    <input type="hidden" name="CategorySettingName" value="" />
+    <input type="hidden" name="IsTaxFlag" value="" />
+    <input type="hidden" name="SectionName" value="" />
+    <input type="hidden" name="HeaderIndex" value="" />
+</div>
+
+<div id="confirmChangeStatusContextMenu" style="display: none; width: 350px !important">
+    <div class="col-xs-12" style="padding: 10px;">
+        <span>The row contains some maually edited numbers.</span>
+        <br />
+        <span>Select which months should be changed.</span>
+    </div>
+    <div class="col-xs-12">
+        <div>
+            <input type="radio" id="radio-change-status-1" name="radio-change-status" value="1" checked="checked" />
+            <label style="font-size: 10pt;" for="radio-change-status-1">All months</label>
+        </div>
+        <div>
+            <input type="radio" id="radio-change-status-2" name="radio-change-status" value="2" />
+            <label style="font-size: 10pt;" for="radio-change-status-2">All months except manually edited months</label>
+        </div>
+        <div>
+            <input type="radio" id="radio-change-status-3" name="radio-change-status" value="3" />
+            <label style="font-size: 10pt;" for="radio-change-status-3">Only manually edited months</label>
+        </div>
+    </div>
+    <div class="col-xs-12 text-right" style="padding: 10px;">
+        @Html.Label("CANCEL", new { @id = "act-accept-no", @class = "btn btn-accept-no", @style = "width: 100px" })
+        @Html.Label("SAVE", new { @id = "act-accept-yes", @class = "btn btn-primary", @style = "width: 100px" })
+    </div>
+    <input type="hidden" name="CategorySettingId" value="" />
+</div>

@@ -1,0 +1,149 @@
+﻿@using Kendo.Mvc.UI
+@using BCS.Web.Models
+@using BCS.Framework.WebExtensions.Grid
+
+@model BCS.Web.Models.CategoryModel
+@Html.HiddenFor(m => m.CategoryId)
+@Html.HiddenFor(m => m.CategoryName)
+
+<style>
+    .k-grid tbody tr .move-item {
+        cursor: move;
+    }
+</style>
+
+<div class="form-group col-xs-12 clearfix" style="margin: 0 auto; -moz-border-radius: 2em">
+    <div class="col-xs-12 text-center category-header-name">
+        @Html.Label("Manage " + Model.CategoryName + " Categories", new { @style = "font-size: 20pt" })
+    </div>
+    <div class="col-xs-12 clearfix" style="background-color: #fff; box-shadow: 0px 0px 5px #888888; border-radius: 3px !important;">
+        <p class="margin-top-20">@Html.Label("Setting " + Model.CategoryName + " categories for your budget:")</p>
+        <ul>
+            <li>@Html.Label("Input method: checked is Percentage (%), unchecked is Dollar ($)")</li>
+            <li>@Html.Label("Add a new category: just at the end of category list")</li>
+            @{
+                if (Model.CategoryName == BCS.Commons.BCSCommonData.CATEGORY_DEFAULT_PAYROLL_EXPENSES_TEXT)
+                {
+                    <li>@Html.Label("Prime Cost is displayed in ")<span style="color: red;"> red</span></li>
+                    <li>@Html.Label("Tax Cost is displayed in Groups")</li>
+                }
+            }
+            <li>@Html.Label("You can Drag & Drop a category to new position number (#)")</li>
+        </ul>
+    </div>
+    <div class="col-xs-12 clearfix margin-top-10 category-setting" style="background-color: #fff; box-shadow: 0px 0px 5px #888888; border-radius: 3px !important;">
+        @(Html.Kendo().Grid<CategoryModel>()
+            .Name("CategoryModelGrid")
+            .Scrollable(s => s.Enabled(true))
+            .Columns(columns =>
+            {
+                columns.Template(p => p.SortOrder).ClientTemplate("<div class='text-center move-item'>#= renderNumber(data) #</div>").Title("#").Width(20);
+                columns.Bound(p => p.CategoryName).Template(@<text>@Html.Raw(HttpUtility.HtmlDecode("#= CategoryName #"))</text>).Title("Category Name").Width(100);
+                columns.Bound(p => p.IsPercentage).ClientTemplate("<div class='text-center'><input type='checkbox' name='IsPercentage' #=IsPercentage ? Checked='Checked' : '' # /></div>").Title("Input Method<br/>x Percentage").Width(50);
+                if (Model.CategoryName == BCS.Constants.Constant.CATEGORY_DEFAULT_PAYROLL_EXPENSES)
+                {
+                    columns.Bound(p => p.IsPrimeCost).ClientTemplate("<div class='text-center'><input type='checkbox' name='IsPrimeCost' #=IsPrimeCost ? Checked='Checked' : '' # /></div>").Title("Is Prime Cost").Width(50);
+                    //columns.Bound(p => p.IsTaxCost).ClientTemplate("<div class='text-center'><input type='checkbox' name='IsTaxCost' #=IsTaxCost ? Checked='Checked' : '' # /></div>").Title("Is Tax Cost").Width(50);
+                }
+                columns.Bound(p => p.CategoryId).ClientTemplate("<div class=\"text-center \"><label class=\"btn-crm btn-crm-action\" title='Delete categories' onclick='deleteCategoriesById(this)'><i class=\"fa fa-trash\"></i></label></div>").Title("Action").Width(30);
+            })
+            .ToolBar(toolbar =>
+            {
+                toolbar.Custom().Text("").HtmlAttributes(new { @title = "Add New Category", @id = "btnAddCategories", @onclick = "addNewCategories()", @class = "btn btn-default btn-crm btn-crm-action fa fa-plus-square-o", @style = "padding-top:10px;height:34px; width:40px" });
+            })
+            .AutoBind(true)
+            .Editable(editable => editable.Mode(GridEditMode.InCell).CreateAt(GridInsertRowPosition.Bottom))
+            .Reorderable(p => p.Columns(true))
+            .Resizable(p => p.Columns(true))
+            .Selectable(s => s.Mode(GridSelectionMode.Single))
+            .Pageable(pageable => pageable.Refresh(false).Enabled(true).PreviousNext(false).Numeric(false).Input(false))
+            .DataSource(dataSource => dataSource.Ajax().PageSize(int.MaxValue)
+                .Model(model =>
+                {
+                    model.Id(p => p.CategoryId);
+                    model.Field(p => p.CategoryId).Editable(false);
+                    model.Field(p => p.SortOrder).Editable(false);
+                    model.Field(p => p.CategoryName).Editable(true);
+                    model.Field(p => p.IsPercentage).Editable(false);
+                    model.Field(p => p.IsPrimeCost).Editable(false);
+                    model.Field(p => p.IsTaxCost).Editable(false);
+                })
+                .Read(read =>
+                {
+                    read.Action("GetCategoriesByParentId", "CategoriesSetting").Data("getCategoryIsTaxFlg");
+                }))
+        )
+    </div>
+
+    <div class="col-xs-12 margin-top-10 categoryErrorMessage">
+        @*@Html.Label("Add New Category")*@
+    </div>
+    <div class="col-xs-12 margin-top-10 margin-bottom-10 text-right">
+        @Html.Label("CANCEL", new { @id = "act-accept-no", @class = "btn btn-accept-no", @style = "width: 100px" })
+        @Html.Label("SAVE", new { @id = "act-accept-yes", @class = "btn btn-primary", @style = "width: 100px" })
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        itemDeleteList = [];
+        counter = 1;
+
+        window.setaJs.ToolBar('#CategoryModelGrid');
+        var grid = $("#CategoryModelGrid").data("kendoGrid");
+        grid.table.kendoSortable({
+            filter: ">tbody >tr:not(.k-grid-edit-row)",
+            hint: $.noop,
+            cursor: "move",
+            ignore: "input",
+            placeholder: function (element) {
+                return element.clone().addClass("k-state-hover").css("opacity", 0.65);
+            },
+            container: "tbody",
+            change: function (e, id) {
+                var skip = grid.dataSource.skip(),
+                    oldIndex = e.oldIndex + skip,
+                    newIndex = e.newIndex + skip,
+                    data = grid.dataSource.data(),
+                    dataItemThis = grid.dataSource.getByUid(e.item.data("uid"));
+
+                // remove this data item in grid.
+                grid.dataSource.remove(dataItemThis);
+
+                // reset couter in gird.
+                counter = 1;
+                grid.dataSource.insert(newIndex, dataItemThis);
+            }
+        });
+
+        $("#CategoryModelGrid").on("click", 'input[type="checkbox"]', function (e) {
+            var rowIndex = $(this).closest('tr').index();
+            var dataItem = $('#CategoryModelGrid').data().kendoGrid.dataSource.data()[rowIndex];
+
+            if ($(this).hasAttr('checked')) {
+                $(this).removeAttr('checked');
+
+                // set new data to grid
+                dataItem[$(this).attr("name")] = false;
+            } else {
+                $(this).attr('checked', 'checked');
+
+                // set new data to grid
+                dataItem[$(this).attr("name")] = true;
+            }
+        });
+
+        $("#CategoryModelGrid").on("focus", 'input[name="CategoryName"]', function (e) {
+            $(this).select();
+        });
+
+        $("#CategoryModelGrid").on("keyup", 'input[name="CategoryName"]', function (e) {
+            var rowIndex = $(this).closest('tr').index();
+            var dataItem = $('#CategoryModelGrid').data().kendoGrid.dataSource.data()[rowIndex];
+            var newValue = $.trim($(this).val());
+
+            // set new data to grid
+            dataItem.CategoryName = newValue;
+        });
+    });
+</script>

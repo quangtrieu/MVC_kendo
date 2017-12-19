@@ -1,0 +1,124 @@
+﻿@using Kendo.Mvc.UI
+
+<div class="col-xs-12 clearfix menu-bottom" style="height:45px; background-color: #fff; box-shadow: 0px 0px 5px #888888; display: none">
+    <div class="col-xs-2">
+        <a onclick="callNextOrBack(false);">@Html.Label("< Back", new { @style = "margin-top: 10px; font-size: 15px;" })</a>
+    </div>
+    <div class="col-xs-6 category-setting">
+        <table class="menu-item-edit-budget display-none" style="white-space: nowrap;">
+            <tr>
+                <td style="padding: 6px">@Html.CheckBox("ActualNumbersFlg", true)</td>
+                <td style="padding: 6px; margin-top: 4px;">@Html.Label("Actual numbers")</td>
+                <td style="padding: 6px">@Html.CheckBox("VarianceFlg", true)</td>
+                <td style="padding: 6px; margin-top: 4px;">@Html.Label("Variance")</td>
+                <td style="padding: 6px; width: 100px"></td>
+                <td style="padding: 6px">
+                    @Html.Label("Input Method: ", new { @class = "input-method-dropdownlist" })
+                    @(Html.Kendo().DropDownList()
+                            .Name("InputMethod")
+                            .HtmlAttributes(new { @style = "width: 120px", @class = "input-method-dropdownlist" })
+                            .DataTextField("Text")
+                            .DataValueField("Value")
+                            .Events(e => e.Change("inputMethodOnChange"))
+                            .BindTo(new List<SelectListItem>(){
+                                new SelectListItem() { Text = "Percentage", Value ="1" },
+                                new SelectListItem() { Text = "Dollar", Value ="2" }
+                            })
+                    )
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-4 text-right">
+        @Html.Label("SAVE", new { @class = "btn btn-primary btn-save-change", @style = "width: 100px; margin-top: 6px; display: none" })
+        @Html.Label("CONTINUE", new { @class = "btn btn-primary btn-continue", @onclick = "callNextOrBack(true);", @style = "margin-top: 6px" })
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var pathName = window.location.pathname;
+        if (pathName == "/Budget/ImportActualNumber" || pathName == "/Budget/Mapping") {
+            $('.menu-bottom').css('display', 'none');
+        } else {
+            $('.menu-bottom').css('display', 'block');
+
+            if (pathName == "/Budget/ViewTagetAndSales") {
+                $('.menu-item-edit-budget').show();
+                $('.btn-save-change').css('display', 'inline-block');
+
+                // set action on page
+                loadActionToEditAndReview();
+            }
+            //else if (pathName == "/Budget/ReviewBudgetDetail") {
+            //    $('.menu-item-edit-budget').show();
+            //    $('.input-method-dropdownlist').addClass('display-none');
+            //    $('.btn-continue').addClass('display-none');
+
+            //    $('.btn-save-change').css('display', 'display-none');
+            //    $('.btn-save-change').unbind('click');
+            //    $('.btn-save-change').on('click', function () {
+            //        SaveBudgetDetails("/Budget/ReviewBudgetDetail?id=" + $.urlParam("id"));
+            //    });
+
+            //    // set action on page
+            //    loadActionToEditAndReview();
+            //}
+        }
+    });
+
+    function loadActionToEditAndReview() {
+        // set value hidden to input
+        if ($('#ActualNumbersFlg-hidden').length > 0) {
+            $('#ActualNumbersFlg').prop('checked', JSON.parse($('#ActualNumbersFlg-hidden').val().toLowerCase()));
+        }
+
+        if ($('#VarianceFlg-hidden').length > 0) {
+            $('#VarianceFlg').prop('checked', JSON.parse($('#VarianceFlg-hidden').val().toLowerCase()));
+        }
+
+        if ($('#InputMethod-hidden').length > 0) {
+            $("#InputMethod").data("kendoDropDownList").value($('#InputMethod-hidden').val());
+            //$("#InputMethod").data("kendoDropDownList").trigger("change");
+        }
+
+        // set action change actual flag
+        $('#ActualNumbersFlg').on("change", function (data) {
+            var actualFlg = $('#ActualNumbersFlg').prop('checked');
+            $("#VarianceFlg").prop('checked', actualFlg);
+            setTimeout(function () {
+                $(window).trigger('resize');
+            }, 500);
+        });
+
+        // set action change variance flag
+        $("#VarianceFlg").on("change", function (data) {
+            setTimeout(function () {
+                $(window).trigger('resize');
+            }, 500);
+        });
+    }
+
+    function inputMethodOnChange(e) {
+        var inputDollar = $('#inputMethodDollar').val();
+        if ($(this.element).val() == inputDollar) {
+            $("[id^='Target_Sales_']").addClass('numerictextbox');
+            $("[id^='Target_Sales_']").removeClass('readonly');
+            $("[id^='Target_Sales_']").removeAttr('readonly');
+
+            $("[id^='Target_Percent_']").removeClass('numerictextbox');
+            $("[id^='Target_Percent_']").addClass('readonly');
+            $("[id^='Target_Percent_']").attr('readonly', 'readonly');
+        } else {
+            $("[id^='Target_Percent_']").addClass('numerictextbox');
+            $("[id^='Target_Percent_']").removeClass('readonly');
+            $("[id^='Target_Percent_']").removeAttr('readonly');
+
+            $("[id^='Target_Sales_']").removeClass('numerictextbox');
+            $("[id^='Target_Sales_']").addClass('readonly');
+            $("[id^='Target_Sales_']").attr('readonly', 'readonly');
+        }
+
+        // set confirm redirect
+        $.isChangeDataInPage = true;
+    }
+</script>

@@ -1,0 +1,140 @@
+﻿.file-icon {
+    display: inline-block;
+    float: left;
+    width: 48px;
+    height: 48px;
+    margin-left: 10px;
+    margin-top: 6.5px;
+}
+
+.img-file {
+    background-image: url('../../img/iconfile/jpg.png');
+}
+
+.doc-file {
+    background-image: url('../../img/iconfile/doc.png');
+}
+
+.pdf-file {
+    background-image: url('../../img/iconfile/pdf.png');
+}
+
+.xls-file {
+    background-image: url('../../img/iconfile/xls.png');
+}
+
+.zip-file {
+    background-image: url('../../img/iconfile/zip.png');
+}
+
+.default-file {
+    background-image: url('../../img/iconfile/default.png');
+}
+
+#upload-restaurantDoc .file-heading {
+    font-family: Arial;
+    font-size: 1.1em;
+    display: inline-block;
+    float: left;
+    width: 48%;
+    margin: 0 0 0 0px;
+    height: 65px;
+    line-height: 70px;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+#upload-restaurantDoc .file-name-heading {
+    font-weight: bold;
+}
+
+#example .file-size-heading {
+    font-weight: normal;
+    font-style: italic;
+}
+
+li.k-file .file-wrapper .k-upload-action {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+li.k-file div.file-wrapper {
+    position: relative;
+    height: 65px;
+}
+.btn.btn-primary.btn-clear-all {
+    position: absolute;
+    right: 22px;
+    top: 8px;
+    z-index: 9;
+    display:none;
+}
+.jstree-default-small .jstree-node{
+    line-height:36px !important;
+}
+.k-edit:before {
+  content: "\f044";
+}
+.k-delete:before {
+  content: "\f014";
+}
+tbody[role="rowgroup"] td[role="gridcell"] .k-icon, .k-grid-Download span, .k-grid-Delete span{
+    background-image:none;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.fa.fa-plus.btn-section-field {
+    border: 1px solid #cccccc;
+    font-size: 12px;
+    padding: 6px 10px;
+}
+
+.k-grid-excel:before {
+  content: "\f1c3";
+}
+button.k-grid-excel {
+    background: none repeat scroll 0 0 #ffffff;
+    font-size: 14px;
+    padding: 9px 14px;
+}
+
+.vendorIDField, th[data-field="VendorID"]{display:block;}
+
+.k-menu-vertical .k-sort-asc, .k-menu-vertical .k-sort-desc{display:none !important;}
+#VendorGrid > table[role="treegrid"] > .k-grid-header > tr > .k-header:nth-child(3){
+    border-left:0px;
+}
+.k-item.k-state-default.k-first[role="menuitem"] .k-link {
+    display: none;
+}
+.k-grid-delete, .k-grid-Delete, .k-grid-Download{
+    height: 22px;
+    overflow: hidden;
+    width: 35px;
+    border:none;
+}
+.k-grid-Download > span:before {
+  content: "\f019";
+}
+
+.k-grid-Delete > span:before {
+    content: "\f014";
+}
+
+.upload-restaurantDoc .k-file{
+    position:relative;clear:both;
+}
+.file-wrapper{width:100%;}
+.file-wrapper > div{
+    width:80%;float: left;
+}
+#userDocTree{display:none;}

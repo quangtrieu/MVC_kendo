@@ -1,0 +1,925 @@
+﻿@using Kendo.Mvc.UI
+@using BCS.Web.Models
+@using BCS.Commons
+
+@model BCS.Web.Models.BudgetModel
+
+<style>
+    div.k-window-content {
+        overflow: hidden;
+    }
+    .variance-report-form {
+        overflow: hidden;
+        padding: 0px;
+        font-size: 10pt;
+    }
+    .header-label {
+        margin-top: 7px;
+    }
+    .budget-data-area label {
+        margin-top: 7px !important;
+        margin-left: 5px !important;
+        font-size: 10pt;
+    }
+    .header-format label {
+        font-weight: bold;
+    }
+</style>
+<div class="form-group variance-report-form col-xs-12 clearfix" style="margin: 0 auto; -moz-border-radius: 2em">
+    @{
+        var budgetTab = Model.BudgetTabModelList.FirstOrDefault();
+        var tabIndex = "tabIndex_" + budgetTab.TabIndex;
+
+        // get profit loss
+        var profitLossParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_PROFIT_LOSS_TEXT);
+
+        // get sales category
+        var salesParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_SALES_TEXT);
+
+        // get cogs category
+        var cogsParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_COGS_TEXT);
+
+        // get payroll expenses category
+        var payrollExpensesParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_PAYROLL_EXPENSES_TEXT);
+
+        // get operation category
+        var operationParentCategory = Model.CategorySettingModelList.FirstOrDefault(s => s.ParentCategoryId == 0 && s.CategoryName == BCSCommonData.CATEGORY_DEFAULT_OPERATION_EXPENSES_TEXT);
+
+        // category setting id list
+        var categorySettingIdList = ViewBag.categorySettingId;
+
+        // data table in tab
+        var salesTable = budgetTab.BudgetItemModelList.Where(s => s.ParentCategoryId == salesParentCategory.CategorySettingId && categorySettingIdList.Contains(s.CategorySettingId)).OrderBy(s => s.SortOrder).ToList();
+        var cogsTable = budgetTab.BudgetItemModelList.Where(s => s.ParentCategoryId == cogsParentCategory.CategorySettingId && categorySettingIdList.Contains(s.CategorySettingId)).OrderBy(s => s.SortOrder).ToList();
+        var payrollTable = budgetTab.BudgetItemModelList.Where(s => s.ParentCategoryId == payrollExpensesParentCategory.CategorySettingId && s.IsTaxCost == false && categorySettingIdList.Contains(s.CategorySettingId)).OrderBy(s => s.SortOrder).ToList();
+        var payrollIsTaxTable = budgetTab.BudgetItemModelList.Where(s => s.ParentCategoryId == payrollExpensesParentCategory.CategorySettingId && s.IsTaxCost == true && categorySettingIdList.Contains(s.CategorySettingId)).OrderBy(s => s.SortOrder).ToList();
+        var operationTable = budgetTab.BudgetItemModelList.Where(s => s.ParentCategoryId == operationParentCategory.CategorySettingId && categorySettingIdList.Contains(s.CategorySettingId)).OrderBy(s => s.SortOrder).ToList();
+        var profitLossTable = budgetTab.BudgetItemModelList.Where(s => s.ParentCategoryId == profitLossParentCategory.CategorySettingId && categorySettingIdList.Contains(s.CategorySettingId)).OrderBy(s => s.SortOrder).ToList();
+
+        // init data table in tab
+        System.Data.DataTable profitLossTableCalculate = budgetTab.ProfitLossDataTable;
+
+        // calculate grand total projection sales by section sales
+        decimal grandTotalProjectionSalesBySectionSales = 0;
+        var headerColumnIndexList = ViewBag.HeaderColumnIndexList as List<HeaderItemModel>;
+        foreach (var item in headerColumnIndexList)
+        {
+            grandTotalProjectionSalesBySectionSales += budgetTab.SalesTotal[item.HeaderIndex].ProjectionSales;
+        }
+
+        <div class="col-xs-12" style="height: 50px; white-space: nowrap">
+            <div class="col-xs-3">
+                @Html.Label("Year: ")<span class="budget-tab-year"></span>
+            </div>
+            <div class="col-xs-3">
+                @Html.Label("Annual sales: ")<span> @string.Format("{0:C}", budgetTab.AnnualSales)</span>
+            </div>
+            <div class="col-xs-3">
+                @Html.Label("Sales target total: ")<span class="sales-target-total"></span>
+            </div>
+            <div class="col-xs-3">
+                @Html.Label("Sales total: ")<span class="sales-total"></span>
+            </div>
+        </div>
+        <div class="col-xs-12 budget-data-area" style="height: 700px; overflow-y:auto; padding: 0px">
+        @{
+            var newStyleColor = string.Empty;
+            var index = 0;
+            string[] colorArray = { "background-color: #347ebd", "background-color: #9fd5f1" };
+            var tableWidth = string.Format("width: {0}px", (headerColumnIndexList.Count + 1) * 496 + 167);
+            <div class="budget-detail-item clearfix" style="@tableWidth">
+                @* header row*@
+                <div class="header-row">
+                    <div class="budget-item" style="border-right: 1px solid #A7A7A7; width: 166px"><span>&emsp;&emsp;&emsp;</span></div>
+                    @{
+                        index = 0;
+                        var headerName = "HeaderName_" + budgetTab.TabIndex;
+                        foreach (var item in headerColumnIndexList)
+                        {
+                            var customStyle = "width: 495px; border-right: 1px solid #A7A7A7; " + colorArray[index % 2];
+                            <div class="text-center header-format budget-item header-name" style="@customStyle">
+                                <label class="header-label">@budgetTab.HeaderColumnList[item.HeaderIndex]</label>
+                            </div>
+                            index++;
+                        }
+                    }
+                    <div class="header-format budget-item header-name" style="width: 496px"></div>
+                </div>
+
+                @* Target row*@
+                <div class="target-row">
+                    <div class="header-format budget-item" style="border-left: 1px solid #A7A7A7; height: 35px !important"></div>
+                    @foreach (var item in headerColumnIndexList)
+                    {
+                        <div class="text-center header-format budget-item actual-div" style="height: 35px !important; border-left: 1px solid #A7A7A7;">Budgeted</div>
+                        <div class="text-center header-format budget-item actual-div" style="height: 35px !important">Actual</div>
+                        <div class="text-center header-format budget-item variance-div" style="height: 35px !important">Variance</div>
+                    }
+                    <div class="text-center header-format budget-item" style="border-left: 1px solid #A7A7A7; height: 35px !important">Total Budgeted</div>
+                    <div class="text-center header-format budget-item actual-div" style="height: 35px !important">Total Actual</div>
+                    <div class="text-center header-format budget-item variance-div" style="border-right: 1px solid #A7A7A7; height: 35px !important">Total Variance</div>
+                </div>
+
+                @*write data by section sales*@
+                @{
+                    @* total sales row *@
+                    if (salesTable.Count > 0)
+                    {
+                        <div class="sales-row">
+                            <div class="header-format budget-item" style="border-left: 1px solid #A7A7A7;"><label>@salesParentCategory.CategoryName</label></div>
+                            @{
+                                var grandTotalActualSales = 0M;
+                                foreach (var item in headerColumnIndexList)
+                                {
+                                    var budgetItem = budgetTab.SalesTotal[item.HeaderIndex];
+                                    grandTotalActualSales += budgetItem.ActualSales;
+                                    newStyleColor = string.Format("{0:C}", budgetItem.VarianceSales) == "$0.00" ? "color: black" : (budgetItem.VarianceSales > 0 ? "color: green" : "color: red");
+
+                                    <div class="text-center header-format budget-item total-sales-data" style="border-left: 1px solid #A7A7A7;">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", budgetItem.ProjectionSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", budgetItem.ProjectionPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item actual-div">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", budgetItem.ActualSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetItem.ActualPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item variance-div">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (budgetItem.VarianceSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (budgetItem.VariancePercent))" readonly="readonly" />
+                                    </div>
+                                }
+
+                                // write grand total column
+                                var grandTotalProjectionPercent = grandTotalProjectionSalesBySectionSales > 0 ? 100M : 0M;
+                                var grandTotalActualPercent = (grandTotalProjectionSalesBySectionSales == 0) ? 0 : grandTotalActualSales * 100 / grandTotalProjectionSalesBySectionSales;
+                                var grandTotalVarianceSales = grandTotalActualSales - grandTotalProjectionSalesBySectionSales;
+                                var grandTotalVariancePercent = (grandTotalProjectionSalesBySectionSales == 0) ? 0 : grandTotalVarianceSales * 100 / grandTotalProjectionSalesBySectionSales;
+                                newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+                                <div class="text-center header-format budget-item" style="border-left: 1px solid #A7A7A7;">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalProjectionSalesBySectionSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item actual-div">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalActualSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item variance-div" style="border-right: 1px solid #A7A7A7;">
+                                    <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @*data item row by sales category*@
+                    index = 0;
+                    foreach (var itemDetail in salesTable)
+                    {
+                        var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                        <div class="data-row-by-category">
+                            
+                            <div class="budget-item" style="border-left: 1px solid #A7A7A7; @formatRow"><label data-toggle="tooltip" title="@itemDetail.CategoryName">@string.Format("{0}", itemDetail.CategoryName.Length <= 20 ? itemDetail.CategoryName : itemDetail.CategoryName.Substring(0, 20))</label></div>
+                            @{
+                                var totalProjectionSales = 0M;
+                                var totalActualSales = 0M;
+                                foreach (var i in headerColumnIndexList)
+                                {
+                                    var item = itemDetail.BudgetItemList[i.HeaderIndex];
+                                    totalProjectionSales += item.ProjectionSales;
+                                    totalActualSales += item.ActualSales;
+                                    newStyleColor = string.Format("{0:C}", item.VarianceSales) == "$0.00" ? "color: black" : (item.VarianceSales > 0 ? "color: green" : "color: red");
+
+                                    <div class="text-center budget-item projection-data" style="border-left: 1px solid #A7A7A7;@formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", item.ProjectionSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", item.ProjectionPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item actual-div" style="@formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", item.ActualSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", item.ActualPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item variance-div" style="@formatRow">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (item.VarianceSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (item.VariancePercent))" readonly="readonly" />
+                                    </div>
+                                }
+
+                                // write grand total column
+                                var totalProjectionPercent = (grandTotalProjectionSalesBySectionSales == 0) ? 0 : totalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales;
+                                var totalActualPercent = (totalProjectionSales == 0) ? 0 : totalActualSales * 100 / totalProjectionSales;
+                                var totalVarianceSales = totalActualSales - totalProjectionSales;
+                                var totalVariancePercent = (totalProjectionSales == 0) ? 0 : totalVarianceSales * 100 / totalProjectionSales;
+                                newStyleColor = string.Format("{0:C}", totalVarianceSales) == "$0.00" ? "color: black" : (totalVarianceSales > 0 ? "color: green" : "color: red");
+                                <div class="text-center budget-item" style="border-left: 1px solid #A7A7A7; @formatRow">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalProjectionSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", totalProjectionPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center budget-item actual-div" style="@formatRow">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalActualSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", totalActualPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center budget-item variance-div" style="border-right: 1px solid #A7A7A7;@formatRow">
+                                    <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (totalVarianceSales))" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (totalVariancePercent))" readonly="readonly" />
+                                </div>
+                            }
+                        </div>
+
+                        index++;
+                    }
+                }
+
+                @*write data by section cogs*@
+                @{
+                    if (cogsTable.Count > 0)
+                    {
+                        <div class="sales-row">
+                            <div class="header-format budget-item" style="border-left: 1px solid #A7A7A7;"><label>@cogsParentCategory.CategoryName</label></div>
+                            @{
+                                var grandTotalProjectionSales = 0M;
+                                var grandTotalActualSales = 0M;
+                                foreach (var item in headerColumnIndexList)
+                                {
+                                    grandTotalProjectionSales += budgetTab.CogsTotal[item.HeaderIndex].ProjectionSales;
+                                    grandTotalActualSales += budgetTab.CogsTotal[item.HeaderIndex].ActualSales;
+                                    newStyleColor = string.Format("{0:C}", budgetTab.CogsTotal[item.HeaderIndex].VarianceOtherSales) == "$0.00" ? "color: black" : (budgetTab.CogsTotal[item.HeaderIndex].VarianceOtherSales > 0 ? "color: green" : "color: red");
+
+                                    // change requeiment : variance = projection - actual
+                                    var cogsVariancePercent = budgetTab.CogsTotal[item.HeaderIndex].ProjectionPercent - budgetTab.CogsTotal[item.HeaderIndex].ActualPercent;
+
+                                    <div class="text-center header-format budget-item total-sales-data" style="border-left: 1px solid #A7A7A7;">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", budgetTab.CogsTotal[item.HeaderIndex].ProjectionSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", budgetTab.CogsTotal[item.HeaderIndex].ProjectionPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item actual-div">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", budgetTab.CogsTotal[item.HeaderIndex].ActualSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetTab.CogsTotal[item.HeaderIndex].ActualPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item variance-div">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (budgetTab.CogsTotal[item.HeaderIndex].VarianceOtherSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", cogsVariancePercent)" readonly="readonly" />
+                                    </div>
+                                }
+
+                                // get grand total actual by sales section
+                                var grandTotalActualBySectionSales = budgetTab.SalesTotal.Sum(s => s.ActualSales);
+
+                                // write grand total column
+                                var grandTotalProjectionPercent = grandTotalActualBySectionSales == 0 ? 0 : (grandTotalProjectionSales * 100 / grandTotalActualBySectionSales);
+                                var grandTotalActualPercent = grandTotalActualBySectionSales == 0 ? 0 : (grandTotalActualSales * 100 / grandTotalActualBySectionSales);
+                                var grandTotalVarianceSales = grandTotalProjectionSales - grandTotalActualSales;
+                                var grandTotalVariancePercent = grandTotalProjectionPercent - grandTotalActualPercent;
+                                newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+                                <div class="text-center header-format budget-item" style="border-left: 1px solid #A7A7A7;">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalProjectionSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item actual-div">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalActualSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item variance-div" style="border-right: 1px solid #A7A7A7;">
+                                    <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @*data item row by cogs category*@
+                    index = 0;
+                    foreach (var itemDetail in cogsTable)
+                    {
+                        System.Data.DataRow salesDataRowByCategoryRefId = null;
+                        var grandTotalActualBySectionSales = 0M;
+                        if (itemDetail.SalesCategoryRefId == 0)
+                        {
+                            grandTotalActualBySectionSales = budgetTab.SalesTotal.Sum(s => s.ActualSales);
+                        }
+                        else
+                        {
+                            salesDataRowByCategoryRefId = budgetTab.SalesDataTable.Select("CategorySettingId=" + itemDetail.SalesCategoryRefId)[0];
+                            grandTotalActualBySectionSales = Convert.ToDecimal(salesDataRowByCategoryRefId["GrandTotal_ActualSales"]);
+                        }
+
+                        var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                        <div class="data-row-by-category">
+                            <div class="budget-item" style="border-left: 1px solid #A7A7A7; @formatRow"><label data-toggle="tooltip" title="@itemDetail.CategoryName">@string.Format("{0}", itemDetail.CategoryName.Length <= 20 ? itemDetail.CategoryName : itemDetail.CategoryName.Substring(0, 20))</label></div>
+                            @{
+                                var totalProjectionSales = 0M;
+                                var totalActualSales = 0M;
+                                foreach (var i in headerColumnIndexList)
+                                {
+                                    var actualSalesBySalesSection = 0M;
+                                    if (itemDetail.SalesCategoryRefId == 0)
+                                    {
+                                        actualSalesBySalesSection = budgetTab.SalesTotal[i.HeaderIndex].ActualSales;
+                                    }
+                                    else
+                                    {
+                                        actualSalesBySalesSection = Convert.ToDecimal(salesDataRowByCategoryRefId[budgetTab.HeaderColumnList[i.HeaderIndex] + "_ActualSales"]);
+                                    }
+
+                                    var itemHeader = itemDetail.BudgetItemList[i.HeaderIndex];
+                                    totalProjectionSales += itemHeader.ProjectionSales;
+                                    totalActualSales += itemHeader.ActualSales;
+                                    newStyleColor = string.Format("{0:C}", itemHeader.VarianceOtherSales) == "$0.00" ? "color: black" : (itemHeader.VarianceOtherSales > 0 ? "color: green" : "color: red");
+
+                                    // change requeiment : variance = projection - actual
+                                    var cogsVariancePercent = itemHeader.ProjectionPercent - itemHeader.ActualPercent;
+
+                                    <div class="text-center budget-item projection-data" style="border-left: 1px solid #A7A7A7; @formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", itemHeader.ProjectionSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", itemHeader.ProjectionPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item actual-div" style="@formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", itemHeader.ActualSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", itemHeader.ActualPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item variance-div" style="@formatRow">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (itemHeader.VarianceOtherSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", cogsVariancePercent)" readonly="readonly" />
+                                    </div>
+                                }
+
+                                // write grand total column
+                                var totalProjectionPercent = (grandTotalActualBySectionSales == 0) ? 0 : totalProjectionSales * 100 / grandTotalActualBySectionSales;
+                                var totalActualPercent = (grandTotalActualBySectionSales == 0) ? 0 : totalActualSales * 100 / grandTotalActualBySectionSales;
+                                var totalVarianceSales = totalProjectionSales - totalActualSales;
+                                var totalVariancePercent = totalProjectionPercent - totalActualPercent;
+                                newStyleColor = string.Format("{0:C}", totalVarianceSales) == "$0.00" ? "color: black" : (totalVarianceSales > 0 ? "color: green" : "color: red");
+                                <div class="text-center budget-item" style="border-left: 1px solid #A7A7A7; @formatRow">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalProjectionSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", totalProjectionPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center budget-item actual-div" style="@formatRow">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalActualSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", totalActualPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center budget-item variance-div" style="border-right: 1px solid #A7A7A7;@formatRow">
+                                    <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (totalVarianceSales))" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (totalVariancePercent))" readonly="readonly" />
+                                </div>
+                            }
+                        </div>
+                        index++;
+                    }
+                }
+
+                @*write data by section payroll*@
+                @{
+                    @*total payroll all row*@
+                    if (payrollTable.Count > 0 || payrollIsTaxTable.Count > 0)
+                    {
+                        <div class="sales-row">
+                            <div class="header-format budget-item" style="border-left: 1px solid #A7A7A7;"><label>@payrollExpensesParentCategory.CategoryName</label></div>
+                            @{
+                                var grandTotalProjectionSales = 0M;
+                                var grandTotalActualSales = 0M;
+                                foreach (var item in headerColumnIndexList)
+                                {
+                                    grandTotalProjectionSales += budgetTab.PayrollAllTotal[item.HeaderIndex].ProjectionSales;
+                                    grandTotalActualSales += budgetTab.PayrollAllTotal[item.HeaderIndex].ActualSales;
+                                    newStyleColor = string.Format("{0:C}", budgetTab.PayrollAllTotal[item.HeaderIndex].VarianceOtherSales) == "$0.00" ? "color: black" : (budgetTab.PayrollAllTotal[item.HeaderIndex].VarianceOtherSales > 0 ? "color: green" : "color: red");
+
+                                    <div class="text-center header-format budget-item total-sales-data" style="border-left: 1px solid #A7A7A7;">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", budgetTab.PayrollAllTotal[item.HeaderIndex].ProjectionSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", budgetTab.PayrollAllTotal[item.HeaderIndex].ProjectionPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item actual-div">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", budgetTab.PayrollAllTotal[item.HeaderIndex].ActualSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox"style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetTab.PayrollAllTotal[item.HeaderIndex].ActualPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item variance-div">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (budgetTab.PayrollAllTotal[item.HeaderIndex].VarianceOtherSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (budgetTab.PayrollAllTotal[item.HeaderIndex].VarianceOtherPercent))" readonly="readonly" />
+                                    </div>
+                                }
+
+                                // write grand total column
+                                var grandTotalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : (grandTotalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales);
+                                var grandTotalActualPercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalActualSales * 100 / grandTotalProjectionSales);
+                                var grandTotalVarianceSales = grandTotalProjectionSales - grandTotalActualSales;
+                                var grandTotalVariancePercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalVarianceSales * 100 / grandTotalProjectionSales);
+                                newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+                                <div class="text-center header-format budget-item" style="border-left: 1px solid #A7A7A7;">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalProjectionSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item actual-div">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalActualSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item variance-div" style="border-right: 1px solid #A7A7A7;">
+                                    <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @*data item row by payroll expenses category*@
+                    index = 0;
+                    foreach (var itemDetail in payrollTable)
+                    {
+                        var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                        <div class="data-row-by-category">
+                            <div class="budget-item" style="border-left: 1px solid #A7A7A7; @formatRow"><label data-toggle="tooltip" title="@itemDetail.CategoryName">@string.Format("{0}", itemDetail.CategoryName.Length <= 20 ? itemDetail.CategoryName : itemDetail.CategoryName.Substring(0, 20))</label></div>
+                            @{
+                                var totalProjectionSales = 0M;
+                                var totalActualSales = 0M;
+                                foreach (var item in headerColumnIndexList)
+                                {
+                                    var itemHeader = itemDetail.BudgetItemList[item.HeaderIndex];
+                                    totalProjectionSales += itemHeader.ProjectionSales;
+                                    totalActualSales += itemHeader.ActualSales;
+                                    newStyleColor = string.Format("{0:C}", itemHeader.VarianceOtherSales) == "$0.00" ? "color: black" : (itemHeader.VarianceOtherSales > 0 ? "color: green" : "color: red");
+
+                                    <div class="text-center budget-item projection-data" style="border-left: 1px solid #A7A7A7; @formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", itemHeader.ProjectionSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", itemHeader.ProjectionPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item actual-div" style="@formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", itemHeader.ActualSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", itemHeader.ActualPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item variance-div" style="@formatRow">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (itemHeader.VarianceOtherSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (itemHeader.VarianceOtherPercent))" readonly="readonly" />
+                                    </div>
+                                }
+
+                                // write grand total column
+                                var totalProjectionPercent = (grandTotalProjectionSalesBySectionSales == 0) ? 0 : totalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales;
+                                var totalActualPercent = (totalProjectionSales == 0) ? 0 : totalActualSales * 100 / totalProjectionSales;
+                                var totalVarianceSales = totalProjectionSales - totalActualSales;
+                                var totalVariancePercent = (totalProjectionSales == 0) ? 0 : totalVarianceSales * 100 / totalProjectionSales;
+                                newStyleColor = string.Format("{0:C}", totalVarianceSales) == "$0.00" ? "color: black" : (totalVarianceSales > 0 ? "color: green" : "color: red");
+                                <div class="text-center budget-item" style="border-left: 1px solid #A7A7A7; @formatRow">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalProjectionSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", totalProjectionPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center budget-item actual-div" style="@formatRow">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalActualSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", totalActualPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center budget-item variance-div" style="border-right: 1px solid #A7A7A7;@formatRow">
+                                    <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (totalVarianceSales))" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (totalVariancePercent))" readonly="readonly" />
+                                </div>
+                            }
+                        </div>
+
+                        index++;
+                    }
+
+                    // write total is not tax
+                    if (payrollTable.Count > 0 && payrollIsTaxTable.Count > 0)
+                    {
+                        <div class="sales-row">
+                            <div class="header-format budget-item" style="border-left: 1px solid #A7A7A7;"><label>Total</label></div>
+                            @{
+                                var grandTotalProjectionSales = 0M;
+                                var grandTotalActualSales = 0M;
+                                foreach (var item in headerColumnIndexList)
+                                {
+                                    grandTotalProjectionSales += budgetTab.PayrollTotal[item.HeaderIndex].ProjectionSales;
+                                    grandTotalActualSales += budgetTab.PayrollTotal[item.HeaderIndex].ActualSales;
+                                    newStyleColor = string.Format("{0:C}", budgetTab.PayrollTotal[item.HeaderIndex].VarianceOtherSales) == "$0.00" ? "color: black" : (budgetTab.PayrollTotal[item.HeaderIndex].VarianceOtherSales > 0 ? "color: green" : "color: red");
+
+                                    <div class="text-center header-format budget-item" style="border-left: 1px solid #A7A7A7;">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", budgetTab.PayrollTotal[item.HeaderIndex].ProjectionSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", budgetTab.PayrollTotal[item.HeaderIndex].ProjectionPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item actual-div">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", budgetTab.PayrollTotal[item.HeaderIndex].ActualSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetTab.PayrollTotal[item.HeaderIndex].ActualPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item variance-div">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (budgetTab.PayrollTotal[item.HeaderIndex].VarianceOtherSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (budgetTab.PayrollTotal[item.HeaderIndex].VarianceOtherPercent))" readonly="readonly" />
+                                    </div>
+                                }
+
+                                // write grand total column
+                                var grandTotalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : (grandTotalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales);
+                                var grandTotalActualPercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalActualSales * 100 / grandTotalProjectionSales);
+                                var grandTotalVarianceSales = grandTotalProjectionSales - grandTotalActualSales;
+                                var grandTotalVariancePercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalVarianceSales * 100 / grandTotalProjectionSales);
+                                newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                <div class="text-center header-format budget-item" style="border-left: 1px solid #A7A7A7;">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalProjectionSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item actual-div">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalActualSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item variance-div" style="border-right: 1px solid #A7A7A7;">
+                                    <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    index = 0;
+                    foreach (var itemDetail in payrollIsTaxTable)
+                    {
+                        var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                        <div class="data-row-by-category is-tax-row">
+                            <div class="budget-item" style="border-left: 1px solid #A7A7A7;@formatRow"><label data-toggle="tooltip" title="@itemDetail.CategoryName">@string.Format("{0}", itemDetail.CategoryName.Length <= 20 ? itemDetail.CategoryName : itemDetail.CategoryName.Substring(0, 20))</label></div>
+                            @{
+                                decimal totalProjectionSales = 0;
+                                decimal totalActualSales = 0;
+                                foreach (var item in headerColumnIndexList)
+                                {
+                                    var itemHeader = itemDetail.BudgetItemList[item.HeaderIndex];
+                                    totalProjectionSales += itemHeader.ProjectionSales;
+                                    totalActualSales += itemHeader.ActualSales;
+                                    newStyleColor = string.Format("{0:C}", itemHeader.VarianceOtherSales) == "$0.00" ? "color: black" : (itemHeader.VarianceOtherSales > 0 ? "color: green" : "color: red");
+
+                                    <div class="text-center budget-item projection-data" style="border-left: 1px solid #A7A7A7;@formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", itemHeader.ProjectionSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", itemHeader.ProjectionPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item actual-div" style="@formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", itemHeader.ActualSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", itemHeader.ActualPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item variance-div" style="@formatRow">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (itemHeader.VarianceOtherSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (itemHeader.VarianceOtherPercent))" readonly="readonly" />
+                                    </div>
+                                }
+
+                                // write grand total column
+                                var totalProjectionPercent = (grandTotalProjectionSalesBySectionSales == 0) ? 0 : totalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales;
+                                var totalActualPercent = (totalProjectionSales == 0) ? 0 : totalActualSales * 100 / totalProjectionSales;
+                                var totalVarianceSales = totalProjectionSales - totalActualSales;
+                                var totalVariancePercent = (totalProjectionSales == 0) ? 0 : totalVarianceSales * 100 / totalProjectionSales;
+                                newStyleColor = string.Format("{0:C}", totalVarianceSales) == "$0.00" ? "color: black" : (totalVarianceSales > 0 ? "color: green" : "color: red");
+
+                                <div class="text-center budget-item" style="border-left: 1px solid #A7A7A7; @formatRow">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalProjectionSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", totalProjectionPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center budget-item actual-div" style="@formatRow">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalActualSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", totalActualPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center budget-item variance-div" style="border-right: 1px solid #A7A7A7;@formatRow">
+                                    <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (totalVarianceSales))" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (totalVariancePercent))" readonly="readonly" />
+                                </div>
+                            }
+                        </div>
+
+                        index++;
+                    }
+
+                    // write total is tax
+                    if (payrollIsTaxTable.Count > 0 && payrollTable.Count > 0)
+                    {
+                        <div class="sales-row">
+                            <div class="header-format budget-item" style="border-left: 1px solid #A7A7A7;"><label>Total</label></div>
+                            @{
+                                var grandTotalProjectionSales = 0M;
+                                var grandTotalActualSales = 0M;
+                                foreach (var item in headerColumnIndexList)
+                                {
+                                    grandTotalProjectionSales += budgetTab.PayrollIsTaxTotal[item.HeaderIndex].ProjectionSales;
+                                    grandTotalActualSales += budgetTab.PayrollIsTaxTotal[item.HeaderIndex].ActualSales;
+                                    newStyleColor = string.Format("{0:C}", budgetTab.PayrollIsTaxTotal[item.HeaderIndex].VarianceOtherSales) == "$0.00" ? "color: black" : (budgetTab.PayrollIsTaxTotal[item.HeaderIndex].VarianceOtherSales > 0 ? "color: green" : "color: red");
+
+                                    <div class="text-center header-format budget-item" style="border-left: 1px solid #A7A7A7;">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", budgetTab.PayrollIsTaxTotal[item.HeaderIndex].ProjectionSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", budgetTab.PayrollIsTaxTotal[item.HeaderIndex].ProjectionPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item actual-div">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", budgetTab.PayrollIsTaxTotal[item.HeaderIndex].ActualSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetTab.PayrollIsTaxTotal[item.HeaderIndex].ActualPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item variance-div">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (budgetTab.PayrollIsTaxTotal[item.HeaderIndex].VarianceOtherSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (budgetTab.PayrollIsTaxTotal[item.HeaderIndex].VarianceOtherPercent))" readonly="readonly" />
+                                    </div>
+                                }
+
+                                // write grand total column
+                                var grandTotalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : (grandTotalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales);
+                                var grandTotalActualPercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalActualSales * 100 / grandTotalProjectionSales);
+                                var grandTotalVarianceSales = grandTotalProjectionSales - grandTotalActualSales;
+                                var grandTotalVariancePercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalVarianceSales * 100 / grandTotalProjectionSales);
+                                newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+                                <div class="text-center header-format budget-item" style="border-left: 1px solid #A7A7A7;">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalProjectionSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item actual-div">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalActualSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item variance-div" style="border-right: 1px solid #A7A7A7;">
+                                    <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+
+                @*write data by section operation*@
+                @{
+                    @*total operation row*@
+                    if (operationTable.Count > 0)
+                    {
+                        <div class="sales-row">
+                            <div class="header-format budget-item" style="border-left: 1px solid #A7A7A7;"><label>@operationParentCategory.CategoryName</label></div>
+                            @{
+                                var grandTotalProjectionSales = 0M;
+                                var grandTotalActualSales = 0M;
+                                foreach (var item in headerColumnIndexList)
+                                {
+                                    grandTotalProjectionSales += budgetTab.OperationTotal[item.HeaderIndex].ProjectionSales;
+                                    grandTotalActualSales += budgetTab.OperationTotal[item.HeaderIndex].ActualSales;
+                                    newStyleColor = string.Format("{0:C}", budgetTab.OperationTotal[item.HeaderIndex].VarianceOtherSales) == "$0.00" ? "color: black" : (budgetTab.OperationTotal[item.HeaderIndex].VarianceOtherSales > 0 ? "color: green" : "color: red");
+                                    <div class="text-center header-format budget-item total-sales-data" style="border-left: 1px solid #A7A7A7;">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", budgetTab.OperationTotal[item.HeaderIndex].ProjectionSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", budgetTab.OperationTotal[item.HeaderIndex].ProjectionPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item actual-div">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", budgetTab.OperationTotal[item.HeaderIndex].ActualSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetTab.OperationTotal[item.HeaderIndex].ActualPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center header-format budget-item variance-div">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (budgetTab.OperationTotal[item.HeaderIndex].VarianceOtherSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (budgetTab.OperationTotal[item.HeaderIndex].VarianceOtherPercent))" readonly="readonly" />
+                                    </div>
+                                }
+
+                                // write grand total column
+                                var grandTotalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : (grandTotalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales);
+                                var grandTotalActualPercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalActualSales * 100 / grandTotalProjectionSales);
+                                var grandTotalVarianceSales = grandTotalProjectionSales - grandTotalActualSales;
+                                var grandTotalVariancePercent = grandTotalProjectionSales == 0 ? 0 : (grandTotalVarianceSales * 100 / grandTotalProjectionSales);
+                                newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+                                <div class="text-center header-format budget-item" style="border-left: 1px solid #A7A7A7;">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalProjectionSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox"  value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item actual-div">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalActualSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item variance-div" style="border-right: 1px solid #A7A7A7;">
+                                    <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                    <input class="bcs-percent-textbox"  style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @*data item row by operation category*@
+                    index = 0;
+                    foreach (var itemDetail in operationTable)
+                    {
+                        var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                        <div class="data-row-by-category">
+                            <div class="budget-item" style="border-left: 1px solid #A7A7A7; @formatRow"><label data-toggle="tooltip" title="@itemDetail.CategoryName">@string.Format("{0}", itemDetail.CategoryName.Length <= 20 ? itemDetail.CategoryName : itemDetail.CategoryName.Substring(0, 20))</label></div>
+                            @{
+                                var totalProjectionSales = 0M;
+                                var totalActualSales = 0M;
+                                foreach (var item in headerColumnIndexList)
+                                {
+                                    var itemHeader = itemDetail.BudgetItemList[item.HeaderIndex];
+                                    totalProjectionSales += itemHeader.ProjectionSales;
+                                    totalActualSales += itemHeader.ActualSales;
+                                    newStyleColor = string.Format("{0:C}", itemHeader.VarianceOtherSales) == "$0.00" ? "color: black" : (itemHeader.VarianceOtherSales > 0 ? "color: green" : "color: red");
+                                    <div class="text-center budget-item projection-data" style="border-left: 1px solid #A7A7A7;@formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", itemHeader.ProjectionSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", itemHeader.ProjectionPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item actual-div" style="@formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", itemHeader.ActualSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", itemHeader.ActualPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item variance-div" style="@formatRow">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (itemHeader.VarianceOtherSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (itemHeader.VarianceOtherPercent))" readonly="readonly" />
+                                    </div>
+                                }
+
+                                // write grand total column
+                                var totalProjectionPercent = (grandTotalProjectionSalesBySectionSales == 0) ? 0 : totalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales;
+                                var totalActualPercent = (totalProjectionSales == 0) ? 0 : totalActualSales * 100 / totalProjectionSales;
+                                var totalVarianceSales = totalProjectionSales - totalActualSales;
+                                var totalVariancePercent = (totalProjectionSales == 0) ? 0 : totalVarianceSales * 100 / totalProjectionSales;
+                                newStyleColor = string.Format("{0:C}", totalVarianceSales) == "$0.00" ? "color: black" : (totalVarianceSales > 0 ? "color: green" : "color: red");
+                                <div class="text-center budget-item" style="border-left: 1px solid #A7A7A7; @formatRow">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalProjectionSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", totalProjectionPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center budget-item actual-div" style="@formatRow">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalActualSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", totalActualPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center budget-item variance-div" style="border-right: 1px solid #A7A7A7; @formatRow">
+                                    <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (totalVarianceSales))" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (totalVariancePercent))" readonly="readonly" />
+                                </div>
+                            }
+                        </div>
+
+                        index++;
+                    }
+                }
+
+                @*write profit loss*@
+                @if (Convert.ToBoolean(ViewBag.IsAllSection) || profitLossTable.Count > 0)
+                {
+                    @*total profit loss row*@
+                    <div class="sales-row">
+                        <div class="header-format budget-item" style="border-left: 1px solid #A7A7A7;"><label>Profit/Loss</label></div>
+                        @{
+                            var grandTotalProjectionSales = 0M;
+                            var grandTotalActualSales = 0M;
+                            foreach (var item in headerColumnIndexList)
+                            {
+                                grandTotalProjectionSales += budgetTab.ProfitLossTotal[item.HeaderIndex].ProjectionSales;
+                                grandTotalActualSales += budgetTab.ProfitLossTotal[item.HeaderIndex].ActualSales;
+                                newStyleColor = string.Format("{0:C}", budgetTab.ProfitLossTotal[item.HeaderIndex].VarianceSales) == "$0.00" ? "color: black" : (budgetTab.ProfitLossTotal[item.HeaderIndex].VarianceSales > 0 ? "color: green" : "color: red");
+                                <div class="text-center header-format budget-item total-sales-data" style="border-left: 1px solid #A7A7A7;">
+                                    <input class="bcs-currency-textbox" value="@string.Format("{0:C}", budgetTab.ProfitLossTotal[item.HeaderIndex].ProjectionSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox"  value="@string.Format("{0:#,##0.00}%", budgetTab.ProfitLossTotal[item.HeaderIndex].ProjectionPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item actual-div">
+                                    <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", budgetTab.ProfitLossTotal[item.HeaderIndex].ActualSales)" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", budgetTab.ProfitLossTotal[item.HeaderIndex].ActualPercent)" readonly="readonly" />
+                                </div>
+                                <div class="text-center header-format budget-item variance-div">
+                                    <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (budgetTab.ProfitLossTotal[item.HeaderIndex].VarianceSales))" readonly="readonly" />
+                                    <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (budgetTab.ProfitLossTotal[item.HeaderIndex].VariancePercent))" readonly="readonly" />
+                                </div>
+                            }
+
+                            // write grand total column
+                            var grandTotalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : grandTotalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales;
+                            var grandTotalActualPercent = (grandTotalProjectionSales == 0) ? 0 : grandTotalActualSales * 100 / grandTotalProjectionSales;
+                            var grandTotalVarianceSales = grandTotalActualSales - grandTotalProjectionSales;
+                            var grandTotalVariancePercent = (grandTotalProjectionSales == 0) ? 0 : grandTotalVarianceSales * 100 / grandTotalProjectionSales;
+                            newStyleColor = string.Format("{0:C}", grandTotalVarianceSales) == "$0.00" ? "color: black" : (grandTotalVarianceSales > 0 ? "color: green" : "color: red");
+                            <div class="text-center header-format budget-item" style="border-left: 1px solid #A7A7A7;">
+                                <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalProjectionSales)" readonly="readonly" />
+                                <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", grandTotalProjectionPercent)" readonly="readonly" />
+                            </div>
+                            <div class="text-center header-format budget-item actual-div">
+                                <input class="bcs-currency-textbox" value="@string.Format("{0:C}", grandTotalActualSales)" readonly="readonly" />
+                                <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", grandTotalActualPercent)" readonly="readonly" />
+                            </div>
+                            <div class="text-center header-format budget-item variance-div" style="border-right: 1px solid #A7A7A7;">
+                                <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (grandTotalVarianceSales))" readonly="readonly" />
+                                <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (grandTotalVariancePercent))" readonly="readonly" />
+                            </div>
+                        }
+                    </div>
+
+                    if (profitLossTable.Count > 0)
+                    {
+                        @*data item row by profit loss category*@
+                        index = 0;
+                        foreach (var itemDetail in profitLossTable)
+                        {
+                            var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                            <div class="data-row-by-category">
+                                <div class="budget-item" style="border-left: 1px solid #A7A7A7; @formatRow"><label data-toggle="tooltip" title="@itemDetail.CategoryName">@string.Format("{0}", itemDetail.CategoryName.Length <= 20 ? itemDetail.CategoryName : itemDetail.CategoryName.Substring(0, 20))</label></div>
+                                @{
+                                    var totalProjectionSales = 0M;
+                                    var totalActualSales = 0M;
+                                    foreach (var item in headerColumnIndexList)
+                                    {
+                                        var itemHeader = itemDetail.BudgetItemList[item.HeaderIndex];
+                                        totalProjectionSales += itemHeader.ProjectionSales;
+                                        totalActualSales += itemHeader.ActualSales;
+                                        newStyleColor = string.Format("{0:C}", itemHeader.VarianceSales) == "$0.00" ? "color: black" : (itemHeader.VarianceSales > 0 ? "color: green" : "color: red");
+
+                                        <div class="text-center budget-item projection-data" style="border-left: 1px solid #A7A7A7;@formatRow">
+                                            <input class="bcs-currency-textbox" value="@string.Format("{0:C}", itemHeader.ProjectionSales)" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", itemHeader.ProjectionPercent)" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center budget-item actual-div" style="@formatRow">
+                                            <input class="bcs-currency-textbox" value="@string.Format("{0:C}", itemHeader.ActualSales)" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", itemHeader.ActualPercent)" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center budget-item variance-div" style="@formatRow">
+                                            <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (itemHeader.VarianceSales))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (itemHeader.VariancePercent))" readonly="readonly" />
+                                        </div>
+                                    }
+
+                                    // reset grand total by net profit running total.
+                                    if (itemDetail.CategoryName == "Net Profit Running Total")
+                                    {
+                                        totalProjectionSales = itemDetail.BudgetItemList[headerColumnIndexList.Last().HeaderIndex].ProjectionSales;
+                                        totalActualSales = itemDetail.BudgetItemList[headerColumnIndexList.Last().HeaderIndex].ActualSales;
+                                    }
+
+                                    // write grand total column
+                                    var totalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : totalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales;
+                                    var totalActualPercent = totalProjectionSales == 0 ? 0 : totalActualSales * 100 / totalProjectionSales;
+                                    var totalVarianceSales = totalActualSales - totalProjectionSales;
+                                    var totalVariancePercent = (totalProjectionSales == 0) ? 0 : totalVarianceSales * 100 / totalProjectionSales;
+                                    newStyleColor = string.Format("{0:C}", totalVarianceSales) == "$0.00" ? "color: black" : (totalVarianceSales > 0 ? "color: green" : "color: red");
+                                    <div class="text-center budget-item" style="border-left: 1px solid #A7A7A7; @formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalProjectionSales)" category-setting-id="@itemDetail.CategorySettingId" category-name="@itemDetail.CategoryName" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", totalProjectionPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item actual-div" style="@formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalActualSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", totalActualPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item variance-div" style="border-right: 1px solid #A7A7A7; @formatRow">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (totalVarianceSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (totalVariancePercent))" readonly="readonly" />
+                                    </div>
+                                }
+                            </div>
+
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        @*data item row by profit loss category*@
+                        index = 0;
+                        foreach (System.Data.DataRow dataRow in profitLossTableCalculate.Rows)
+                        {
+                            var formatRow = (index % 2 == 0) ? "" : "background-color: #F0FCFF";
+                            <div class="data-row-by-category">
+                                <div class="budget-item" style="border-left: 1px solid #A7A7A7; @formatRow"><label>@dataRow["CategoryName"]</label></div>
+                                @{
+                                    var totalProjectionSales = 0M;
+                                    var totalActualSales = 0M;
+                                    foreach (var item in headerColumnIndexList)
+                                    {
+                                        var header = budgetTab.HeaderColumnList[item.HeaderIndex];
+                                        totalProjectionSales += Convert.ToDecimal(dataRow[header + "_ProjectionSales"]);
+                                        totalActualSales += Convert.ToDecimal(dataRow[header + "_ActualSales"]);
+                                        newStyleColor = string.Format("{0:C}", Convert.ToDecimal(dataRow[header + "_VarianceSales"])) == "$0.00" ? "color: black" : (Convert.ToDecimal(dataRow[header + "_VarianceSales"]) > 0 ? "color: green" : "color: red");
+                                        <div class="text-center budget-item projection-data" style="border-left: 1px solid #A7A7A7;@formatRow">
+                                            <input class="bcs-currency-textbox" value="@string.Format("{0:C}", Convert.ToDecimal(dataRow[header + "_ProjectionSales"]))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", Convert.ToDecimal(dataRow[header + "_ProjectionPercent"]))" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center budget-item actual-div" style="@formatRow">
+                                            <input class="bcs-currency-textbox" value="@string.Format("{0:C}", Convert.ToDecimal(dataRow[header + "_ActualSales"]))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", Convert.ToDecimal(dataRow[header + "_ActualPercent"]))" readonly="readonly" />
+                                        </div>
+                                        <div class="text-center budget-item variance-div" style="@formatRow">
+                                            <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (Convert.ToDecimal(dataRow[header + "_VarianceSales"])))" readonly="readonly" />
+                                            <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (Convert.ToDecimal(dataRow[header + "_VariancePercent"])))" readonly="readonly" />
+                                        </div>
+                                    }
+
+                                    // reset grand total by net profit running total.
+                                    if (dataRow["CategoryName"].ToString() == "Net Profit Running Total")
+                                    {
+                                        var header = budgetTab.HeaderColumnList[headerColumnIndexList.Last().HeaderIndex];
+                                        totalProjectionSales = Convert.ToDecimal(dataRow[header + "_ProjectionSales"]);
+                                        totalActualSales = Convert.ToDecimal(dataRow[header + "_ActualSales"]);
+                                    }
+
+                                    var totalProjectionPercent = grandTotalProjectionSalesBySectionSales == 0 ? 0 : totalProjectionSales * 100 / grandTotalProjectionSalesBySectionSales;
+                                    var totalActualPercent = totalProjectionSales == 0 ? 0 : totalActualSales * 100 / totalProjectionSales;
+                                    var totalVarianceSales = totalProjectionSales - totalActualSales;
+                                    var totalVariancePercent = (totalProjectionSales == 0) ? 0 : totalVarianceSales * 100 / totalProjectionSales;
+                                    newStyleColor = string.Format("{0:C}", totalVarianceSales) == "$0.00" ? "color: black" : (totalVarianceSales > 0 ? "color: green" : "color: red");
+                                    <div class="text-center budget-item" style="border-left: 1px solid #A7A7A7; @formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalProjectionSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" value="@string.Format("{0:#,##0.00}%", totalProjectionPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item actual-div" style="@formatRow">
+                                        <input class="bcs-currency-textbox" value="@string.Format("{0:C}", totalActualSales)" readonly="readonly" />
+                                        <input class="bcs-percent-textbox"style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", totalActualPercent)" readonly="readonly" />
+                                    </div>
+                                    <div class="text-center budget-item variance-div" style="border-right: 1px solid #A7A7A7; @formatRow">
+                                        <input class="bcs-currency-textbox" style="@newStyleColor" value="@string.Format("{0:C}", (totalVarianceSales))" readonly="readonly" />
+                                        <input class="bcs-percent-textbox" style="@newStyleColor" value="@string.Format("{0:#,##0.00}%", (totalVariancePercent))" readonly="readonly" />
+                                    </div>
+                                }
+                            </div>
+
+                            index++;
+                        }
+                    }
+                }
+            </div>
+        }
+        </div>
+    }
+
+    <div class="col-xs-12 margin-top-10 margin-bottom-10 text-right">
+        @Html.Label("Export", new { @id = "act-accept-yes-export", @class = "btn btn-primary", @style = "width: 100px" })
+        @Html.Label("Print", new { @id = "act-accept-yes-print", @class = "btn btn-primary", @style = "width: 100px" })
+        @Html.Label("Close", new { @id = "act-accept-no", @class = "btn btn-accept-no", @style = "width: 100px" })
+    </div>
+</div>

@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>BCS.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{2b09cd4c-c444-4e55-8915-23c6ae40ae88}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql110DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>BCS.Database</RootNamespace>
+    <AssemblyName>BCS.Database</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'alpha|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="dbo" />
+    <Folder Include="dbo\Tables" />
+    <Folder Include="dbo\Functions" />
+    <Folder Include="dbo\Stored Procedures" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\acc_Users.sql" />
+    <Build Include="dbo\Tables\acc_RestActiveCode.sql" />
+    <Build Include="dbo\Tables\das_Budgets.sql" />
+    <Build Include="dbo\Tables\set_Category.sql" />
+    <Build Include="dbo\Tables\set_CategorySetting.sql" />
+    <Build Include="dbo\Tables\set_HelpSetting.sql" />
+    <Build Include="dbo\Tables\common_Data.sql" />
+    <Build Include="dbo\Stored Procedures\sec_ResetPassword_1.sql" />
+    <Build Include="dbo\Stored Procedures\sec_ResetExpireDate_1.sql" />
+    <Build Include="dbo\Stored Procedures\sec_IsExistEmailOfUser_1.sql" />
+    <Build Include="dbo\Stored Procedures\sec_GetUserForgotByCode_1.sql" />
+    <Build Include="dbo\Stored Procedures\sec_Get_UserByUserName.sql" />
+    <Build Include="dbo\Stored Procedures\sec_Get_UserByEmail_1.sql" />
+    <Build Include="dbo\Stored Procedures\sec_Get_UserAuthenticated_1.sql" />
+    <Build Include="dbo\Stored Procedures\acc_RestActiveCode_GetByToken.sql" />
+    <Build Include="dbo\Stored Procedures\acc_RestActiveCode_GetById.sql" />
+    <Build Include="dbo\Stored Procedures\acc_User_GetByToken.sql" />
+    <Build Include="dbo\Stored Procedures\acc_User_Save.sql" />
+    <Build Include="dbo\Functions\ufn_Replace_XmlChars.sql" />
+    <Build Include="dbo\Stored Procedures\utl_Insert_ErrorLog.sql" />
+    <Build Include="dbo\Tables\utl_Error_Log.sql" />
+    <Build Include="dbo\Stored Procedures\acc_RestActiveCode_Save.sql" />
+    <Build Include="dbo\Stored Procedures\das_GetBudgetById.sql" />
+    <Build Include="dbo\Stored Procedures\das_GetBudgetByUserId.sql" />
+    <Build Include="dbo\Stored Procedures\das_DeleteBudgetById.sql" />
+    <Build Include="dbo\Stored Procedures\das_SaveBudget.sql" />
+    <Build Include="dbo\Stored Procedures\acc_RestActiveCode_GetByUserId.sql" />
+    <Build Include="dbo\Stored Procedures\acc_RestActiveCode_GetByUserIdAndRestCode.sql" />
+    <Build Include="dbo\Stored Procedures\set_HelpSetting_GetByUserIdAndHelpSettingDataId.sql" />
+    <Build Include="dbo\Stored Procedures\set_HelpSetting_Save.sql" />
+    <Build Include="dbo\Stored Procedures\acc_RestActiveCode_UpdateDefaultRestCodeByUser.sql" />
+    <Build Include="dbo\Stored Procedures\set_Category_GetById.sql" />
+    <Build Include="dbo\Stored Procedures\set_Category_GetByUserId.sql" />
+    <Build Include="dbo\Stored Procedures\set_Category_GetByParentId.sql" />
+    <Build Include="dbo\Stored Procedures\set_Category_Save.sql" />
+    <Build Include="dbo\Stored Procedures\set_CategorySetting_Save.sql" />
+    <Build Include="dbo\Stored Procedures\set_CategorySetting_GetByBudgetId.sql" />
+    <Build Include="dbo\Stored Procedures\set_CategorySetting_GetByParentCategoryId.sql" />
+    <Build Include="dbo\Stored Procedures\set_CategorySetting_GetById.sql" />
+    <Build Include="dbo\Stored Procedures\set_CategorySetting_CheckDuplicate.sql" />
+    <Build Include="dbo\Stored Procedures\cmm_CommonData_GetByCode.sql" />
+    <Build Include="dbo\Stored Procedures\cmm_commonData_GetById.sql" />
+    <Build Include="dbo\Stored Procedures\set_Category_GetByParentName.sql" />
+    <Build Include="dbo\Stored Procedures\set_CategorySetting_GetByParentName.sql" />
+    <Build Include="dbo\Tables\das_BudgetTab.sql" />
+    <Build Include="dbo\Functions\ufn_GetTabNumberByBudgetId.sql" />
+    <Build Include="dbo\Stored Procedures\das_BudgetDetail_GetByBudgetId.sql" />
+    <Build Include="dbo\Functions\ufn_Split.sql" />
+    <Build Include="dbo\Tables\das_BudgetItem.sql" />
+    <Build Include="dbo\Stored Procedures\das_BudgetTab_GetByBudgetId.sql" />
+    <Build Include="dbo\Stored Procedures\das_BudgetTab_Save.sql" />
+    <Build Include="dbo\Stored Procedures\das_BudgetItem_GetByBudgetTabId.sql" />
+    <Build Include="dbo\Stored Procedures\das_BudgetItem_AddDefaultByBudgetTab.sql" />
+    <Build Include="dbo\Stored Procedures\das_BudgetTab_DeleteByBudgetId.sql" />
+    <Build Include="dbo\Stored Procedures\das_BudgetItem_GetById.sql" />
+    <Build Include="dbo\Stored Procedures\das_BudgetItem_Save.sql" />
+    <Build Include="dbo\Stored Procedures\das_BudgetTab_GetById.sql" />
+    <Build Include="dbo\Stored Procedures\das_BudgetItem_DeleteByCategorySettingId.sql" />
+    <Build Include="dbo\Stored Procedures\acc_User_GetByRestCode.sql" />
+    <Build Include="dbo\Stored Procedures\set_Category_GetDefaultSectionByUser.sql" />
+    <Build Include="dbo\Stored Procedures\set_Category_AddCategoryDefaultByUser.sql" />
+    <Build Include="dbo\Stored Procedures\set_Category_DeleteAllCategoryDefaultByUser.sql" />
+    <Build Include="dbo\Stored Procedures\set_CategorySetting_DeleteByBudgetId.sql" />
+    <Build Include="dbo\Stored Procedures\set_Category_DeleteAllCategoryChildrenByParentId.sql" />
+    <Build Include="dbo\Stored Procedures\set_CategorySetting_DeleteByParentCategoryId.sql" />
+    <Build Include="dbo\Stored Procedures\acc_User_GetByUserId.sql" />
+    <Build Include="dbo\Stored Procedures\sec_IsExistEmailOfUserId.sql" />
+    <Build Include="dbo\Stored Procedures\acc_User_GetByRoleId.sql" />
+    <Build Include="dbo\Stored Procedures\acc_User_CheckDuplicateUserName.sql" />
+    <Build Include="dbo\Stored Procedures\acc_User_CheckDuplicateEmail.sql" />
+    <Build Include="dbo\Stored Procedures\das_Budget_CloneNewBudgetById.sql" />
+    <Build Include="dbo\Stored Procedures\acc_RestActiveCode_ResetNotDefaultRestByUserId.sql" />
+    <Build Include="dbo\Stored Procedures\acc_User_GetSSPMember.sql" />
+    <Build Include="dbo\Functions\ufn_GetRestCodeByUserId.sql" />
+    <Build Include="dbo\Stored Procedures\das_Budgets_GetBudgetDeletedByUserId.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BCS.demo.publish.xml" />
+    <None Include="BCS.alpha.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="BCS.Database.refactorlog" />
+  </ItemGroup>
+</Project>

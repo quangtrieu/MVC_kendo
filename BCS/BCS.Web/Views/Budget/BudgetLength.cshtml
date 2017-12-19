@@ -1,0 +1,165 @@
+﻿@using Kendo.Mvc.UI
+@using BCS.BusinessLogic
+@using BCS.Web.Models
+
+@model BCS.Web.Models.BudgetModel
+
+@{
+    ViewBag.Title = string.Format("Budget Length (Budget Name: {0})", Model.BudgetNameDisplay);
+    Layout = "~/Views/Shared/_LayoutNewBudget.cshtml";
+}
+
+<div class="form-group clearfix dashboard-body" style="margin: 0 auto; -moz-border-radius: 2em">
+    @Html.Hidden("BudgetId", Model.BudgetId)
+    @*@if (!ViewBag.ShowOrHiddenSetBudLength)
+    {
+        Html.RenderPartial("~/Views/HelpSetting/_BudgetLength.cshtml");
+    }
+    else
+    {
+        <div class="col-xs-12 text-right">
+            @Html.CheckBox("isShowHelp", true, new { @onclick = "showHiddenHelp(false, " + BCS.Commons.BCSCommonData.HELP_SETTING_BUDGET_LENGTH + ");" })
+            @Html.Label("Do not show again")
+        </div>
+    }*@
+    <div class="col-xs-12">
+        <table style="margin: 0 auto;">
+            <tr class="">
+                <th colspan="2" class="text-center">@Html.Label("BUDGET LENGTH", new { @style = "font-size: 25pt; color: rgb(85, 150, 207)" })</th>
+            </tr>
+            <tr>
+                <td width="150px" class="text-right">Type:</td>
+                <td>
+                    @(Html.Kendo().DropDownList()
+                        .Name("BudgetLengthType")
+                        .HtmlAttributes(new { @style = "width: 245px" })
+                        .DataTextField("DataText")
+                        .DataValueField("DataValue")
+                        .Value(Model.BudgetLengthType.ToString())
+                        .BindTo(ViewBag.BudgetType)
+                    )
+                </td>
+            </tr>
+
+            @{
+                if (Model.BudgetLengthType == BCS.Commons.BCSCommonData.BUDGET_TYPE_MONTH)
+                {
+                    <tr>
+                        <td class="text-right">Start:</td>
+                        <td>
+                            @(Html.Kendo().DatePicker()
+                                .Name("BudgetLengthStart")
+                                .HtmlAttributes(new { @style = "width: 245px" })
+                                .Start(CalendarView.Year)
+                                .Depth(CalendarView.Year)
+                                .Format("MMMM yyyy")
+                                .Value(Model.BudgetLengthStart)
+                            )
+                            <br />
+                            <span class="error validation-item-BudgetLengthStart"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Fiscal Year Starts On:</td>
+                        <td>
+                            @(Html.Kendo().DatePicker()
+                                .Name("FiscalYearStartOn")
+                                .HtmlAttributes(new { @style = "width: 245px" })
+                                .Start(CalendarView.Year)
+                                .Depth(CalendarView.Year)
+                                .Format("MMMM")
+                                .Value(Model.FiscalYearStartOn)
+                            )
+                            <br />
+                            <span class="error validation-item-FiscalYearStartOn"></span>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td class="text-right">Start:</td>
+                        <td>
+                            @(Html.Kendo().DatePicker()
+                                .Name("BudgetLengthStart")
+                                .HtmlAttributes(new { @style = "width: 245px" })
+                                .Start(CalendarView.Decade)
+                                .Depth(CalendarView.Decade)
+                                .Format("yyyy")
+                                .Value(Model.BudgetLengthStart)
+                            )
+                            <br />
+                            <span class="error validation-item-BudgetLengthStart"></span>
+                        </td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td class="text-right">Budget Length:</td>
+                <td>
+                    @(Html.Kendo().DropDownList()
+                        .Name("BudgetMonthLenth")
+                        .HtmlAttributes(new { @style = "width: 245px" })
+                        .OptionLabel("")
+                        .DataTextField("DataText")
+                        .DataValueField("DataValue")
+                        .Value(Model.BudgetLength.ToString())
+                        .BindTo(ViewBag.BudgetMonthLenth)
+                    )
+                </td>
+            </tr>
+            @*<tr>
+                <td colspan="2" class="text-center">
+                    @Html.Label("SAVE", new { @id = "budgetlength", @class = "btn btn-primary", @onclick = "callSaveBudgetLength();", @style = "width: 80px; display: none" })
+                </td>
+            </tr>*@
+        </table>
+    </div>
+</div>
+@Html.HiddenFor(m=> m.EditFlg)
+<script>
+    $(document).ready(function () {
+        // set readonly to datetime picker
+        $('#BudgetLengthStart').attr('readonly', 'readonly');
+        $('#FiscalYearStartOn').attr('readonly', 'readonly');
+
+        var editFlag = JSON.parse($('#EditFlg').val().toLowerCase());
+
+        if (editFlag) {
+            $("#BudgetLengthType").on("change", function (e) {
+                changeBudgetLengthType($(this).val(), false);
+            });
+            $('#BudgetLengthStart').on('change', function (e) {
+                $('.btn-save-change').css('display', 'inline-block');
+            });
+            $('#FiscalYearStartOn').on('change', function (e) {
+                $('.btn-save-change').css('display', 'inline-block');
+            });
+            $('#BudgetMonthLenth').on('change', function (e) {
+                $('.btn-save-change').css('display', 'inline-block');
+            });
+
+            // set action to button save change budget
+            $('.btn-save-change').unbind('click');
+            $('.btn-save-change').on('click', function () {
+                callSaveBudgetLength();
+                setTimeout(function () {
+                    $('.btn-save-change').css('display', 'none');
+                }, 1500);
+            });
+        }
+        else {
+            $('#budgetlength').hide();
+            var budgetType = $("#BudgetLengthType").data("kendoDropDownList");
+            budgetType.enable(false);
+            var budgetLenth = $("#BudgetMonthLenth").data("kendoDropDownList");
+            budgetLenth.enable(false);
+
+            if ($('#BudgetLengthStart').length > 0)
+                $('#BudgetLengthStart').data('kendoDatePicker').enable(false);
+
+            if($('#FiscalYearStartOn').length > 0)
+                $('#FiscalYearStartOn').data('kendoDatePicker').enable(false);
+        }
+    })
+</script>

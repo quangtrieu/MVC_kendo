@@ -1,0 +1,191 @@
+﻿@using BCS.Web.Models
+@using BCS.Framework.WebExtensions.Label
+@using Kendo.Mvc.UI
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+
+@{
+    ViewBag.Title = "User Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .category-setting .k-grid-content {
+        height: auto !important;
+        max-height: 65vh !important;
+        overflow-y: auto;
+    }
+    .btn-crm-action{
+        cursor: pointer; 
+    }
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+        background-color: #428BCA !important;
+    }
+    .category-setting .k-grid-header .k-header {
+        text-align: left !important;
+    }
+    /*.text-left{
+        margin-left: -10px;
+    }*/
+</style>
+
+<div class="form-group clearfix dashboard-body" style="margin: 0 auto; -moz-border-radius: 2em">
+    <div class="col-xs-12 text-center margin-top-20">
+        @Html.Label("User Management", new { @style = "color: #428bca; font-size: 20pt; margin-top: 20px; margin-bottom: 20px" })
+    </div>
+    <div style="background-color: #FFF; box-shadow: 0px 0px 5px #888888; margin-top: 20px; padding: 10px;">
+        @*tab by budget*@
+        <ul class="nav nav-tabs">
+            <li><a data-toggle="tab" href="#tabSuper">Super User</a></li>
+            <li><a data-toggle="tab" href="#tabTech">Tech Support</a></li>
+            <li><a data-toggle="tab" href="#tabStandalone">BCS Website</a></li>
+            <li><a data-toggle="tab" href="#tabAssociated">SSP Members</a></li>
+        </ul>
+        <div class="tab-content category-setting">
+            <div id="tabSuper" class="tab-pane fade in tab-area-by-section">
+                @(Html.Kendo().Grid<UserModel>()
+                    .Name("SuperUserGrid")
+                    .Scrollable(s => s.Enabled(true))
+                    .Columns(columns =>
+                    {
+                        //columns.Template(p => p.UserId).ClientTemplate("<div class='text-center move-item'>#= renderNumberBySuper() #</div>").Title("#").Width(20);
+                        columns.Bound(p => p.UserName).ClientTemplate("<div class='text-left'>#= UserName #</div>").Title("Login").Width(70).Filterable(true);
+                        columns.Bound(p => p.FullName).Template(@<text>@Html.Raw(HttpUtility.HtmlDecode("#= FullName #"))</text>).Title("Name").Width(100).Filterable(true);
+                        columns.Bound(p => p.Email).ClientTemplate("<div class='text-left'>#= Email #</div>").Title("Email").Width(100).Filterable(true);
+                        columns.Bound(p => p.Phone).ClientTemplate("<div class='text-left'>#=Phone == null ? '---' : Phone #</div>").Title("Phone").Width(70).Filterable(false);
+                        columns.Bound(p => p.Active).ClientTemplate("<div class='text-left'>#=Active ? 'Active' : 'In-Active' #</div>").Title("Status").Width(50).Filterable(false);
+                        columns.Bound(p => p.UserId).ClientTemplate("<div class='text-left'>#= getActionByRow('SuperUserGrid', UserId, Active) #</div>").Title("Action").Width(50).Filterable(false);
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.Custom().Text("").HtmlAttributes(new { @title = "Add New User", @onclick = "addNewUser('SuperUserGrid', 0)", @class = "btn btn-default btn-crm btn-crm-action fa fa-plus-square-o", @style = "padding-top:10px;height:34px; width:40px" });
+                    })
+                    .Filterable(filterable => filterable.Extra(false).Operators(operators => operators.ForString(str => str.Clear().StartsWith("Starts with").Contains("Contains").IsEqualTo("Is equal to").IsNotEqualTo("Is not equal to"))))
+                    .AutoBind(true)
+                    .Reorderable(p => p.Columns(false))
+                    .Resizable(p => p.Columns(false))
+                    .Selectable(s => s.Mode(GridSelectionMode.Single))
+                    .Pageable(pageable => pageable.Refresh(false).Enabled(true).PreviousNext(false).Numeric(false).Input(false))
+                    .DataSource(dataSource => dataSource.Ajax().PageSize(int.MaxValue)
+                        .Read(read =>
+                        {
+                            read.Action("GetUserByRole", "User", new { systemId = BCS.Commons.BCSCommonData.SYSTEM_ID_BUDGET_SYSTEM, roleId = BCS.Commons.BCSCommonData.ROLE_NAME_SUPPER_USER });
+                        }))
+                )
+            </div>
+            <div id="tabTech" class="tab-pane fade in tab-area-by-section">
+                @(Html.Kendo().Grid<UserModel>()
+                    .Name("TechUserGrid")
+                    .Scrollable(s => s.Enabled(true))
+                    .Columns(columns =>
+                    {
+                        //columns.Template(p => p.UserId).ClientTemplate("<div class='text-center move-item'>#= renderNumberByTech() #</div>").Title("#").Width(20);
+                        columns.Bound(p => p.UserName).ClientTemplate("<div class='text-left'>#= UserName #</div>").Title("Login").Width(70).Filterable(true);
+                        columns.Bound(p => p.FullName).Template(@<text>@Html.Raw(HttpUtility.HtmlDecode("#= FullName #"))</text>).Title("Name").Width(100).Filterable(true);
+                        columns.Bound(p => p.Email).ClientTemplate("<div class='text-left'>#= Email #</div>").Title("Email").Width(100).Filterable(true);
+                        columns.Bound(p => p.Phone).ClientTemplate("<div class='text-left'>#=Phone == null ? '---' : Phone #</div>").Title("Phone").Width(70).Filterable(false);
+                        columns.Bound(p => p.Active).ClientTemplate("<div class='text-left'>#=Active ? 'Active' : 'In-Active' #</div>").Title("Status").Width(50).Filterable(false);
+                        columns.Bound(p => p.UserId).ClientTemplate("<div class='text-left'>#= getActionByRow('TechUserGrid', UserId, Active) #</div>").Title("Action").Width(50).Filterable(false);
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.Custom().Text("").HtmlAttributes(new { @title = "Add New User", @onclick = "addNewUser('TechUserGrid', 0)", @class = "btn btn-default btn-crm btn-crm-action fa fa-plus-square-o", @style = "padding-top:10px;height:34px; width:40px" });
+                    })
+                    .Filterable(filterable => filterable.Extra(false).Operators(operators => operators.ForString(str => str.Clear().StartsWith("Starts with").Contains("Contains").IsEqualTo("Is equal to").IsNotEqualTo("Is not equal to"))))
+                    .AutoBind(true)
+                    .Reorderable(p => p.Columns(false))
+                    .Resizable(p => p.Columns(false))
+                    .Selectable(s => s.Mode(GridSelectionMode.Single))
+                    .Pageable(pageable => pageable.Refresh(false).Enabled(true).PreviousNext(false).Numeric(false).Input(false))
+                    .DataSource(dataSource => dataSource.Ajax().PageSize(int.MaxValue)
+                        .Read(read =>
+                        {
+                            read.Action("GetUserByRole", "User", new { systemId = BCS.Commons.BCSCommonData.SYSTEM_ID_BUDGET_SYSTEM, roleId = BCS.Commons.BCSCommonData.ROLE_NAME_SITE_TECH_SUPPORT });
+                        }))
+                )
+            </div>
+            <div id="tabStandalone" class="tab-pane fade in tab-area-by-section">
+                @(Html.Kendo().Grid<UserModel>()
+                    .Name("StandaloneUserGrid")
+                    .Scrollable(s => s.Enabled(true))
+                    .Columns(columns =>
+                    {
+                        //columns.Template(p => p.UserId).ClientTemplate("<div class='text-center move-item'>#= renderNumberByStandalone() #</div>").Title("#").Width(20);
+                        columns.Bound(p => p.UserName).ClientTemplate("<div class='text-left'>#= UserName #</div>").Title("Login").Width(70).Filterable(true);
+                        columns.Bound(p => p.FullName).Template(@<text>@Html.Raw(HttpUtility.HtmlDecode("#= FullName #"))</text>).Title("Name").Width(100).Filterable(true);
+                        columns.Bound(p => p.Email).ClientTemplate("<div class='text-left'>#= Email #</div>").Title("Email").Width(100).Filterable(true);
+                        columns.Bound(p => p.Phone).ClientTemplate("<div class='text-left'>#=Phone == null ? '---' : Phone #</div>").Title("Phone").Width(70).Filterable(false);
+                        columns.Bound(p => p.Active).ClientTemplate("<div class='text-left'>#=Active ? 'Active' : 'In-Active' #</div>").Title("Status").Width(50).Filterable(false);
+                        columns.Bound(p => p.UserId).ClientTemplate("<div class='text-left'>#= getActionByRow('StandaloneUserGrid', UserId, Active) #</div>").Title("Action").Width(50).Filterable(false);
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.Custom().Text("").HtmlAttributes(new { @title = "Add New User", @onclick = "addNewUser('StandaloneUserGrid', 0)", @class = "btn btn-default btn-crm btn-crm-action fa fa-plus-square-o", @style = "padding-top:10px;height:34px; width:40px" });
+                    })
+                    .Filterable(filterable => filterable.Extra(false).Operators(operators => operators.ForString(str => str.Clear().StartsWith("Starts with").Contains("Contains").IsEqualTo("Is equal to").IsNotEqualTo("Is not equal to"))))
+                    .AutoBind(true)
+                    .Reorderable(p => p.Columns(false))
+                    .Resizable(p => p.Columns(false))
+                    .Selectable(s => s.Mode(GridSelectionMode.Single))
+                    .Pageable(pageable => pageable.Refresh(false).Enabled(true).PreviousNext(false).Numeric(false).Input(false))
+                    .DataSource(dataSource => dataSource.Ajax().PageSize(int.MaxValue)
+                        .Read(read =>
+                        {
+                            read.Action("GetUserByRole", "User", new { systemId = BCS.Commons.BCSCommonData.SYSTEM_ID_BUDGET_SYSTEM, roleId = BCS.Commons.BCSCommonData.ROLE_NAME_BCS_USER });
+                        }))
+                )
+            </div>
+            <div id="tabAssociated" class="tab-pane fade in tab-area-by-section">
+                @(Html.Kendo().Grid<UserModel>()
+                    .Name("AssociatedUserGrid")
+                    .Scrollable(s => s.Enabled(true))
+                    .Columns(columns =>
+                    {
+                        //columns.Template(p => p.UserId).ClientTemplate("<div class='text-center move-item'>#= renderNumberByAssociated() #</div>").Title("#").Width(20);
+                        columns.Bound(p => p.UserName).ClientTemplate("<div class='text-left'>#= UserName #</div>").Title("Login").Width(70).Filterable(true);
+                        columns.Bound(p => p.FullName).Template(@<text>@Html.Raw(HttpUtility.HtmlDecode("#= FullName #"))</text>).Title("Name").Width(100).Filterable(true);
+                        columns.Bound(p => p.Email).ClientTemplate("<div class='text-left'>#= RestCode #</div>").Title("Rest Code").Width(100).Filterable(false);
+                        columns.Bound(p => p.Email).ClientTemplate("<div class='text-left'>#= Email #</div>").Title("Email").Width(100).Filterable(true);
+                        columns.Bound(p => p.Phone).ClientTemplate("<div class='text-left'>#=Phone == null ? '---' : Phone #</div>").Title("Phone").Width(70).Filterable(false);
+                        columns.Bound(p => p.Active).ClientTemplate("<div class='text-left'>#=Active ? 'Active' : 'In-Active' #</div>").Title("Status").Width(50).Filterable(false);
+                        columns.Bound(p => p.UserId).ClientTemplate("<div class='text-left'>#= getActionByRowAssociatedUser('AssociatedUserGrid', UserId, Active) #</div>").Title("Action").Width(50).Filterable(false);
+                    })
+                    //.ToolBar(toolbar =>
+                    //{
+                    //    toolbar.Custom().Text("").HtmlAttributes(new { @title = "Add New User", @onclick = "addNewUser('AssociatedUserGrid', 0)", @class = "btn btn-default btn-crm btn-crm-action fa fa-plus-square-o", @style = "padding-top:10px;height:34px; width:40px" });
+                    //})
+                    .Filterable(filterable => filterable.Extra(false).Operators(operators => operators.ForString(str => str.Clear().StartsWith("Starts with").Contains("Contains").IsEqualTo("Is equal to").IsNotEqualTo("Is not equal to"))))
+                    .AutoBind(true)
+                    .Reorderable(p => p.Columns(false))
+                    .Resizable(p => p.Columns(false))
+                    .Selectable(s => s.Mode(GridSelectionMode.Single))
+                    .Pageable(pageable => pageable.Refresh(false).Enabled(true).PreviousNext(false).Numeric(false).Input(false))
+                    .DataSource(dataSource => dataSource.Ajax().PageSize(int.MaxValue)
+                        .Read(read =>
+                        {
+                            read.Action("GetSSPMember", "User", new { systemId = BCS.Commons.BCSCommonData.SYSTEM_ID_SSP_SYSTEM, roleId = BCS.Commons.BCSCommonData.ROLE_NAME_BCS_USER });
+                        }))
+                )
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        window.setaJs.ToolBar('#SuperUserGrid');
+        window.setaJs.ToolBar('#TechUserGrid');
+        window.setaJs.ToolBar('#StandaloneUserGrid');
+        //window.setaJs.ToolBar('#AssociatedUserGrid');
+
+        // set active first tab
+        $(".nav-tabs li:first > a").click();
+
+        // set on double click row open edit popup on grid view
+        setTimeout(function () {
+            $('tr').on('dblclick', function () {
+                $(this).find('.fa-edit').parent().click();
+            });
+        }, 1000);
+    });
+</script>

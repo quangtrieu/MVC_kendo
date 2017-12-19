@@ -1,0 +1,191 @@
+﻿.fa.btn-address-user {
+    border: 1px solid #cccccc;
+    font-size: 14px;
+    padding: 6px 7px 3px;
+}
+.k-detail-cell .k-pager-nav, .k-detail-cell .k-pager-numbers, .k-detail-cell .k-pager-sizes {
+    display: none;
+}
+.k-edit:before {
+  content: "\f044";
+}
+.k-delete:before {
+  content: "\f014";
+}
+#UserManagerGrid th[data-field="FirstName"] {
+    border-left: 0 none;
+}
+#details-container li {
+    display: block;
+    line-height: 1.9em;
+}
+#details-container ul{padding:10px;}
+
+li.k-item.k-sort-asc.k-state-default[role="menuitem"], li.k-item.k-sort-desc.k-state-default[role="menuitem"] {
+    display: none;
+}
+td[role="gridcell"] .btn-crm.btn-crm-action{background:none !important; padding: 0px 5px;}
+.k-button.k-button-icontext.k-grid-ViewDetails.btn-crm.btn-crm-action.k-detail-icon.btn-crm.btn-crm-action.k-detail-icon {
+    padding: 2px 5px;
+}
+.k-button.k-button-icontext.k-grid-ViewDetails.btn-crm.btn-crm-action.k-detail-icon.btn-crm.btn-crm-action.k-detail-icon > span{
+    font-size:16px;
+}
+
+.enddatePosition{
+    clear: both;
+    display: block;
+    margin-bottom: 20px;
+    margin-top: -30px;
+    position: relative;
+}
+.enddateEmployee{
+    clear: both;
+    display: block;
+    margin-bottom: 20px;
+    margin-top: 0px;
+    position: relative;
+}
+/***Rating****/
+.reply-rating {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    cursor: default;
+    display: inline-block;
+}
+
+.reply-rating li {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.reply-rating li.reply-rating-star-full:after {
+    content: "\2605";
+    font-family: Arial;
+    font-size: 20px;
+    color: orange;
+}
+
+.reply-rating li.reply-rating-star-empty:after {
+    content: "\2606";
+    font-family: Arial;
+    font-size: 20px;
+    color: gray;
+}
+
+/***Form Search****/
+.form-group.from-fix-group {
+    padding: 0;font-size:11px;
+}
+.form-group.from-fix-group > label{padding:0px;font-size:12px;line-height: 26px;}
+.form-group.from-fix-group > div{padding:0 5px 0 0;}
+.form-group.from-fix-group input {
+    font-size: 11px;
+}
+.form-control.field-control {
+    border-color: #ccc;
+    height: 28px;
+}
+.k-grid-Download span{
+    background-image:none;
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.k-grid-Download{
+    height: 22px;
+    overflow: hidden;
+    width: 35px;
+    border:none;
+}
+.k-grid-Download > span:before {
+  content: "\f019";
+}
+#dvUserPositionGrid > h4, .titleEmpDocs {
+    font-size: 18px;
+    font-weight: bold;
+}
+.btnDatePicker > span{
+    font-size:18px;
+}
+.btnDatePicker {
+    background: #ffffff none repeat scroll 0 0;
+    border: 1px solid #ddd;
+    display: block;
+    height: 21px;
+    padding:6px 5px 3px;
+    position: absolute;
+    right: 16px;
+    top: 1px;
+    cursor:pointer;
+}
+/*****Datepicker Style****/
+.ui-widget-header {
+    background: #f5f5f5 !important;
+    border: medium none !important;
+}
+#ui-datepicker-div {
+    padding: 0;
+    font-family: "Open Sans",sans-serif !important;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.ui-datepicker .ui-datepicker-title {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.8em;
+    margin: 0 2.3em;
+    text-align: center;
+}
+#ui-datepicker-div.ui-datepicker th {
+    border: 0 none;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 0.5em 0.3em 0.2em;
+    text-align: center;
+}
+.ui-datepicker-calendar > thead {
+    border-bottom: 1px solid #cccccc;
+    background: #f5f5f5 !important;
+    margin-bottom:5px;
+}
+
+.ui-datepicker-header .ui-datepicker-next.ui-corner-all,
+.ui-datepicker-header .ui-datepicker-prev.ui-corner-all {
+    background-repeat: no-repeat;
+    display: inline-block;
+    font-size: 0;
+    height: 16px;
+    line-height: 0;
+    overflow: hidden;
+    text-align: center;
+    width: 16px;
+}
+.ui-datepicker-header .ui-datepicker-next.ui-corner-all .ui-icon, .ui-datepicker-header .ui-datepicker-next.ui-corner-all .ui-icon::before,
+.ui-datepicker-header .ui-datepicker-prev.ui-corner-all .ui-icon, .ui-datepicker-header .ui-datepicker-prev.ui-corner-all .ui-icon::before,
+.ui-icon::after {
+    background-image: url("../../plugin/kendoui/css/Bootstrap/sprite.png");
+    border-color: transparent;
+}
+.ui-icon.ui-icon-circle-triangle-e {
+    background-position: 0 -16px;
+}
+.ui-icon.ui-icon-circle-triangle-w{
+    background-position: 0 -48px;
+}
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next{top:7px !important;}
+.ui-datepicker td{padding:3px !important;}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{color:#333;}
+#StartDate, #EffectiveDate {
+    cursor: auto;
+}
+.departmentCombobox .k-dropdown-wrap.k-state-default,
+.positionCombobox .k-dropdown-wrap.k-state-default,
+.isSalariedCombobox .k-dropdown-wrap.k-state-default {
+    padding-bottom: 1px;
+}

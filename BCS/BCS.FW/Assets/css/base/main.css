@@ -1,0 +1,643 @@
+﻿/* reset everything to the default box model */
+
+*,
+:before,
+:after
+{
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+/* set a border-box model only to elements that need it */
+
+.btn,.form-control, /* if this class is applied to a Kendo UI widget, its layout may change */
+.navbar-header,
+.navbar-brand,
+.container,
+.container-fluid,
+.row,
+.col-xs-1,
+.col-sm-1,
+.col-md-1,
+.col-lg-1,
+.col-xs-2,
+.col-sm-2,
+.col-md-2,
+.col-lg-2,
+.col-xs-3,
+.col-sm-3,
+.col-md-3,
+.col-lg-3,
+.col-xs-4,
+.col-sm-4,
+.col-md-4,
+.col-lg-4,
+.col-xs-5,
+.col-sm-5,
+.col-md-5,
+.col-lg-5,
+.col-xs-6,
+.col-sm-6,
+.col-md-6,
+.col-lg-6,
+.col-xs-7,
+.col-sm-7,
+.col-md-7,
+.col-lg-7,
+.col-xs-8,
+.col-sm-8,
+.col-md-8,
+.col-lg-8,
+.col-xs-9,
+.col-sm-9,
+.col-md-9,
+.col-lg-9,
+.col-xs-10,
+.col-sm-10,
+.col-md-10,
+.col-lg-10,
+.col-xs-11,
+.col-sm-11,
+.col-md-11,
+.col-lg-11,
+.col-xs-12,
+.col-sm-12,
+.col-md-12,
+.col-lg-12
+{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+/*==================== COMMON =============*/
+body {
+    color: #333;
+    font-family: Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857142857143;
+}
+.form-group .k-widget, .form-group .k-textbox{
+    width: 100%;
+}
+.text-left {
+    text-align: left!important;
+}
+.text-center {
+    text-align: center!important;
+}
+.text-right {
+    text-align: right!important;
+}
+.text-bold {
+    font-weight: bold!important;
+}
+.form-group{
+    margin-bottom: 5px;
+    min-height: 30px;
+}
+.form-group .control-label {
+    text-align: left;
+}
+.divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #e5e5e5;
+}
+hr {
+    border-top: 1px solid #949494;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+legend {
+    background: #ddd ;
+    color: #333;
+    font-size: 20px;
+    padding: 5px 0px 5px 10px;
+    margin-bottom: 10px;
+}
+fieldset .form-horizontal {
+    padding: 0px 10px;
+}
+/*============ HEADER =============*/
+/*header {
+    background-color: #57bae7;
+    border-bottom: 1px solid #DBDBDB;
+}
+header{
+    background: #57bae7;
+    margin-bottom: 20px;
+}
+header .nav>li{
+    font-size: 27px;
+}
+header .nav>li>a{
+    color: #fff;
+}
+header #logo{
+    margin: 0;padding: 0;
+}
+header #logo img{
+    max-height: 60px;
+}*/
+header .navbar-brand {
+    padding: 0;
+}
+header .navbar-default {
+    background: #59B8E6;
+    border-radius: 0px;
+    border: none;
+    margin: 0;
+}
+header .navbar-default .navbar-nav>li>a {
+    font-size: 27px;
+    color: #fff;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+header .navbar-default .navbar-nav>li>a:hover, 
+header .navbar-default .navbar-nav>li>a:focus {
+    background: #296ca3;
+    color: #fff;
+}
+header .navbar-default .navbar-nav>.open>a, 
+header .navbar-default .navbar-nav>.open>a:hover, 
+header .navbar-default .navbar-nav>.open>a:focus {
+    background: #296ca3;
+    color: #fff;    
+}
+header .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, 
+header .navbar-default .navbar-nav .open .dropdown-menu>li>a:focus {
+    color: #fff;
+    background: #296ca3;
+}
+header .navbar-default .navbar-nav .open .dropdown-menu>.active>a, 
+header .navbar-default .navbar-nav .open .dropdown-menu>.active>a:hover, 
+header .navbar-default .navbar-nav .open .dropdown-menu>.active>a:focus {
+    background: #296ca3;
+    color: #fff;  
+}
+header .navbar-default .fa-question-circle {
+    font-size: 23px;
+}
+
+/*============== HEADER NOTIFI ============*/
+header #header-help-and-notifi {
+    position: relative;
+}
+header #header-help-and-notifi a{
+    cursor: pointer;
+    padding: 18px 15px;
+}
+header #notification-badge {
+    position: absolute;
+    top: 10px;left: 30px;
+    background: #d04437;
+    width: 15px;
+    height: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 30px;
+    line-height: 13px;
+}
+/*header #header-help-and-notifi #icon-notification {
+        /*visibility: hidden;!1!
+        position: absolute;
+        top: 8px;
+        left: 26px;
+        height: 9px;
+        width: 9px;
+        background-color: #d04437;
+        border-radius: 50%;
+        border-width: 1px;
+        border-color: #B8B8B8;
+        border-style: solid;
+}*/
+/*============== HEADER USERNAME ============*/
+header #header-details-user-fullname > a {
+    padding: 17px 10px;
+    margin-right: 10px;
+}
+header .crm-avatar {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+header .crm-avatar img {
+    width: 24px;height: 24px;
+    border-radius: 3px;
+}
+header .navbar-form {
+    padding: 5px 15px;
+}
+/*=============== NAVIGATION =========*/
+.nav>li>a:hover, .nav>li>a:focus,
+.nav .open>a, .nav .open>a:hover, .nav .open>a:focus{
+    background: transparent;
+    background-color: #5b9bd1 !important;
+    color: #FFF;
+}
+nav a{
+    font-weight: bold;
+}
+.navbar-module {
+    border-radius: 0;
+    border-right: 0;
+    border-left: 0;
+    border-bottom: 0;
+    margin-bottom: 0;
+}
+.navbar-module .navbar-nav>li>a {
+    padding: 15px 14px;
+}
+/*============ FORM SEARCH TOOLBAR ==========*/
+.form-search-toolbar {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+/*============== CUSTOMIZE MODAL ===========*/
+.modal-footer {
+    margin-left: -18px;
+    margin-right: -18px;
+    margin-bottom: -5px;
+    padding-bottom: 0;
+}
+/*=========== ERROR MESSAGE ==========*/
+.field-validation-error {
+    display: block;
+    margin-top: 5px;
+    color: #ff0000;
+}
+.input-validation-error,
+.input-validation-error.form-control:focus {
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(255, 0, 0, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(255, 0, 0, 0.6);
+    border: 1px solid #ff0000;
+}
+.input-validation-error-kendo {
+    outline: 0!important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(255, 0, 0, 0.6)!important;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(255, 0, 0, 0.6)!important;
+    border: 1px solid #ff0000 !important;
+}
+/*========= BUTTON LIST VIEWS =======*/
+.button-list .fa{
+    font-size: 17px;
+    display: inline-block;
+    margin-right: 7px;
+    cursor: pointer;
+}
+.k-state-selected .fa,
+.k-state-selected a{
+    color: #fff;
+}
+/*============= TIME ZONE ===========*/
+#timezone {
+    margin-top: 20px;
+}
+#timezone  a {
+    text-decoration: underline;
+}
+/*============ image section field ================*/
+.udf-group-layout{
+        padding: 3px;
+        background: #fff;
+        border: 1px solid #e2e2e2;
+        cursor: pointer;
+}
+.udf-group-layout.active {
+    border: 1px solid #999;
+}
+/*============ COMPONENT CAMPAIN INFO TAB RESULT ========*/
+#campainInfoTabResult {
+    padding: 20px;
+}
+#campainInfoTabResult aside {
+    margin-bottom: 20px;
+    padding-top: 20px;
+}
+#campainInfoTabResult section {
+    background: #f4f4f4;
+    padding: 20px;
+}
+
+#campainInfoTabResult .progress {
+    height: 40px;line-height: 40px;
+    background: #f0ad4e;
+    color: #ffffff;
+}
+#campainInfoTabResult .point-response i {
+    color: #337ab7;
+}
+#campainInfoTabResult .point-goal i {
+    color: #f0ad4e;
+}
+/*============ COMPONENT CAMPAIN DESCRIPTION ========*/
+#campaignDesc h4{
+    padding-top: 10px;
+}
+#campaignDesc a.list-group-item i {
+    color: #205081;
+}
+#campaignDesc a.list-group-item{
+    color: #000;
+}
+#campaignDesc a.list-group-item:hover {
+    color: blue;
+    text-decoration: underline;
+}
+#campaignDesc .list-group-item.disabled i,
+#campaignDesc .list-group-item.disabled,
+#campaignDesc .list-group-item.disabled:hover{
+    color: grey;
+}
+#campaignDesc .col-right {
+    border: 1px solid #ccc;
+}
+/*============= select field =======================*/
+.select-list {
+    border: 1px solid #BBBBBB;
+    height: 100%;
+    min-height: 245px;
+    margin: 0;
+    outline: none;
+    color: #333333;
+    line-height: 16px;
+    width: 100%;
+    padding: 3px;
+}
+
+/*============== FORM BUILDER ================*/
+.panel.panel-default{
+    border: none;
+}
+.panel-heading {
+    border: 1px solid #ddd;
+}
+.panel-heading .first {
+    color: #333;
+    background-color: #f5f5f5;
+}
+.panel-heading .first .panel-title {
+    float: left;
+    font-size: 20px;
+    line-height: 35px;
+    font-weight: normal;
+    margin-right: 12px;
+    max-width: 18em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.panel-heading .second {
+    border-color: #ddd;
+    padding: 10px 15px 0px 15px;
+    margin: 10px -15px 0px -15px;
+    border-top: 1px solid #ddd;
+}
+.panel-heading .panel-button-right {
+    float: right;
+}
+.panel-body {
+    padding: 15px 0px;
+}
+.btn-add-tab:hover {
+    background: transparent!important;
+    border: 1px solid #fff!important;
+    box-shadow: none;
+}
+.btn-add-tab .k-link{
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+.btn-add-tab .k-link button {
+    padding: 4px 10px;
+}
+/*========== MODULE =========*/
+section.module {
+    margin: 20px 0;
+}
+.module-heading {
+    background: url("../../img/line.png") repeat-x 50% 50%;
+    padding: 0px 0px 5px 0;
+    clear: both;
+}
+.module-heading .module-title {
+    font-size: 20px;
+    display: inline-block;
+    margin: 0;
+    background-color: #fff;
+    padding-right: 10px;
+}
+.module-heading .module-action {
+    float: right;
+    background: #fff;
+    padding-left: 10px;
+}
+.module-heading .module-action a {
+    font-size: 18px;
+}
+.module-filter {
+    padding: 10px 0px;
+    text-align: right;
+}
+.module-filter label {
+    font-weight: normal;
+}
+.module-filter .label-filter {
+    font-weight: bold;
+}
+.module-filter .form-group {
+    padding: 0px 15px;
+}
+/*=============== POPUP CONTENT ===========*/
+.k-window {
+    border: none!important;
+}
+.k-window-titlebar.k-header {
+    background: #59B8E6;
+}
+.k-window-title {
+    color: #fff;
+}
+/*.k-window-titlebar.k-header {
+    background: #FFF;
+}
+.k-window-title {
+    color: #000;
+}*/
+.mod-header, .label-header {
+    background: url("../../img/line.png") repeat-x 50% 50%;
+    padding: 0px 0px 5px 0;
+    clear: both;
+}
+.mod-header h2 {
+    font-size: 22px;
+    display: inline-block;
+    margin: 0;
+    background-color: #fff;
+    padding-right: 10px;
+}
+.collapse-icon {
+    margin-left: 10px;
+    margin-right: 0;
+    font-size: 12px;
+}
+.btn-add-new-section {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.drag-drop-field > div.spacer:hover,
+.drag-drop-field > div.heading:hover
+{
+    cursor: all-scroll;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+    border: 1px dashed #a6a6a6;
+}
+.drag-drop-field > div.spacer .deleteSpacer,
+.drag-drop-field > div.heading .editHeading,
+.drag-drop-field > div.heading .deleteHeading {
+    display: none;   
+}
+.drag-drop-field > div.spacer:hover .deleteSpacer,
+.drag-drop-field > div.heading:hover .editHeading,
+.drag-drop-field > div.heading:hover .deleteHeading
+{
+    display: block;
+}
+.drag-drop-field label.control-label{
+    cursor: all-scroll;
+}
+.drag-drop-field {
+    min-height: 10px;
+}
+.section-part {
+}
+.k-state-active .btn-del-tab {
+    display:inline;
+}
+.btn-del-tab {
+    display:none;
+}
+/*#panel-FormDesign {
+min-height:500px;
+}*/
+/*#panel-FormDesign .k-tabstrip-wrapper {
+min-height:500px;
+}
+.k-tabstrip .k-content {
+min-height:400px;
+}*/
+.systemField {
+    color:blue;
+}
+.requiredField {
+    color: red !important;
+}
+.placeholder {
+    opacity: 0.4;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+    border: 1px dashed #a6a6a6;
+}
+
+/*Grid section*/
+select.selectGridField,
+select.selectGridFilter
+{
+    min-height: 150px;
+}
+
+.bottom-selectGridField,
+.header-selectGridFilter {
+    display: none;
+}
+.imgFieldSelect {
+    cursor: pointer
+}
+.k-tabstrip .k-content {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            #hint {
+                border: none;
+            }
+
+            #hint .k-tabstrip-items {
+                padding: 0;
+            }
+.avatar-field {
+    height: 260px;
+}
+.edit-avatar-field {
+    min-height: 120px;
+    max-width: 100%;
+    cursor: pointer;
+}
+#ModuleGrid .navbar-left {
+    margin-left: -27px;
+}
+/*for header field*/
+.rhead:first-child {
+    border: 0;
+}
+.rhead {
+    float: right;
+    padding: 0 15px;
+    border-right: 1px solid #000;
+}
+.rhead strong {
+    display: block;
+    color: #000;
+    font-size: 20px;
+    line-height: 30px;
+    font-family: "Helvetica";
+    min-height: 30px;
+}
+.rhead span {
+    font-size: 16px;
+}
+.rhead-button {
+    clear: both;
+    float: right;
+    margin-top: 8px;
+}
+/*============= FEES =============*/
+.content-fees {
+    border: 1px solid #ddd;
+    border-top: none;
+    overflow: hidden;
+    margin-top: -10px;
+    padding: 20px 60px;
+}
+.content-fees .ttfvalue {
+    border-bottom: 1px solid #ddd;
+}
+@media screen and (min-width: 1024px) {
+    .no-padding-right {
+        padding-right: 0px !important;
+    }
+
+    .no-padding-left {
+        padding-left: 0px !important;
+    }
+}
+.ctl-error {
+    font-weight: normal !important;
+    color: red !important;
+}
+/*header field in section*/
+.field-heading {
+    font-size: 20px;
+    background-color: #fff;
+    text-decoration: underline;
+}
+
+.breaktime {
+    color: red;
+}

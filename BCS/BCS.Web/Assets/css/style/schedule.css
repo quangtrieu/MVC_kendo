@@ -1,0 +1,158 @@
+﻿a {
+    text-decoration: none;
+}
+
+.reply-rating li {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.reply-rating {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  cursor: default;
+  display: inline-block;
+}
+
+.reply-rating li.reply-rating-star-full:after {
+  content: "\2605";
+  font-family: Arial;
+  font-size: 20px !important;
+  color: orange;
+}
+
+.reply-rating li.reply-rating-star-empty:after {
+  content: "\2606";
+  font-family: Arial;
+  font-size: 20px !important;
+  color: gray;
+}
+/* CSS Hack for Safari browser - LongNDG 26-01-2016 */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    ::i-block-chrome,.reply-rating li.reply-rating-star-full:after {
+      content: "\2605";
+      font-family: Arial;
+      font-size: 14px !important;
+      color: orange;
+    }
+
+    ::i-block-chrome,.reply-rating li.reply-rating-star-empty:after {
+      content: "\2606";
+      font-family: Arial;
+      font-size: 14px !important;
+      color: gray;
+    }    
+}
+/* End CSS Hack for Safari browser */
+.k-state-selected {
+  color: #fff;
+  background-color: #428bca;
+  border-color: #428bca;
+}
+.k-grid-content-locked {
+    /*overflow-x: scroll !important;*/
+}
+#masterSchedulesGrid .k-grid-content {
+    overflow-x: scroll !important;
+}
+.red-border {
+    border:1px solid #ff7373 !important;
+}
+
+.shift {
+    text-align: center;
+}
+
+.table-caption {
+    padding: 5px;
+    background-color: #00599c;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.disabled-day { 
+    display: block;
+    cursor:default;
+}
+
+.active-day a{
+    color: #ff6a00 !important;
+}
+
+#masterSchedulesGrid {
+    font-size: 12px;
+}
+
+#msGridContextMenu li {
+    width: 100%;
+    border-color: white;
+}
+
+.cell-schedule-info {
+    /*font-size: 12px;
+    line-height: 12px;*/
+    width: 120px;
+}
+
+#frmEditSchedule {
+    padding: 20px;
+}
+
+#frmEditSchedule select:disabled {
+    background-color: #eeeeee;
+}
+
+.schedule-time-label {
+    width: 85px;
+}
+
+.schedule-time-input {
+    width: 100px !important;
+}
+
+.confirmed-schedule {
+    background-color: #d9edf7;
+}
+
+.k-state-selected {
+    background-color: #428bca !important;
+}
+
+.drop-enter {
+    background-color: #ffb4b4;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.drag-source {
+    background-color: #ccc;
+}
+
+.pending-request-day {
+    background-color: #feff88;
+    color: red;
+}
+
+#masterSchedulesGrid .k-grid-content-locked{
+    overflow-x:scroll;
+}
+#masterSchedulesGrid .k-grid-content > table.k-selectable, #masterSchedulesGrid .k-grid-content-locked > table.k-selectable{
+    height:100%;
+}
+
+
+
+.red-swap {
+    color: red !important;
+    }
+
+.black-swap {
+    color: #333 !important;
+    }

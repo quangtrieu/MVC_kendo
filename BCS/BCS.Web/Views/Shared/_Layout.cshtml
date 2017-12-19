@@ -1,0 +1,229 @@
+﻿@using System.Web.Configuration
+@using BCS.Framework.Configuration
+@using BCS.Framework.Data
+@using BCS.Framework.Utilities
+@using BCS.Framework.Web
+@using BCS.Framework.WebExtensions
+@{
+    var controller = ViewContext.RouteData.Values["Controller"].ToString().ToLower();
+    var isMiniProfile = Request.QueryString["benchmark"];
+    var rootUrl = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + Url.Content("~");
+    var oGlobal = ViewContext.RouteData.Values.ToDictionary(v => v.Key, v => v.Value);
+    oGlobal.Add("CurrentModule", ViewBag.ModuleId);
+    oGlobal.Add("RootURL", rootUrl);
+    oGlobal.Add("IgnoreNotify", Config.GetConfigByKey("IgnoreNotify"));
+    var version = Config.GetConfigByKey("webpages:Version");
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv='cache-control' content='no-cache'>
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
+    <noscript>
+        <meta http-equiv="refresh" content="0; url=NoJavascript.html" />
+    </noscript>
+    @if (@ViewBag.Title != null)
+    {
+        <title>@ViewBag.Title</title>
+    }
+    else
+    {
+        <title>@string.Format("{0} - {1}", ViewContext.RouteData.Values["Controller"], ViewContext.RouteData.Values["Action"]) </title>
+    }
+
+    @{ Html.Resource()
+           .All(false)
+         // .Validate()
+
+           .Style("~/Assets/plugin/bootstrap/css/bootstrap.min.css")
+           .Style("~/Assets/plugin/bootstrap/css/bootstrap-select.css")
+           .Style("~/Assets/plugin/bootstrap/css/bootstrap-datetimepicker.min.css")
+           .Style("~/Assets/plugin/kendoui/css/kendo.bootstrap.min.css")
+           .Style("~/Assets/plugin/kendoui/css/kendo.common-bootstrap.min.css")
+           .Style("~/Assets/plugin/kendoui/css/kendo.bootstrap.mobile.min.css")
+           .Style("~/Assets/plugin/font-awesome/css/font-awesome.css")
+           .Style("~/Assets/plugin/font-awesome/css/font-awesome.min.css")
+
+           .Style("~/Assets/css/base/main.css" + "?v=" + version)
+           .Style("~/Assets/css/base/popup.css" + "?v=" + version)
+
+           .Style("~/Assets/plugin/custom/layout.css" + "?v=" + version)
+           .Style("~/Assets/plugin/custom/darkblue.css" + "?v=" + version)
+           .Style("~/Assets/css/style/common.css" + "?v=" + version)
+           .Style("~/Assets/css/style/custom.css" + "?v=" + version)
+           .Style("~/Assets/css/style/components.css" + "?v=" + version)
+           .Style("~/Assets/css/treeview/treecustom.css" + "?v=" + version)
+           .Style("~/Assets/plugin/treeview/css/style.css" + "?v=" + version)
+           .Style("~/Assets/plugin/treeview/prints/print-preview.css" + "?v=" + version)
+
+           .Script("~/Assets/plugin/jquery/js/jquery.min.js")
+           .Script("~/Assets/plugin/jquery/js/jquery-ui-1.10.3.custom.min.js")
+           .Script("~/Assets/plugin/jquery.form/jquery.form.min.js")
+
+           .Script("~/Assets/plugin/bootstrap/js/bootstrap-hover-dropdown.min.js")
+           .Script("~/Assets/plugin/bootstrap/js/metronic.js")
+
+
+           .Script("~/Assets/plugin/bootstrap/js/bootstrap.min.js")
+           .Script("~/Assets/plugin/kendoui/js/kendo.all.min.js")
+           .Script("~/Assets/plugin/kendoui/js/kendo.aspnetmvc.min.js")
+           .Script("~/Assets/plugin/noty/jquery.noty.js")
+           .Script("~/Assets/plugin/noty/layouts/center.js")
+           .Script("~/Assets/plugin/noty/layouts/topRight.js")
+           .Script("~/Assets/plugin/noty/themes/default.js")
+
+           .Script("~/Assets/plugin/validation/jquery.validate.js")
+           .Script("~/Assets/plugin/validation/jquery.validate.min.js")
+           .Script("~/Assets/plugin/validation/jquery.validate.unobtrusive.min.js")
+           .Script("~/Assets/plugin/validation/jquery.validate.kendo.js")
+
+           .Script("~/Assets/js/base/setaJs.modules.js" + "?v=" + version)
+           .Script("~/Assets/js/scripts/layout.js" + "?v=" + version)
+           .Script("~/Assets/js/scripts/default.js" + "?v=" + version)
+           .Script("~/Assets/plugin/treeview/js/jstree.js")
+           .Script("~/Assets/js/treeview/AjaxBase.js")
+           //.Script("~/Assets/plugin/session-time-out/store.min.js")
+
+           .Render();
+    }
+    <script src="~/Assets/plugin/treeview/prints/jquery.print-preview.js?v=@(version)"></script>
+    @if (@ViewContext.RouteData.Values["controller"].ToString() != "home")
+    {
+        <script src="~/Assets/js/controller/homeController.js?v=@(version)"></script>
+    }
+    <![if !IE]>
+    <link href="/Assets/css/base/nonIE.css" rel="stylesheet" />
+    <![endif]>
+    <script type="text/javascript" defer="defer">
+        @Html.Raw(ViewBag.StartupScript)
+        $(function () {
+            $(document).ajaxError(function (e, xhr, settings) {
+                if (xhr.status == 401) {
+                    window.location ='@Url.Action( "Login", "Security" )';
+                }
+            });
+        });
+
+        //show proccessing
+        function showProcessing() {
+            $('#over').fadeIn('fast', function () {
+                $('#over').addClass("overlay");
+                $('#proccessing').show();
+                $('#proccessing').animate({ 'left': '40%', 'top': '40%' }, 500);
+            });
+            setTimeout('hideProcessingTimeout()', 3000);
+        }
+
+        function showProcessing(timeout,animate) {
+            $('#over').fadeIn('fast', function () {
+                $('#over').addClass("overlay");
+                $('#proccessing').show();
+                $('#proccessing').animate({ 'left': '38%', 'top': '40%' }, 500);
+            });
+            setTimeout('hideProcessingTimeout()', timeout);
+        }
+
+        function hideProcessingTimeout() {
+            hideProcessing();
+        }
+
+        function hideProcessing() {
+            $('#over').fadeOut('fast', function () {
+                $('#proccessing').hide();
+            });
+        }
+    </script>
+    @RenderSection("Header", required: false)
+<style>
+    .page-content-wrapper {
+        background-color: #F4FCFF;
+        /*min-height: 840px;*/
+        /*overflow-x: hidden;*/
+        /*border-radius: 1px !important;
+        box-shadow: 0px 0px 5px #888888;*/
+    }
+</style>
+</head>
+    <body class="page-header-fixed page-quick-sidebar-over-content">
+        <div follow="Main_Navigation" class="wp-page">
+            <header>
+                @{ Html.RenderPartial("_header"); }
+            </header>
+            <div class="content">
+                <div class="main-content">
+                    <div class="">
+                        <div class="page-container">
+                            <div class="page-content-wrapper">
+                                <div id="mainContent" style="margin: 0px auto; overflow: auto">
+                                    @RenderBody()
+                                </div>
+                            </div>
+                        </div>
+                        <div id="over"></div>
+                        <div id="proccessing" class="proccessing" style="z-index: 999999999999;top: 90px">
+                            <br />
+                            <img src="~/Assets/img/processing.gif" alt="" border="0" />
+                            <br />
+                            <br />
+                            <font size="4">Please wait...</font>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- BEGIN FOOTER -->
+        <div class="page-footer">
+            @{Html.RenderPartial("_footer");}
+        </div>
+        <!-- END FOOTER -->
+
+        <script type="text/javascript">
+            var setaJs = setaJs || {};
+            setaJs.oGlobal = @(Html.Raw(Json.Encode(oGlobal)));
+        </script>
+        <script src="~/Assets/js/base/SetaBase.js?v=@(version)"></script>
+        <script src="~/Assets/js/base/setaJs.js?v=@(version)"></script>
+        <script src="~/Assets/js/base/base.js?v=@(version)"></script>
+
+        <script src="~/Assets/js/base/jszip.min.js"></script>
+        <!-- Kendo Window -->
+        @RenderSection("kendoWindow", required: false)
+
+        @RenderSection("js", required: false)
+        @RenderSection("jsDataSeta", required: false)
+        @RenderSection("Footer", required: false)
+        @if (ViewData["loadJsController"] == null || ViewData["loadJsController"].ToString() == "True")
+        {
+            <script src="~/Assets/js/controller/@(controller)Controller.js?v=@(version)"></script>
+        }
+
+        @if (ViewData["loadJsAction"] != null)
+        {
+            <script src="~/Assets/js/controller/@(controller).@(ViewContext.RouteData.Values["Action"].ToString().ToLower()).js?v=@(version)"></script>
+        }
+
+        @RenderSection("jsData", required: false)
+        <script type="text/javascript">
+            $(document).ready(function() {
+                setaJs.initController('@(controller)Controller');
+
+                // reCalculate height main content
+                $.reCalcHeightBody();
+                $(window).on('resize', function () {
+                    $.reCalcHeightBody();
+                });
+            });
+        </script>
+
+        <script type="text/javascript">
+            $("#iconHome").click(function() {
+                location.href = '/Home/Index';
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,108 @@
+.commutator {
+    background-image: none;
+    border: 1px solid #666666;
+    margin: 0;
+    padding: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 13px;
+    height: 24px;
+    overflow: hidden;
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    box-shadow: 0 0 0px #999999;
+    background-color: #283857;
+    color: #ffffff;
+}
+
+    .commutator.on {
+        -pie-background: linear-gradient(#f7f7f7,#fff);
+        -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+        -moz-box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+        box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+        .commutator.on .is.on {
+            left: 0;
+        }
+
+        .commutator.on .is.off {
+            margin-right: 24px;
+        }
+
+    .commutator.off {
+        -pie-background: linear-gradient(#f7f7f7,#fff);
+        -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+        -moz-box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+        box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+        .commutator.off .is.on {
+            left: -34px;
+            background-image: linear-gradient(to bottom, #eeeeee, #999999);
+            border-right: 1px solid #cccccc;
+            border-radius: 3px;
+            background-color: #eeeeee;
+        }
+
+        .commutator.off .is.off {
+            margin-right: 1px;
+            padding-left: 5px;
+            border: 0;
+            border-radius: 0;
+            z-index: 10;
+            color: #ffffff;
+            background-image: none;
+            background-color: transparent;
+        }
+
+    .commutator .is {
+        margin: 0 2px;
+        padding: 0px 35px 0px 5px;
+        position: relative;
+        width: 100%;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-transition: left .2s linear,margin .2s linear;
+        -moz-transition: left .2s linear,margin .2s linear;
+        -ms-transition: left .2s linear,margin .2s linear;
+        -o-transition: left .2s linear,margin .2s linear;
+        transition: left .2s linear,margin .2s linear;
+        line-height: 22px;
+        color: #ffffff;
+        text-transform: uppercase;
+        z-index: 1;
+    }
+
+        .commutator .is.off {
+            right: -100%;
+            padding-left: 33px;
+            position: absolute;
+            top: 0;
+            background-image: linear-gradient(to bottom, #eeeeee, #999999);
+            background-color: #eeeeee;
+            border-left: 1px solid #cccccc;
+            border-radius: 3px;
+        }
+/*
+    .commutator.on .is.off {
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#eeeeee,endColorstr=#999999);
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#eeeeee,endColorstr=#999999)";
+    }
+
+    .commutator.off .is.on {
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#eeeeee,endColorstr=#999999);
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#eeeeee,endColorstr=#999999)";
+    }
+
+    .commutator.off .is.off {
+        filter: progid:DXImageTransform.Microsoft.gradient(enable=false);
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(enable=false)";
+    }
+            */

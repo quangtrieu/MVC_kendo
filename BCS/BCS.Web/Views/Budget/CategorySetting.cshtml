@@ -1,0 +1,171 @@
+﻿@using BCS.Web.Models
+
+@model BCS.Web.Models.BudgetModel
+
+@{
+    ViewBag.Title = string.Format("Category Settings (Budget Name: {0})", Model.BudgetNameDisplay);
+    Layout = "~/Views/Shared/_LayoutNewBudget.cshtml";
+}
+
+<style>
+    .k-widget .k-window {
+        height: 860px;
+    }
+</style>
+
+<div class="form-group clearfix dashboard-body" style="margin: 0 auto; -moz-border-radius: 2em">
+    @Html.Hidden("BudgetId", Model.BudgetId)
+    @Html.Hidden("EditFlg", Model.EditFlg)
+    @*@if (!ViewBag.ShowOrHiddenHelpSetting)
+    {
+        Html.RenderPartial("~/Views/HelpSetting/_CategorySetting.cshtml");
+    }
+    else
+    {
+        <div class="col-xs-12 text-right">
+            @Html.CheckBox("isShowHelp", true, new { @onclick = "showHiddenHelp(false, " + BCS.Commons.BCSCommonData.HELP_SETTING_CATEGORY_SETTING + ");" })
+            @Html.Label("Do not show again")
+        </div>
+    }*@
+
+    <div class="col-xs-12 text-center">
+        <p>@Html.Label("CATEGORY SETTINGS", new { @style = "font-size: 25pt; color: rgb(85, 150, 207)" })</p>
+    </div>
+    <div class="col-xs-12" style="height: 30px; background-color: #428bca; color: #FFF">
+        @Html.Label("Action", new { @style = "font-size: 15pt" })
+    </div>
+    <div class="col-xs-12 clearfix categories-setting-note" style="background-color: #fff; box-shadow: 0px 0px 5px #888888;">
+        <div class="col-xs-6 margin-top-15">
+            <p>Load the predefined categories?</p>
+            @Html.Label("RESTORE DEFAULT", new { @id="restoreDefault", @class = "btn btn-primary button", @onclick = "resetDefaultCategory();" })
+            @Html.Label("LOAD FROM TEMPLATE", new { @id = "loadFromExcel", @class = "btn btn-primary button", @onclick = "openLoadCategoryTemplate();" })
+            @if (ViewBag.RestCode != null)
+            {
+                <input type="hidden" id="restName" value="@ViewBag.RestName" />
+                @Html.Label("SYNC FROM SSP", new { @id = "syncBudgetCategorySettingFromSSP", @class = "btn btn-primary button", @onclick = "syncDataBudgetCategorySettingFromSSP('" + ViewBag.RestCode + "');" })
+            }
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <div>Note:</div>
+            <div>Change category position by drag &amp; drop</div>
+            <div>Check category to represent this category with percentage entry</div>
+            <div>Prime Cost appears in <span style="color: red;">red</span></div>
+        </div>
+    </div>
+    <div class="col-xs-12 categories-setting-area">
+        @{
+            var categoriesList = (ViewBag.CategorySettingList as List<CategorySettingModel>);
+            var parentList = categoriesList.Where(p => p.ParentCategoryId == null || p.ParentCategoryId == 0).ToList<CategorySettingModel>();
+            for (int i = 0; i < parentList.Count; i++)
+            {
+                // print out childen is not tax cost
+                var childenList = categoriesList.Where(p => p.ParentCategoryId == parentList[i].CategorySettingId && p.IsTaxCost != true).OrderBy(p => p.SortOrder).ToList<CategorySettingModel>();
+
+                // print out childen is tax cost
+                var childenTaxCostList = categoriesList.Where(p => p.ParentCategoryId == parentList[i].CategorySettingId && p.IsTaxCost == true).OrderBy(p => p.SortOrder).ToList<CategorySettingModel>();
+
+                // print out parent categories
+                <div class="col-xs-6 categoies-tag">
+                    <div class="col-xs-12 margin-top-15 margin-bottom-10" style="border-bottom: 1px solid #A7A7A7;">
+                        <div class="col-xs-8" style="font-size: 14pt"><span>@parentList[i].CategoryName</span></div>
+                        <div class="col-xs-4 text-right">
+                        @if (parentList[i].CategoryName != BCS.Commons.BCSCommonData.CATEGORY_DEFAULT_PROFIT_LOSS_TEXT)
+                        {
+                            <label class="btn" onclick="editCategorySetting(@parentList[i].CategorySettingId, '@parentList[i].CategoryName')"><span><i class="fa fa-edit"></i></span></label>
+                        }
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        @for (int j = 0; j < childenList.Count; j++)
+                        {
+                            var isPercentageVal = childenList[j].IsPercentage ? "" : "display:none;";
+                            var isPrimeCostVal = childenList[j].IsPrimeCost ? "color: red" : "color: #000";
+                            var categoryName = childenList[j].CategoryName.Length < 40 ? childenList[j].CategoryName : childenList[j].CategoryName.Substring(0, 40);
+
+                            <div class="col-xs-3 categories-item">
+                                <div class="col-xs-12" style="display: inherit;margin: 0px -15px 0px -15px !important;">
+                                    <div class="col-xs-1">
+                                        @if (parentList[i].CategoryName != BCS.Commons.BCSCommonData.CATEGORY_DEFAULT_PROFIT_LOSS_TEXT)
+                                        {
+                                            <img src="~/css/images/checked-icon.jpg" style="@isPercentageVal" />
+                                        }
+                                    </div>
+                                    <div class="col-xs-11">
+                                        <span style="@isPrimeCostVal">@categoryName</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            if (j % 4 == 1)
+                            {
+                                <div class="col-xs-12 split-categories-area split-area-for-mobile"></div>
+                            }
+                            else if (j % 4 == 3)
+                            {
+                                <div class="col-xs-12 split-categories-area"></div>
+                            }
+                        }
+                    </div>
+
+
+                    @if (parentList[i].CategoryName == BCS.Commons.BCSCommonData.CATEGORY_DEFAULT_PAYROLL_EXPENSES_TEXT)
+                    {
+                        <div class="col-xs-12 margin-top-15 margin-bottom-10" style="border-bottom: 1px solid #A7A7A7; font-size: 10pt; font-style: italic; font-weight: bold;">
+                            <div class="col-xs-8 margin-top-10"><span>@string.Format("{0} (IS TAX)", parentList[i].CategoryName)</span></div>
+                            <div class="col-xs-4 text-right">
+                                <label class="btn" onclick="editCategorySetting(@parentList[i].CategorySettingId, '@parentList[i].CategoryName', true)"><span><i class="fa fa-edit"></i></span></label>
+                            </div>
+                        </div>
+                    }
+                    @if(childenTaxCostList.Count > 0){
+                        <div class="col-xs-12" style="background-color: #fff; box-shadow: 0px 0px 5px #888888;">
+                            @for (int j = 0; j < childenTaxCostList.Count; j++)
+                            {
+                                var isPercentageVal = childenTaxCostList[j].IsPercentage ? "" : "display:none;";
+                                var isPrimeCostVal = childenTaxCostList[j].IsPrimeCost ? "color: red" : "color: #000";
+                                var categoryName = childenTaxCostList[j].CategoryName.Length < 40 ? childenTaxCostList[j].CategoryName : childenTaxCostList[j].CategoryName.Substring(0, 40);
+
+                                <div class="col-xs-3 categories-item">
+                                    <div class="col-xs-12" style="display: inherit;margin: 0px -15px 0px -15px !important;">
+                                        <div class="col-xs-1">
+                                            <img src="~/css/images/icon-checked-bgwhite.png" style="@isPercentageVal" />
+                                        </div>
+                                        <div class="col-xs-11">
+                                            <span style="@isPrimeCostVal">@categoryName</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                if (j % 4 == 1)
+                                {
+                                    <div class="col-xs-12 split-categories-area split-area-for-mobile"></div>
+                                }
+                                else if (j % 4 == 3)
+                                {
+                                    <div class="col-xs-12 split-categories-area"></div>
+                                }
+                            }
+                        </div>
+                    }
+
+                </div>
+
+                if (i % 2 == 1)
+                {
+                    <div class="col-xs-12"></div>
+                }
+            }
+        }
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var editFlag = JSON.parse($('#EditFlg').val().toLowerCase());
+        if (!editFlag) {
+            $('.fa-edit').hide();
+            $("#restoreDefault").attr("disabled", "disabled");
+            $("#loadFromExcel").attr("disabled", "disabled");
+            $("#syncBudgetCategorySettingFromSSP").attr("disabled", "disabled");
+        }
+    })
+</script>

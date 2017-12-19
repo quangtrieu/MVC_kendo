@@ -1,0 +1,454 @@
+﻿.ui-state-default.ui-state-highlight {
+    background: #f6f6f6 none repeat scroll 0 0 !important;
+    color:#FF8800 !important;
+}
+.btnDatePicker > span{
+    font-size:18px;
+}
+.btnDatePicker {
+    background: #ffffff none repeat scroll 0 0;
+    border: 1px solid #ddd;
+    display: block;
+    height: 21px;
+    padding:6px 5px 3px;
+    position: absolute;
+    right: 16px;
+    top: 1px;
+    cursor:pointer;
+}
+/*****Datepicker Style****/
+.ui-widget-header {
+    background: #f5f5f5 !important;
+    border: medium none !important;
+}
+#ui-datepicker-div {
+    padding: 0;
+    font-family: "Open Sans",sans-serif !important;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.ui-datepicker .ui-datepicker-title {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.8em;
+    margin: 0 2.3em;
+    text-align: center;
+}
+#ui-datepicker-div.ui-datepicker th {
+    border: 0 none;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 0.5em 0.3em 0.2em;
+    text-align: center;
+}
+.ui-datepicker-calendar > thead {
+    border-bottom: 1px solid #cccccc;
+    background: #f5f5f5 !important;
+    margin-bottom:5px;
+}
+
+.ui-datepicker-header .ui-datepicker-next.ui-corner-all,
+.ui-datepicker-header .ui-datepicker-prev.ui-corner-all {
+    background-repeat: no-repeat;
+    display: inline-block;
+    font-size: 0;
+    height: 16px;
+    line-height: 0;
+    overflow: hidden;
+    text-align: center;
+    width: 16px;
+}
+.ui-datepicker-header .ui-datepicker-next.ui-corner-all .ui-icon, .ui-datepicker-header .ui-datepicker-next.ui-corner-all .ui-icon::before,
+.ui-datepicker-header .ui-datepicker-prev.ui-corner-all .ui-icon, .ui-datepicker-header .ui-datepicker-prev.ui-corner-all .ui-icon::before,
+.ui-icon::after {
+    background-image: url("../../plugin/kendoui/css/Bootstrap/sprite.png");
+    border-color: transparent;
+}
+.ui-icon.ui-icon-circle-triangle-e {
+    background-position: 0 -16px;
+}
+.ui-icon.ui-icon-circle-triangle-w{
+    background-position: 0 -48px;
+}
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next{top:7px !important;}
+.ui-datepicker td{padding:3px !important;}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{color:#333;}
+#DateOfOrder, #DeliveryDate, #InventoryDate {
+    cursor: auto;
+}
+.confirm-footer-popHD > button{margin-top:8px;}
+.header_chose_droplist > div {
+    padding: 0;
+}
+.header_chose_droplist .col-md-5.control-label {
+    display: block;
+    line-height: 30px;
+}
+#InventoryDateField{display:none;}
+#OrderProductListGrid {
+    overflow: hidden;
+}
+select#searchVendorSlt {
+    border: 1px solid #e5e5e5;
+    padding: 6px 0;
+}
+#PlacedOrder {
+    width:auto;
+    height:auto;
+}
+#FromDateSearch, #ToDateSearch{
+    height:30px;
+}
+.k-animation-container > div.k-column-menu > ul.k-menu-vertical > li{
+    display:none;
+}
+.k-animation-container > div.k-column-menu > ul.k-menu-vertical > li:nth-child(4),
+.k-animation-container > div.k-column-menu > ul.k-menu-vertical > li:nth-child(6){
+    display:block !important;
+}
+#ctrl-bottom-field > a{display:inline-block;}
+.k-dirty {
+    display: none;
+}
+.k-edit:before {
+  content: "\f044";
+}
+.icon-action {
+    font-size: 18px !important;
+    padding: 3px 5px !important;
+}
+.icon-action > span {
+    font-size: 16px !important;
+    padding: 1px;
+}
+.form-group.from-fix-group .control-label, .form-group.from-fix-group > div {
+    padding: 0;line-height: 30px;
+}
+#DetailVendorProductID .confirm-content-popHD {
+    max-height: 600px;
+    overflow: auto;
+    padding: 7px;
+}
+#panelData .panel-body {
+    line-height: 22px;
+    padding: 10px;
+}
+.totalCost{
+    float:none;font-weight:700;text-align:right;
+}
+.expAction{
+    float:none;
+}
+.CategoryActDetail .panel.panel-primary {
+    padding: 0;
+}
+#panelData .panel-heading{padding:5px 10px;}
+.expAction > a {
+    border: 1px solid #cccccc;
+    color: #333333;
+    display: block;
+    float: left;
+    margin-bottom: 10px;
+    padding: 3px 6px;
+}
+.expAction > a > i{font-size:16px;}
+.PurchaseAllotmentType {
+    text-align: right;
+}
+.date-range {
+    display: block;
+    float: right;
+}
+.dateRangeShow{display:none;margin-bottom:10px;}
+.manualComparePrice {
+    float: right !important;
+    margin-top: 10px;
+    text-decoration: none !important;
+}
+#act-accept-reset {
+    margin-top: 8px;
+}
+.confirm-content-popHD {
+    min-height: 50px;
+}
+.fbtn-order-act {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+}
+.fbtn-order-act > i{font-size:16px;padding-right: 5px;}
+#ctrl-bottom-field {
+    margin-top: 15px;
+}
+button#act-acceptAlert-no {
+    margin-left: 5px;
+}
+#OrderManualComaprePrice h3 {
+    font-size: 115%;
+    padding-bottom: 10px;
+}
+.act-invoce-log{padding-top:20px;}
+#orderUpdateInvoceLog .k-picker-wrap.k-state-default {
+    border: 1px solid #e5e5e5;
+    padding: 4px;
+}
+#orderUpdateInvoceLog .form-group {
+    padding: 5px 0;
+}
+
+.k-button.k-button-icontext.k-grid-delete > span.k-delete{
+    background:none;
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin-left:-5px;
+    font-size:16px;
+}
+.k-button.k-button-icontext.k-grid-delete{
+    width:25px;
+    height:25px;
+    overflow:hidden;
+}
+span.k-delete:before {
+  content: "\f00d";
+}
+.alert-content-popHD {
+    font-size: 16px;
+}
+
+.deleteaddcost {
+    border: 1px solid #cccccc;
+    color: #333333;
+    display: block;
+    height: 25px;
+    margin: 0 auto;
+    text-align: center;
+    width: 25px;
+    font-size:19px;
+}
+.deleteaddcost .fa.fa-trash {
+    font-size: 15px;
+}
+#InvocieLogDetailWrapper .STPanel-heading{display:none;}
+#InvocieLogDetailGrid tr.k-detail-row td.k-detail-cell thead.k-grid-header
+{
+    height: 0;
+    border-bottom-width: 0;
+    display: none;
+    overflow: hidden;
+}
+#invoiceLogLineItemsWrapper .STPanel-heading{display:none;}
+#AddtionalCostGrid .k-pager-wrap.k-grid-pager.k-widget > a,
+#InvocieLogDetailGrid .k-pager-wrap.k-grid-pager.k-widget > a, 
+#InvocieLogDetailGrid .k-pager-wrap.k-grid-pager.k-widget > span.k-pager-info.k-label,
+#invoiceLogLineItemsGrid .k-pager-wrap.k-grid-pager.k-widget > a, 
+#invoiceLogLineItemsGrid .k-pager-wrap.k-grid-pager.k-widget > span.k-pager-info.k-label{display:none;}
+.confirm-content-popHD div.row {
+    line-height: 1.8em;
+}
+.HeaderFilterDate .form-group .control-label{
+    line-height: 35px;
+    margin-right: -30px;
+    padding-right: 0;
+}
+#OnHand_validationMessage, #OrderQuantify_validationMessage,
+#OrderManualComaprePriceData .k-pager-info.k-label,
+#AddtionalCostGrid .k-pager-info.k-label{display:none !important;}
+.redColor{color:#FF0000 !important;}
+
+.STPanel-heading {
+    background-color: #00599c;
+    color: #ffffff !important;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px;
+}
+.STPanel-heading > h3 {
+    cursor: pointer;
+    margin: 0;
+    padding: 5px 3px !important;
+    font-weight: 700;
+}
+.GridDataContent {
+    margin-bottom: 30px;
+}
+#OrderProductListGrid i.fa.fa-exchange {
+    cursor: pointer;color:#333;
+}
+.btn.btn-primary.check-item-all {
+    margin-right: 5px;
+}
+#GroupChangeProductGrid{font-size:14px;}
+#orderProductExtPdf ul li{display:block;line-height:1.5em;}
+#orderProductExtPdf ul li > label > input{margin-right:5px;}
+#orderProductExtPdf ul {
+    padding: 0 0 0 10px;
+}
+#orderProductExtPdf .alert-content-popHD {
+    max-height: 600px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+/****Hidden Validate Cell*****/
+#PlacedOrderPrice_validationMessage,
+#OrderVal_validationMessage{
+    display:none !important;
+}
+th[data-title="On Hand"] > a,
+th[data-title="Order"] > a {
+    display: none;
+}
+tr.bg-hightlight{
+    background:#D8F5B5;
+}
+.k-animation-container > div.k-column-menu > ul.k-menu-vertical > li.k-item.k-lock.k-state-default {
+    display: none !important;
+}
+.bg-hightlight td {
+    color: #333;
+}
+#DataOrderProductList{clear:both;}
+.dateNameField > a {
+    float: right;
+}
+
+
+#OrderProductListGrid .k-grid-header-locked, #OrderProductListGrid .k-grid-content-locked, #OrderProductListGrid .k-grid-footer-locked{
+        display:block;
+        float:left;
+}
+#OrderProductListGrid .k-grid-content{height:620px !important;}
+#OrderProductListGrid .k-grid-content-locked{height:620px !important;}
+
+#OrderListGrid .k-state-selected .fa, .k-state-selected a{
+    color:#333333
+}
+.date-range .k-widget.k-datepicker.k-header {
+    width: auto !important;
+}
+
+
+/*****Key Board******/
+#OnHand_keyboard, #OrderQuantify_keyboard {
+    border: 1px solid #ddd;
+    padding: 5px;
+    width: 227px;
+}
+.ui-keyboard-keyset.ui-keyboard-keyset-normal {
+    background: none;
+    border: 1px solid #ddd;
+    padding: 5px;
+    text-align: center;
+    width: 215px;
+}
+#OnHand_keyboard .ui-keyboard-preview-wrapper > input,
+#OrderQuantify_keyboard .ui-keyboard-preview-wrapper > input{
+    height:28px;
+    margin-bottom:10px;
+}
+.ui-keyboard-keyset.ui-keyboard-keyset-normal button {
+    font-size: 20px;
+    margin: 5px;
+    padding: 3px 16px;
+}
+.ui-keyboard-preview-wrapper {
+    width: 100px !important;
+    margin: 0 auto;
+}
+.ui-keyboard-up, .ui-keyboard-down, .ui-keyboard-bksp span, .ui-keyboard-clr{
+    background:none !important;
+    display: inline-block !important;
+    font: normal normal normal 14px/1 FontAwesome !important;
+    font-size: inherit !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    font-size:16px !important;
+    height: 20px;
+    margin-left: 5px !important;
+    padding: 9px 15px 5px !important;
+}
+.ui-keyboard-clr > span{display:none;}
+.ui-keyboard-clr:before{
+    content: "\f00d";
+}
+.ui-keyboard-up:before{
+    content: "\f176";
+}
+.ui-keyboard-down:before{
+    content: "\f175";
+}
+.ui-keyboard-up > span, .ui-keyboard-down > span{display:none;}
+.ui-keyboard-right, .ui-keyboard-left {
+    padding: 3px 10px !important;
+}
+.ui-keyboard-bksp span.ui-keyboard-text:before{
+    content: "\f00d";
+}
+.ui-keyboard-bksp span.ui-keyboard-text {
+    border: 1px solid #ddd;
+    border-radius: 100% 0 0 100% !important;
+    height: 16px;
+    padding: 0 8px !important;
+}
+.ui-keyboard-keyset.ui-keyboard-keyset-normal button.ui-keyboard-bksp{
+    padding:3px 4px;
+}
+.ui-keyboard-bksp span.ui-keyboard-text {
+    border: 1px solid #bbb;
+    border-radius: 100% 0 0 100% !important;
+    display: block;
+    height: 16px;
+    left: -3px;
+    line-height: 16px;
+    margin-top: -4px;
+    padding: 1px 8px !important;
+    position: relative;
+    vertical-align: middle;
+}
+.ui-keyboard-keyset.ui-keyboard-keyset-normal button.ui-keyboard-46 {
+    padding: 3px 19px;
+}
+.ui-keyboard-keyset.ui-keyboard-keyset-normal button.ui-keyboard-46 span{
+    margin-top: -4px;
+    position: relative;
+    top: -6px;
+}
+.ui-keyboard-keyset.ui-keyboard-keyset-normal button:hover{
+    background:#bbb !important;
+}
+.closeKeyboard {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #bbb;
+    border-radius: 100% !important;
+    cursor: pointer;
+    height: 25px;
+    line-height: 22px;
+    position: absolute;
+    right: -15px;
+    text-align: center;
+    top: -15px;
+    width: 25px;
+}
+.ui-keyboard-46, .ui-keyboard-clr, .ui-keyboard-0 {
+    padding: 2px 15px !important;
+}
+.ui-keyboard-button.ui-keyboard-clr {
+    padding: 5px 13px !important;top: -2px;position:relative;
+}
+.ui-keyboard-button.ui-keyboard-bksp {
+    padding: 2px 5px !important;
+}
+.act-focus {
+    border: 1px solid #ff0000 !important;
+}
+#OnHand_keyboard, #OrderQuantify_keyboard{
+    opacity:0;z-index:99999;
+}
+#SwitchMode {
+    margin-left: 15px;
+    margin-right: 15px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+}

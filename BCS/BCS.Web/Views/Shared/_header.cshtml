@@ -1,0 +1,150 @@
+﻿@using BCS.Framework.Commons;
+@using BCS.Framework.Web
+
+@{
+    var currentUser = @Session.CurrentUser();
+}
+<input type="hidden" id="bcsWebServiceUrl" value="@BCS.Framework.Utilities.Utils.GetSetting("webServiceUrl", "http://bcsws.smartsystemspro.com/")" />
+<!-- BEGIN HEADER -->
+@*<div class="page-header navbar navbar-fixed-top" style="@( Session.CurrentUser() == null ? "background: none" : "")">*@
+<div class="page-header navbar navbar-fixed-top" style="background-color: #FFF; height: 50px">
+    <div class="col-xs-12 page-header-inner">
+        <div class="page-logo" style="margin-top: 4px;">
+            <a href="@Url.Action("Index", "Home")"><img src="~/Assets/img/logo.png" alt="logo" /></a>
+            <div class="menu-toggler sidebar-toggler hide"></div>
+        </div>
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-align-justify"></i></a>
+        @if (currentUser != null)
+        {
+            <div class="header-menu">
+                <nav>
+                    <ul class="nav navbar-nav pull-left">
+                        @if (currentUser.RoleId == BCS.Commons.BCSCommonData.ROLE_NAME_BCS_USER)
+                        {
+                            <li class="dropdown dropdown-user">
+                                <a href="@Url.Action("Index", "Home")"><span>Dashboard</span></a>
+                            </li>
+                            <li class="dropdown dropdown-user header-sub-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-default">
+                                    <li><a onclick="newBudget();">New Budget</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="@Url.Action("Index", "CategoriesSetting")">Categories Settings</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="/LinkRestaurant/ConfigRestaurant?isNotShow='hide'">Restaurant Settings</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="@Url.Action("ViewRecycleBin", "Dashboard")">Recycle Bin</a></li>
+                                </ul>
+                            </li>
+                            <li class="page-breadcrumb-sub" style="margin-top: 15px">
+                                <span>@ViewBag.Title</span>
+                            </li>
+                        }
+
+                        @if (currentUser.SupportUser != null)
+                        {
+                            <li class="dropdown dropdown-user header-sub-menu">
+                                <a style="cursor: pointer;" aria-expanded="true" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" title="Swith User" onclick="$.onShowDialogSwitchUser()">
+                                    <i class=" fa fa-cog"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-default">
+                                    <li><a href="#" onclick="$.onShowDialogSwitchUser()">Switch User</a></li>
+                                    <li class="divider"></li>
+                                    <li><a onclick="$.backToHomeSwitchUser();">Stop Switch User</a></li>
+                                </ul>
+                            </li>
+
+                            @*<text>
+                                <li>
+                                    <a style="cursor: pointer;" aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" title="Swith User" onclick="$.onShowDialogSwitchUser()"><i class=" fa fa-cog"></i></a>
+                                </li>
+                                <li>
+                                    <a onclick="$.backToHomeSwitchUser()" title="Back To Home">Current Supporter: @currentUser.SupportUser.UserName - @currentUser.SupportUser.FullName</a>
+                                </li>
+                            </text>*@
+                        }
+                    </ul>
+                </nav>
+            </div>
+            <div class="top-menu">
+                <nav>
+                    <ul class="nav navbar-nav pull-right">
+                        <li class="dropdown dropdown-user">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <img src="~/Assets/img/avatar3_small.png" alt="" class="img-circle" />
+                                <span class="username-hide-on-mobile hidden-sm hidden-xs">
+                                    @(currentUser != null ? string.Format("{0}", Session.CurrentUser().FullName.Length <= 50 ? currentUser.FullName : currentUser.FullName.Substring(0, 50)) : "Guest")
+                                </span>
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-default">
+                                <li><a href="#" onclick="editUserProfile()"><i class="fa fa-user"></i> My Profile</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#" onclick="changeUserPassword()"><i class="fa fa-key"></i> Change Password</a></li>
+                                <li class="divider"></li>
+                                <li><a onclick=" javascript: return onConfirmLogout(); "><i class="fa fa-sign-out"></i> Log Out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <input type="hidden" class="CurrentUserId" value="@currentUser.UserId" />
+        }
+        else
+        {
+            <div class="top-menu">
+                <div style="padding-top: 15px; color: #FFF; padding-right: 15px">
+                    Help&nbsp;&nbsp;|&nbsp;&nbsp;Contact Us
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div style="display: none"><a id="btnLogout" href="@Url.Content("~/Security/Logout")"></a></div>
+<div class="clearfix"></div>
+<!-- END HEADER -->
+<script type="text/javascript">
+    function onConfirmLogout(e) {
+        var confirmTitle = "Logout Confirmation";
+        var confirmText = "Are you sure you want to logout?";
+        var options = {
+            id: 'popupLogOut',
+            idAction: '#LogOut',
+            url: "@Url.Content("~/Security/Logout")",
+            typeStatus: true,
+            title: confirmTitle,
+            confirmText: confirmText,
+            textYes: "Yes",
+            textNo: "No"
+        }
+        var popupWindow = window.setaJs.initPopupWindow(options);
+        popupWindow.refresh({}).center().open();
+
+        var $form = $('#' + options.id);
+        $form.find("#act-accept-no").on("click", function () {
+            if (popupWindow) popupWindow.close();
+        });
+        $form.find("#act-accept-yes").on("click", function () {
+            showProcessing();
+            window.location = "/Security/Logout";
+        });
+    }
+
+    @functions {
+
+         public string GetIdleTimeLimit()
+         {
+             return Utils.GetSetting<string>("IdleTimeLimit");
+         }
+
+         public string GetDialogDisplayLimit()
+         {
+             return Utils.GetSetting<string>("DialogDisplayLimit");
+         }
+     }
+
+</script>

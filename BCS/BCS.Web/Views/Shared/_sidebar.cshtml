@@ -1,0 +1,79 @@
+﻿@using BCS.Framework.Web
+@using BCS.Framework.Singleton
+@using BCS.Framework
+@using BCS.Framework.SecurityServices
+@using BCS.Framework.WebExtensions.Label
+@using BCS.Web.Models
+@{
+   
+}
+<div class="page-sidebar navbar-collapse collapse">
+
+    <!-- BEGIN SIDEBAR MENU -->
+    <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+        <li class="sidebar-toggler-wrapper">
+            <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+            <div class="sidebar-toggler"><i class="fa fa-align-justify"></i></div>
+            <!-- END SIDEBAR TOGGLER BUTTON -->
+        </li>
+        <li class="sidebar-search-wrapper ">
+            <div class="sidebar-search "></div>
+            <!-- END RESPONSIVE QUICK SEARCH FORM -->
+        </li>
+        <li class="start">
+            <a href="/">
+                <i class="icon-home"></i>
+                <span class="title">Dashboard</span>
+            </a>
+        </li>
+
+        <li class="nav-sidebar-li">
+            <a href="javascript:;">
+                <i class="fa fa-list-ul"></i>
+                <span class="title">Setting</span>
+                <span class="arrow "></span>
+            </a>
+            <ul class="sub-menu">
+                
+                    <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "ManagerLog" ? "active" : "")">@Html.ActionLink("Manager Log", "Index", "ManagerLog")</li>
+            </ul>
+        </li>
+        <li class="nav-sidebar-li">
+            <a href="javascript:;">
+                <i class="fa fa-users"></i>
+                <span class="title">Target & Sales</span>
+                <span class="arrow "></span>
+            </a>
+            <ul class="sub-menu">
+                
+                    <li class="hidden"><a href="#">Edit Logged In User Details</a></li>
+            </ul>
+        </li>
+        <li class="nav-sidebar-li">
+            <a href="javascript:;">
+                <i class="fa fa-cutlery"></i>
+                <span class="title">COGS & Expenses</span>
+                <span class="arrow "></span>
+            </a>
+            <ul class="sub-menu">
+               
+                    <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "PurchaseReport" && Request.QueryString["type"] == "food" ? "active" : "")">@Html.ActionLink("Purchase Report", "Index", "PurchaseReport", new { type = "food" }, new { data_url = "food" })</li>
+               
+            </ul>
+        </li>
+        <li class="nav-sidebar-li">
+            <a href="javascript:;">
+                <i class="fa fa-beer"></i>
+                <span class="title">Review</span>
+                <span class="arrow "></span>
+            </a>
+            <ul class="sub-menu">
+                <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "PurchaseReport" && Request.QueryString["type"] == "food" ? "active" : "")">@Html.ActionLink("Purchase Report", "Index", "PurchaseReport", new { type = "food" }, new { data_url = "food" })</li>
+            </ul>
+        </li>
+        <li class="nav-sidebar-li hidden">
+            <ul class="sub-menu"><li class="@(ViewContext.RouteData.Values["controller"].ToString() == "MyProfile" ? "active" : "")" rel="User Detail"> @Html.ActionLink("My Profile", "Index", "MyProfile")</li></ul>
+        </li>
+    </ul>
+    <!-- END SIDEBAR MENU -->
+</div>

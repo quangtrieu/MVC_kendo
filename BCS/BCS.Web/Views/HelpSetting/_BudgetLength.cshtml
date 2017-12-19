@@ -1,0 +1,34 @@
+﻿<div class="col-xs-12 clearfix dashboard-body" style="height: 100%; background-color: #fff; box-shadow: 0px 0px 5px #888888; border-radius: 3px !important;">
+    <p class="col-xs-12 text-center margin-top-10" style="font-size: 15pt;">What is the Budget Length</p>
+    <div class="col-xs-12">
+        <div class="col-xs-7 text-justify">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis cursus ligula nepue, id porta enim
+                venenatis quis. Cras lacus sapien, sagitis arisus et, egetas pulvinar nisl. Quisque convallis, mauris vitae vehicula dictum,
+                tellus leo dignissim metus, in sagittis elit lectus vitae dolor.
+            </p>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipicing elit. Donec in lectus auctor, elementum nunc ullamcorper,
+                convallis leo.
+            </p>
+            <p>
+                Nunc turpis arcu, volutpat sit amet turpis sit amet, fermentum semper elit. Aliquam erat volutpat. Donec
+                disgnissim consectetur venenatis. Donec placerat aliquam ipsum.
+            </p>
+            <p>
+                Ut ultices, libero vitae imperdiet faucibus, quam erat semper tortor, nec tempor lacus orci eu mauris. Sed
+                finibus id
+            </p>
+        </div>
+        <div class="col-xs-5">
+            <iframe width="505" height="265" scrolling="no" src="http://demows.smartsystemspro.com/"></iframe>
+        </div>
+    </div>
+    <div class="col-xs-12 text-right margin-top-10">
+        <p>
+            @Html.Label("GOT IT", new { @class = "btn btn-primary button", @style = "margin-right: 30px" })
+            @Html.CheckBox("isHiddenHelp", false, new { @onclick = "showHiddenHelp(true, " + BCS.Commons.BCSCommonData.HELP_SETTING_BUDGET_LENGTH + ");" })
+            @Html.Label("Do not show again", new { @style = "margin-right: 240px" })
+        </p>
+    </div>
+</div>

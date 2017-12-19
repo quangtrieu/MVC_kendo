@@ -1,0 +1,431 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{36546059-04B9-492B-89D8-6480F4758EBD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BCS.Framework</RootNamespace>
+    <AssemblyName>BCS.Framework</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Qa|AnyCPU'">
+    <OutputPath>bin\Qa\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Demo|AnyCPU'">
+    <OutputPath>bin\Demo\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Demo|AnyCPU'">
+    <OutputPath>bin\Demo\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Qa|AnyCPU'">
+    <OutputPath>bin\Qa\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
+    <OutputPath>bin\Dev\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'QaMi|AnyCPU'">
+    <OutputPath>bin\QaMi\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging|AnyCPU'">
+    <OutputPath>bin\Staging\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'alpha|AnyCPU'">
+    <OutputPath>bin\alpha\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="antlr.runtime">
+      <HintPath>..\References\antlr.runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper">
+      <HintPath>..\References\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="BoC.Web.Mvc.PrecompiledViews">
+      <HintPath>..\References\BoC.Web.Mvc.PrecompiledViews.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\References\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Castle.Facilities.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.WcfIntegration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Castle.Facilities.WcfIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Services.Logging.Log4netIntegration">
+      <HintPath>..\References\Castle.Services.Logging.Log4netIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="Commons.Web.Mvc.PrecompiledViews">
+      <HintPath>..\References\Commons.Web.Mvc.PrecompiledViews.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="Enyim.Caching">
+      <HintPath>..\References\Enyim.Caching.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\References\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>..\References\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Kendo.Mvc">
+      <HintPath>..\References\Kendo.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\References\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Exchange.WebServices, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Microsoft.Exchange.WebServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\References\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\References\Microsoft.Office.Interop.Word.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Web.PageInspector.Loader, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="MiniProfiler">
+      <HintPath>..\References\MiniProfiler.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz">
+      <HintPath>..\References\Quartz.dll</HintPath>
+    </Reference>
+    <Reference Include="Recaptcha.Web">
+      <HintPath>..\References\Recaptcha.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\References\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGrid.SmtpApi">
+      <HintPath>..\References\SendGrid.SmtpApi.dll</HintPath>
+    </Reference>
+    <Reference Include="StringTemplate">
+      <HintPath>..\References\StringTemplate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Activities" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http">
+      <HintPath>..\References\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\References\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.WorkflowServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Commons\AuditableEntity.cs" />
+    <Compile Include="Commons\BaseBll.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commons\BaseDal.cs" />
+    <Compile Include="Caching\ICacheProvider.cs" />
+    <Compile Include="Caching\MemcachedProvider.cs" />
+    <Compile Include="Caching\MemoryCacheProvider.cs" />
+    <Compile Include="Commons\BaseListParam.cs" />
+    <Compile Include="Commons\Entity.cs" />
+    <Compile Include="Commons\IAuditableEntity.cs" />
+    <Compile Include="Commons\IEntity.cs" />
+    <Compile Include="Commons\PagingInfo.cs" />
+    <Compile Include="Controllers\InstallController.cs" />
+    <Compile Include="Controllers\SecurityController.cs" />
+    <Compile Include="EmailServices\EmailService.cs" />
+    <Compile Include="EmailServices\SendGrid\Exceptions\InvalidApiRequestException.cs" />
+    <Compile Include="EmailServices\SendGrid\ISendGrid.cs" />
+    <Compile Include="EmailServices\SendGrid\SendGrid.cs" />
+    <Compile Include="EmailServices\SendGrid\StreamedFileBody.cs" />
+    <Compile Include="EmailServices\SendGrid\Transport\ErrorChecker.cs" />
+    <Compile Include="EmailServices\SendGrid\Transport\ITransport.cs" />
+    <Compile Include="EmailServices\SendGrid\Transport\Web.cs" />
+    <Compile Include="EmailServices\SendGrid\Web\IWebApi.cs" />
+    <Compile Include="Constants\Constant.cs" />
+    <Compile Include="Commons\DynamicLibrary.cs" />
+    <Compile Include="Commons\Expressions\ExpressionHelper.cs" />
+    <Compile Include="Commons\Expressions\OrderByExpression.cs" />
+    <Compile Include="Commons\HelperExtension.cs" />
+    <Compile Include="Commons\Mapping\IPropertyMappingProvider.cs" />
+    <Compile Include="Commons\Mapping\MappingPropertyTypeAttribute.cs" />
+    <Compile Include="Commons\Mapping\MappingProvider.cs" />
+    <Compile Include="Commons\Mapping\PropertyMappingProviderBase.cs" />
+    <Compile Include="Commons\Mapping\ProviderFactory.cs" />
+    <Compile Include="Commons\Mapping\StringPropertyMappingProvider.cs" />
+    <Compile Include="Commons\Mapping\ValueTypePropertyMappingProvider.cs" />
+    <Compile Include="Commons\ObjectExtensions.cs" />
+    <Compile Include="Commons\ObjectHelper.cs" />
+    <Compile Include="Commons\Special\BufferWriter.cs" />
+    <Compile Include="Commons\Utils.cs" />
+    <Compile Include="Constants\ItemType.cs" />
+    <Compile Include="Constants\NodeType.cs" />
+    <Compile Include="Commons\IBusinessLogic.cs" />
+    <Compile Include="Commons\IDataAccess.cs" />
+    <Compile Include="ExportServices\PdfRender\BinaryContentResult.cs" />
+    <Compile Include="ExportServices\PdfRender\FakeView.cs" />
+    <Compile Include="ExportServices\PdfRender\HtmlViewRenderer.cs" />
+    <Compile Include="ExportServices\PdfRender\PdfViewController.cs" />
+    <Compile Include="ExportServices\PdfRender\PrintHeaderFooter.cs" />
+    <Compile Include="ExportServices\PdfRender\StandardPdfRenderer.cs" />
+    <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\ChangePasswordModel.cs" />
+    <Compile Include="Models\ForgotModel.cs" />
+    <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\ModuleModel.cs" />
+    <Compile Include="Models\RoleModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="SecurityServices\DataProviders\DataProvider.cs" />
+    <Compile Include="SecurityServices\DataProviders\SqlDataProvider.cs" />
+    <Compile Include="SecurityServices\Entity\GroupInfo.cs" />
+    <Compile Include="SecurityServices\Entity\ModuleInfo.cs" />
+    <Compile Include="SecurityServices\Entity\RestaurantInfo.cs" />
+    <Compile Include="SecurityServices\Entity\RoleInfo.cs" />
+    <Compile Include="SecurityServices\Entity\UserInfo.cs" />
+    <Compile Include="SecurityServices\RoleService.cs" />
+    <Compile Include="SecurityServices\SecurityService.cs" />
+    <Compile Include="SecurityServices\SecurityUtils.cs" />
+    <Compile Include="SecurityServices\UserService.cs" />
+    <Compile Include="SecurityServices\Utils\Authenticate.cs" />
+    <Compile Include="SecurityServices\Utils\SecurityMethod.cs" />
+    <Compile Include="Security\FileEncrypts\FileCrypt.cs" />
+    <Compile Include="Configuration\Config.cs" />
+    <Compile Include="Dapper\SqlMapper.cs" />
+    <Compile Include="Data\ADOProvider.cs" />
+    <Compile Include="Data\Attributes\FieldMapAttribute.cs" />
+    <Compile Include="Data\DataAccessProvider\DataAccessLayer.cs" />
+    <Compile Include="Data\DataAccessProvider\OdbcDataAccess.cs" />
+    <Compile Include="Data\DataAccessProvider\OleDbDataAccess.cs" />
+    <Compile Include="Data\DataAccessProvider\OracleDataAccess.cs" />
+    <Compile Include="Data\DataAccessProvider\SqlDataAccess.cs" />
+    <Compile Include="Data\DataHelper.cs" />
+    <Compile Include="Data\DataMaping.cs" />
+    <Compile Include="Data\DataReaderExtensions.cs" />
+    <Compile Include="Data\DataSettings.cs" />
+    <Compile Include="Data\DataSettingsHelper.cs" />
+    <Compile Include="Data\DataSettingsManager.cs" />
+    <Compile Include="Data\DynamicQuery.cs" />
+    <Compile Include="Data\ObjectDataReader.cs" />
+    <Compile Include="Data\QueryResult.cs" />
+    <Compile Include="Data\QueryString.cs" />
+    <Compile Include="Data\Utility.cs" />
+    <Compile Include="ExportServices\ExcelService.cs" />
+    <Compile Include="ExportServices\PdfService.cs" />
+    <Compile Include="FrameworkInstaller.cs" />
+    <Compile Include="Helper\ApplicationHelper.cs" />
+    <Compile Include="Helper\Attributes\ADOTableAttribute.cs" />
+    <Compile Include="Helper\Cache\CacheHelper.cs" />
+    <Compile Include="Helper\ConvertHelper.cs" />
+    <Compile Include="Helper\EnumHelper.cs" />
+    <Compile Include="Helper\Json\ConvertJson.cs" />
+    <Compile Include="Helper\ObjectCopier.cs" />
+    <Compile Include="Helper\Objects\DynamicExtensions.cs" />
+    <Compile Include="Helper\Objects\InterfaceObjectFactory.cs" />
+    <Compile Include="Helper\Office\ConverterLocator.cs" />
+    <Compile Include="Helper\Office\DocToHtml.cs" />
+    <Compile Include="Helper\Office\FileConverter.cs" />
+    <Compile Include="Helper\Office\IConverter.cs" />
+    <Compile Include="Helper\Office\TxtToHtml.cs" />
+    <Compile Include="Helper\Office\XlsToHtml.cs" />
+    <Compile Include="Helper\PropertyString.cs" />
+    <Compile Include="Helper\ResourceString.cs" />
+    <Compile Include="Helper\RestartApplication.cs" />
+    <Compile Include="Helper\Session\HttpContextSessionHelper.cs" />
+    <Compile Include="Helper\Session\UserSession.cs" />
+    <Compile Include="Helper\XmlHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Provider.cs" />
+    <Compile Include="Security\Crypt\Md5Util.cs" />
+    <Compile Include="Security\StoreFile\SecurityStoreFile.cs" />
+    <Compile Include="Singleton\Singleton.cs" />
+    <Compile Include="Singleton\SingletonPerRequest.cs" />
+    <Compile Include="StateEngine\IItemStateService.cs" />
+    <Compile Include="StateEngine\MemoryItemStateService.cs" />
+    <Compile Include="StateEngine\StateItem.cs" />
+    <Compile Include="Utilities\ConvertUtil.cs" />
+    <Compile Include="Utilities\CookieUtil.cs" />
+    <Compile Include="Utilities\ParseUtil.cs" />
+    <Compile Include="Utilities\SessionUtil.cs" />
+    <Compile Include="Utilities\UrlUtil.cs" />
+    <Compile Include="Utilities\Utils.cs" />
+    <Compile Include="Views\Security\Forgot.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Forgot.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Security\ForgotResult.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ForgotResult.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Security\Login.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Login.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Security\ResetPassword.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResetPassword.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Security\ResetResult.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResetResult.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="WebExtensions\Grid\GridColumn.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WebExtensions\Label\LabelExtension.cs" />
+    <Compile Include="WebExtensions\ResourceRegistration.cs" />
+    <Compile Include="WebExtensions\ScriptExtension.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WebExtensions\StyleExtension.cs" />
+    <Compile Include="Web\BaseController.cs" />
+    <Compile Include="Web\CastleDependencyResolver.cs" />
+    <Compile Include="Web\CastleDependencyScope.cs" />
+    <Compile Include="Web\SessionExpireAttribute.cs" />
+    <Compile Include="Web\SetaHandleErrorAttribute.cs" />
+    <Compile Include="Web\FilterAuthorize.cs" />
+    <Compile Include="Web\NotAuthorizeResult.cs" />
+    <Compile Include="Web\AuthorizeAttribute.cs" />
+    <Compile Include="Web\WebExtension.cs" />
+    <Compile Include="Web\WindsorControllerFactory.cs" />
+    <Compile Include="Web\XmlResult.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Views\Security\Forgot.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Forgot.generated.cs</LastGenOutput>
+    </None>
+    <None Include="Views\Security\ForgotResult.cshtml">
+      <Generator>MvcRazorClassGenerator</Generator>
+      <LastGenOutput>ForgotResult.cs</LastGenOutput>
+    </None>
+    <None Include="Views\Security\Login.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Login.generated.cs</LastGenOutput>
+    </None>
+    <None Include="Views\Security\ResetPassword.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ResetPassword.generated.cs</LastGenOutput>
+    </None>
+    <None Include="Views\Security\ResetResult.cshtml">
+      <Generator>MvcRazorClassGenerator</Generator>
+      <LastGenOutput>ResetResult.cs</LastGenOutput>
+    </None>
+    <None Include="Views\Shared\AccessDenied.cshtml">
+      <CustomToolNamespace>MvcRazorClassGenerator</CustomToolNamespace>
+    </None>
+    <None Include="Views\Shared\Error401.cshtml">
+      <CustomToolNamespace>MvcRazorClassGenerator</CustomToolNamespace>
+    </None>
+    <None Include="Views\Shared\NotFound.cshtml">
+      <CustomToolNamespace>MvcRazorClassGenerator</CustomToolNamespace>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

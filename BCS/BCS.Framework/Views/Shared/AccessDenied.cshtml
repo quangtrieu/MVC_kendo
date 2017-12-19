@@ -1,0 +1,80 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Kendo.Mvc.UI
+@using BCS.Framework.WebExtensions
+@{
+    ViewBag.Title = "Access Denied";
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Error: Access Denied</title>
+</head>
+<body>
+    <div style="width: 100%; text-align: right">
+        <span style="position: relative; width: 17px; display: inline-block; height: 17px;
+            overflow: hidden">
+            <a accesskey="6" style="width: 17px; display: inline-block;
+                height: 17px" title="Help (new window)" onclick="TopHelpButtonClick('HelpHome');return false"
+               href="#">
+                <img style="position: absolute; top: -309px !important; left: 0px !important" border="0"
+                     alt="Help (new window)" src="@Url.Content("~/Content/fw/images/fgimg.png")" />
+            </a>
+        </span>
+    </div>
+    <div id="s4_simple_card">
+        <div id="s4_simple_card_top">
+            <a href="@Url.Content("~/")">
+                <img alt="Go Back To Site" border="0" src="@Url.Content("~/Content/fw/images/closeX.png")" />
+            </a>
+        </div>
+        <div id="s4_simple_card_content">
+            <div class="s4_simple_iconcont">
+                <img alt="Error" src="@Url.Content("~/Content/fw/images/errorIcon.png")" />
+            </div>
+            <div id="s4_simple_content">
+                <h1>Error: Access Denied</h1>
+                <div id="s4_simple_error_content">
+                    <table cellpadding="0" style="border: none">
+                        <tbody>
+                            <tr>
+                                <td class="ms-sectionheader">
+                                    <img alt="" src="@Url.Content("~/Content/fw/images/ListSet.gif")" />
+                                    Current User
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" class="ms-descriptiontext">
+                                    @*@(new HtmlString(string.Format(YouAreSignInAs, @User.Identity.Name)))*@
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @*@Html.ActionLink(SignAsDiff, "ClearAuthenticationCache", "Security")*@
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div>
+                        <ul>
+                            <li><span>401 Unauthorized</span></li>
+                            <li><span>Authorization Required</span></li>
+                            <li><span>HTTP Error 401 - Unauthorized</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="s4_simple_gobackcont">
+                    <img style="border-width:0px;" alt="Go back to site" src="@Url.Content("~/Content/fw/images/calprev.png")">
+                    <a href="@Url.Content("~/")">Go Back To Site</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

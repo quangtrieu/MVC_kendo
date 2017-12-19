@@ -1,0 +1,23 @@
+﻿@using BCS.Framework.Resources
+@using (Html.BeginForm("AcessDenied", "Error", FormMethod.Post))
+{
+    <div id="s4_simple_card" style="margin: 0 auto;width: 370px !important; height: 180px !important; margin-top: 30px;padding-left: 20px">
+        <div id="s4_simple_card_content">
+            <div id="s4_simple_content">
+                <h1 class="error">@StringResources.Error: @StringResources.AccessDenied</h1>
+                <div id="s4_simple_error_content">
+                    <div>
+                        <ul>
+                            <li><span>401 Unauthorized</span></li>
+                            <li><span>Authorization Required</span></li>
+                            <li><span>HTTP Error 401 - Unauthorized</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="s4_simple_gobackcont">
+                    <a href="@Url.Content("~/Home/Index")">Go home to site</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

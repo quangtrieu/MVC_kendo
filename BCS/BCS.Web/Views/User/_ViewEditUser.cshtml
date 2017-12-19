@@ -1,0 +1,100 @@
+﻿@using System.Collections.Concurrent
+@using BCS.Framework.WebExtensions.Label
+@model BCS.Web.Models.UserModel
+
+@using (Html.BeginForm("EditUser", "User", FormMethod.Post, new { role = "form", id = "formEditUser" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(m => m.UserId)
+    @Html.HiddenFor(m => m.SystemId)
+    @Html.HiddenFor(m => m.RoleId)
+    @Html.HiddenFor(m => m.Active)
+    @Html.HiddenFor(m => m.LastedDateLogin)
+    @Html.HiddenFor(m => m.DeletedFlg)
+    @Html.HiddenFor(m => m.ForgotCode)
+    @Html.HiddenFor(m => m.ForgotExpired)
+    @Html.HiddenFor(m => m.CreatedDate)
+    @Html.HiddenFor(m => m.CreatedUserId)
+    @Html.HiddenFor(m => m.UpdatedDate)
+    @Html.HiddenFor(m => m.UpdatedUserId)
+    <input type="hidden" name="OldPassword" value="@Model.Password"/>
+    <div class="col-xs-12" style="height: auto; background-color: #fff; box-shadow: 0px 0px 5px #888888; border-radius: 3px !important;">
+        <div class="col-xs-12 text-left">
+            <div class="col-xs-12 text-left" style="padding-top:10px; padding-bottom:10px;">
+                @Html.Label("Personal Details", new { @style = "font-size: 16pt; color: rgb(15, 18, 21)" })
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-xs-4" style="">
+                    <label class="control-label">Login*</label>
+                </div>
+                <div class="col-xs-8">
+                    @Html.TextBoxFor(m => m.UserName, new { placeholder = "User Name", @class = "form-control", id = "txtUserName" })
+                    <span class='error user-name-message'></span>
+                </div>
+            </div>
+            <div class="form-group clearfix" style="padding-top: 10px;">
+                <div class="col-xs-4" style="padding-top: 6px;">
+                    <label class="control-label">Password*</label>
+                </div>
+                <div class="col-xs-8">
+                    @Html.PasswordFor(model => model.Password, new { placeholder = "New Password", @class = "form-control", id = "txtPassword" })
+                    <span class='error password-message'></span>
+                </div>
+            </div>
+            <div class="form-group clearfix" style="padding-top: 10px; padding-bottom: 10px;">
+                <div class="col-xs-4" style="padding-top: 6px;">
+                    <label class="control-label">Confirm Password*</label>
+                </div>
+                <div class="col-xs-8">
+                    @Html.PasswordFor(model => model.Password, new { placeholder = "Confirm Password", @class = "form-control", id = "txtConfirmPassword" })
+                    <span class='error confirm-password-message'></span>
+                </div>
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-xs-4" style="padding-top: 6px;">
+                    <label class="control-label">Name*</label>
+                </div>
+                <div class="col-xs-8">
+                    @Html.TextBoxFor(m => m.FullName, new { placeholder = "Full Name", @class = "form-control", id = "txtFullName" })
+                    <span class='error full-name-message'></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 text-left">
+            <div class="col-xs-12 text-left" style="padding-top:10px; padding-bottom:10px;">
+                @Html.Label("Contact Information", new { @style = "font-size: 16pt; color: rgb(15, 18, 21)" })
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-xs-4" style="padding-top: 6px;">
+                    @Html.LabelForRequire(m => m.Email, new { @class = "control-label" })
+                </div>
+                <div class="col-xs-8">
+                    @Html.TextBoxFor(m => m.Email, new { placeholder = "Email Address", @class = "form-control", id = "txtEmail" })
+                    <span class='error email-message'></span>
+                </div>
+            </div>
+            <div class="form-group clearfix" style="padding-top: 10px; padding-bottom: 10px;">
+                <div class="col-xs-4" style="padding-top: 6px;">
+                    @Html.LabelForRequire(m => m.Phone, new { @class = "control-label" })
+                </div>
+                <div class="col-xs-8">
+                    @Html.TextBoxFor(m => m.Phone, new { placeholder = "Phone Number", @class = "form-control", id = "txtPhone" })
+                    <span class='error phone-message'></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 text-right modal-footer" style="padding-top:18px;">
+        <a class="btn btn-accept-no" style="width: 100px;"><i class="fa fa-remove"></i> Cancel</a>
+        <a class="btn btn-primary btn-accept-yes" style="width: 100px;"><i class="fa fa-save"></i> Save</a>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('input').focus(function () {
+            $(this).select();
+        });
+    });
+</script>

@@ -1,0 +1,65 @@
+﻿.reply-rating li {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.reply-rating {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  cursor: default;
+  display: inline-block;
+}
+
+.reply-rating li.reply-rating-star-full:after {
+  content: "\2605";
+  font-family: Arial;
+  font-size: 20px;
+  color: orange;
+}
+
+.reply-rating li.reply-rating-star-empty:after {
+  content: "\2606";
+  font-family: Arial;
+  font-size: 20px;
+  color: gray;
+}
+
+.k-state-selected {
+  color: #fff;
+  background-color: #428bca;
+  border-color: #428bca;
+}
+
+.red-border {
+    border: 1px solid #ff7373 !important;
+}
+
+.shift {
+    text-align: center;
+}
+
+.table-caption {
+    padding: 5px;
+    background-color: #00599c;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.w-700 {
+    width: 700px;
+}
+
+textarea {
+    box-sizing: border-box !important;
+    width: 100%;
+    resize: none;
+}
+
+#frmEditMasterSchedule {
+    width: 600px;
+}

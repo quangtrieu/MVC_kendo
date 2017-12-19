@@ -1,0 +1,315 @@
+﻿@using Kendo.Mvc.UI
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using BCS.Framework.Commons;
+@using BCS.Framework.Web;
+@using BCS.Framework.WebExtensions.Label
+
+@model BCS.Web.Models.DashBoardModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Header {
+    @Scripts.Render("~/Assets/js/base/jquery.cookie.js")
+}
+<style>
+    .budget-tag {
+        white-space: nowrap;
+    }
+    .budget-detail-row {
+        display: flex;
+    }
+    .budget-detail-row .item-row-first {
+        padding-left: 15px;
+        float: left;
+        width: 170px;
+    }
+    .budget-detail-row .item-row-second {
+        float: left;
+        width: 160px;
+        text-align: right;
+        padding-right: 10px;
+    }
+    .budget-detail-row .item-row-lasted {
+        float: left;
+        /*width: 70px;*/
+        text-align: right;
+        border-left: 1px solid #000;
+        padding-left: 5px;
+    }
+    .ErrorMessage{
+        font-size:11pt;
+        color: #428bca;
+        padding-left:20px;
+    }
+
+</style>
+
+<div class="form-group clearfix dashboard-body" style="margin: 0 auto; -moz-border-radius: 2em">
+    <div class="col-xs-12">
+        <div class="col-xs-12">
+            <p style="margin-top: 5px">
+                <a class="showHideFilter">
+                    <i class="fa fa-angle-double-right"></i>
+                </a>
+                @Html.Label("Show filter budgets", new { @style = "font-size: 11pt; color: #428bca", @id="labelShowHideFilter" })
+            </p>
+        </div>
+
+        <div class="col-xs-12 clearfix filter-box-area" style="display: none; background-color: #fff; box-shadow: 0px 0px 5px #888888;">
+            @{
+                if (@Session.CurrentUser().SystemId == BCS.Commons.BCSCommonData.SYSTEM_ID_SSP_SYSTEM)
+                {
+                    <div class="col-xs-12 margin-top-10">
+                        <div class="col-xs-3">Rest Code</div>
+                        <div class="col-xs-9">
+                            @(Html.Kendo().DropDownList()
+                                .Name("restCode")
+                                .HtmlAttributes(new { @style = "width: 285px", @placeholder = "Rest Code" })
+                                .DataTextField("RestName")
+                                .DataValueField("RestCode")
+                                .Value(Model.RestCode == null ? " " : Model.RestCode)
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Action("GetRestCodeByUser", "Dashboard");
+                                    });
+                                })
+                                .Events(e => e.Change("onChangeRestCode"))
+                            )
+                        </div>
+                    </div>
+                    <div class="col-xs-12 margin-top-10">
+                        <div class="col-xs-3">Created User</div>
+                        <div class="col-xs-9">
+                            @(Html.Kendo().DropDownList()
+                                .Name("createdUser")
+                                .HtmlAttributes(new { @style = "width: 285px", @placeholder = "Created User" })
+                                .DataTextField("UserName")
+                                .DataValueField("UserId")
+                                .Value(Model.CreatedUserId == null ? " " : Model.CreatedUserId)
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Action("GetUserReferenceByUser", "Dashboard");
+                                        read.Data("FilterUserByRestCode");
+                                    });
+                                })
+                            )
+                        </div>
+                    </div>
+                }
+            }
+
+            <div class="col-xs-12 margin-top-10">
+                <div class="col-xs-3">Budget Type</div>
+                <div class="col-xs-9">
+                    @(Html.Kendo().DropDownList()
+                        .Name("BudgetType")
+                        .HtmlAttributes(new { @style = "width: 285px" })
+                        .DataTextField("DataText")
+                        .DataValueField("DataValue")
+                        .Value(Model.BudgetType == null ? " " : Model.BudgetType)
+                        .DataSource(source =>
+                        {
+                            source.Read(read =>
+                            {
+                                read.Action("GetBudgetType", "Dashboard");
+                            });
+                        })
+                    )
+                </div>
+            </div>
+            <div class="col-xs-12 margin-top-10">
+                <div class="col-xs-3">Budget Start</div>
+                <div class="col-xs-9">
+                    @(Html.Kendo().DatePicker()
+                        .Name("startDate")
+                        .HtmlAttributes(new { @style = "width: 140px", @placeholder = "From" })
+                        .Start(CalendarView.Year)
+                        .Depth(CalendarView.Year)
+                        .Format("MMM yyyy")
+                    )
+                    @(Html.Kendo().DatePicker()
+                        .Name("endDate")
+                        .HtmlAttributes(new { @style = "width: 140px", @placeholder = "To" })
+                        .Start(CalendarView.Year)
+                        .Depth(CalendarView.Year)
+                        .Format("MMM yyyy")
+                    )
+                </div>
+            </div>
+
+            <div class="col-xs-12 margin-top-10 margin-bottom-10">
+                @Html.Label("FILTER BUDGET", new { @class = "btn btn-primary button btn-filter-budget" })
+                @Html.Label("CLEAR FILTER", new { @class = "btn btn-accept-no button btn-clear-filter-budget" })
+                @Html.Label("errorLabel", new { @id = "errorLabel", @class = "error", @style = "display: none" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group text-center col-xs-12 clearfix dashboard-header">
+        <div class="col-xs-8">
+            <h2><span style="color: #428bca;">ALL BUDGETS</span></h2>
+        </div>
+        <div class="col-xs-4">
+            @Html.Label("NEW BUDGET", new { @class = "btn btn-primary button btn-new-budget", @onclick = "newBudget();" })
+            <p>
+                @Html.Label("Define your new budget")
+            </p>
+        </div>
+    </div>
+    <div class="form-group col-xs-12 clearfix dashboard-content" style="overflow-y: auto; max-height: 755px;">
+        @if (Model.BudgetList.Count == 0)
+        {
+            <p class="ErrorMessage">No Result found.</p>
+        }
+        @for (int i = 0; i < Model.BudgetList.Count; i++)
+        {
+            var item = @Model.BudgetList[i];
+            var createdDate = item.CreatedDate.ToString("MMM dd, yyyy");
+            var updatedDate = item.UpdatedDate.ToString("MMM dd, yyyy");
+            <div class="col-xs-4 budget-tag" style="margin-top: 15px">
+                <div class="form-group">
+                    @*START: header content in budget tag*@
+                    <div class="budget-tag-header">
+                        <div class="col-xs-8">
+                            @{
+                                string strBudgetName = item.BudgetName.Length > 40 ? item.BudgetName.Substring(0, 32) + "..." : item.BudgetName;
+                            }
+                            @if (item.EditFlg)
+                            {
+                                <span class="header-first"><a onclick="ChangeBudgetName(@item.BudgetId,'@item.BudgetName')" style="color: #FFF">@strBudgetName</a></span>
+                            }
+                            else
+                            {
+                                <span class="header-first">@strBudgetName</span>
+                            }
+                            <p class="header-third">@Html.Label("Last updated on " + updatedDate + " by " + string.Format("{0}", item.UpdatedUserName.Length <= 16 ? item.UpdatedUserName : item.UpdatedUserName.Substring(0, 16)), new { @class = "header-secord" })</p>
+                        </div>
+                        <div class="col-xs-4 text-center">
+                            @if (!string.IsNullOrEmpty(@item.RestCode))
+                            {
+                                <a onclick="linkedToRestaurant(@item.BudgetId,'@item.RestCode')" style="color: #FFF"><i class="fa fa-star"></i></a>
+                                <p class="header-third"><span>Linked with @item.RestCode <i class="fa fa-question-circle"></i></span></p>
+                            }
+                        </div>
+                    </div>
+                    @*END: header content in budget tag*@
+
+                    @*START: body content in budget tag*@
+                    <div class="budget-tag-body">
+                        <div class="col-xs-12">
+                            @{
+                                if (!string.IsNullOrEmpty(item.CommonDataText))
+                                {
+                                    @Html.Label("Budget Length: " + item.CommonDataText + ", from " + item.BudgetLengthStart.ToString("MMM yyyy"))
+                                }
+                                else
+                                {
+                                    @Html.Label("Budget Length: EMPTY")
+                                }
+                            }
+                        </div>
+                        <div class="col-xs-12 budget-detail-row margin-bottom-5">
+                            <div class="item-row-first">@Html.Label("Sales:")</div>
+                            <div class="item-row-second"><span>@string.Format("{0:C}", item.Sales)</span></div>
+                            <div class="item-row-lasted"><span>@string.Format("{0}%", item.SalesPercent)</span></div>
+                        </div>
+                        <div class="col-xs-12 budget-detail-row margin-bottom-5">
+                            <div class="item-row-first">@Html.Label("COGS:")</div>
+                            <div class="item-row-second"><span>@string.Format("{0:C}", item.COGS)</span></div>
+                            <div class="item-row-lasted"><span>@string.Format("{0}%", item.COGSPercent)</span></div>
+                        </div>
+                        <div class="col-xs-12 budget-detail-row margin-bottom-5">
+                            <div class="item-row-first">@Html.Label("Gross Profit:")</div>
+                            <div class="item-row-second"><span>@string.Format("{0:C}", item.GrossProfit)</span></div>
+                            <div class="item-row-lasted"><span>@string.Format("{0}%", item.GrossProfitPercent)</span></div>
+                        </div>
+                        <div class="col-xs-12 budget-detail-row margin-bottom-5">
+                            <div class="item-row-first">@Html.Label("Payroll Expenses:")</div>
+                            <div class="item-row-second"><span>@string.Format("{0:C}", item.PayrollExpenses)</span></div>
+                            <div class="item-row-lasted"><span>@string.Format("{0}%", item.PayrollExpensesPercent)</span></div>
+                        </div>
+                        <div class="col-xs-12 budget-detail-row margin-bottom-5">
+                            <div class="item-row-first">@Html.Label("Operating Profit:")</div>
+                            <div class="item-row-second"><span>@string.Format("{0:C}", item.OperatingProfit)</span></div>
+                            <div class="item-row-lasted"><span>@string.Format("{0}%", item.OperatingProfitPercent)</span></div>
+                        </div>
+                        <div class="col-xs-12 budget-detail-row margin-bottom-5">
+                            <div class="item-row-first">@Html.Label("Prime Cost:")</div>
+                            <div class="item-row-second"><span>@string.Format("{0:C}", item.PrimeCost)</span></div>
+                            <div class="item-row-lasted"><span>@string.Format("{0}%", item.PrimeCostPercent)</span></div>
+                        </div>
+                        <div class="col-xs-12 budget-detail-row margin-bottom-5">
+                            <div class="item-row-first">@Html.Label("Operating Expenses:")</div>
+                            <div class="item-row-second"><span>@string.Format("{0:C}", item.OperatingExpenses)</span></div>
+                            <div class="item-row-lasted"><span>@string.Format("{0}%", item.OperatingExpensesPercent)</span></div>
+                        </div>
+                        <div class="col-xs-12 budget-detail-row margin-bottom-5">
+                            <div class="item-row-first">@Html.Label("Net Profit/Loss:")</div>
+                            <div class="item-row-second"><span>@string.Format("{0:C}", item.NetProfitLoss)</span></div>
+                            <div class="item-row-lasted"><span>@string.Format("{0}%", item.NetProfitLossPercent)</span></div>
+                        </div>
+                        <div class="col-xs-12 budget-detail-row margin-bottom-5">
+                            <div class="item-row-first">@Html.Label("Break-even Point:")</div>
+                            <div class="item-row-second"><span>@string.Format("{0:C}", item.BreakEvenPoint)</span></div>
+                            <div class="item-row-lasted"><span>@string.Format("{0}%", item.BreakEvenPointPercent)</span></div>
+                        </div>
+
+                        @*START: menu in budget tab*@
+                        <div class="k-animation-container hidden menuConfig text-center">
+                            @if (item.EditFlg)
+                            {
+                                <div class="col-xs-12" style=" margin-top: -190px;">
+                                    @Html.Label("IMPORT DATA", new { @class = "btn btn-primary button btn-budget-tag", @onclick = "importActualNumber(" + item.BudgetId + ");" })
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-xs-12" style=" margin-top: -190px;">
+                                    @Html.Label("VIEW", new { @class = "btn btn-primary button btn-budget-tag", @onClick = "viewDetail(" + item.BudgetId + ", '" + item.RestCode + "')" })
+                                </div>
+                            }
+                            @if (item.EditFlg)
+                            {
+                                <div class="col-xs-12" style=" margin-top: -130px;">
+                                    @Html.Label("VIEW / EDIT", new { @class = "btn btn-primary button btn-budget-tag", @onClick = "viewDetail(" + item.BudgetId + ", '" + item.RestCode + "')" })
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-xs-12" style=" margin-top: -130px;">
+                                    @Html.Label("CLONE", new { @class = "btn btn-primary button btn-budget-tag", @onClick = "CloneBudget(" + item.BudgetId + ", '" + item.BudgetName + "')" })
+                                </div>
+                            }
+                            @*disable button delete case logined user is other created user*@
+                            @if (item.EditFlg)
+                            {
+                                <div class="col-xs-12" style=" margin-top: -70px;">
+                                    @Html.Label("DELETE", new { @class = "btn btn-primary button btn-budget-tag", @onClick = "deleteThisBudget(" + item.BudgetId + ")" })
+                                </div>
+                            }
+                        </div>
+                        @*END: menu in budget tab*@
+                    </div>
+                    @*END: body content in budget tag*@
+
+                    @*START: bottom content in budget tab*@
+                    <div class="budget-tag-bottom">
+                        <div class="col-xs-8">
+                            @Html.Label("First created on " + createdDate + " by " + string.Format("{0}", item.CreatedUserName.Length <= 16 ? item.CreatedUserName : item.CreatedUserName.Substring(0, 16)), new { style = "font-size: 10pt;" })
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <a onclick="redirectToCategorySetting(@item.BudgetId)" style="font-size: 14px"><span>Setting &gt;</span></a>
+                        </div>
+                    </div>
+                    @*END: bottom content in budget tab*@
+                </div>
+            </div>
+        }
+    </div>
+</div>

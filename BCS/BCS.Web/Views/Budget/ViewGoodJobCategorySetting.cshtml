@@ -1,0 +1,30 @@
+﻿@using Kendo.Mvc.UI
+@using BCS.Web.Models
+
+@model BCS.Web.Models.BudgetModel
+
+@{
+    ViewBag.Title = string.Format("Good Job (Budget Name: {0})", Model.BudgetNameDisplay);
+    Layout = "~/Views/Shared/_LayoutNewBudget.cshtml";
+}
+
+<div class="form-group clearfix dashboard-body" style="margin: 0 auto; -moz-border-radius: 2em">
+    @Html.Hidden("BudgetId", Model.BudgetId)
+    <div class="col-xs-12">
+        <div class="col-xs-8 text-center" style="margin-left: 16%">
+            @Html.Label("Good Job", new { @style = "font-size: 25pt; color: rgb(85, 150, 207)" })
+        </div>
+        <div class="col-xs-8" style="margin-left: 16%">
+            <p>Your completed Settings.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis cursus ligula neque, id porta enim venenatis quis. Cras lacus sapien, sagitis a risus et, egestas pulvinar nisl. Quisque convallis, mauris, mauris vitae vehicala dictum, tellus leo dignissim metus, in sagittis elit lectus vitae dolor.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in lectus autor, elementum nunc ullamcorper, convallis leo.</p>
+        </div>
+    </div>
+    <div class="col-xs-10 margin-top-20" style="margin-left: 9%">
+        <div class="col-xs-3"><img src="~/Assets/img/images/goodjob01.jpg" alt="Fjords" width="300" height="200"></div>
+        <div class="col-xs-3"><img src="~/Assets/img/images/goodjob02.jpg" alt="Forest" width="300" height="200"></div>
+        <div class="col-xs-3"><img src="~/Assets/img/images/goodjob03.jpg" alt="Northern Lights" width="300" height="200"></div>
+        <div class="col-xs-3"><img src="~/Assets/img/images/goodjob04.jpg" alt="Mountains" width="300" height="200"></div>
+    </div>
+</div>
+

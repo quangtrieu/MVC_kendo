@@ -1,0 +1,49 @@
+﻿.k-grid tbody tr {
+    cursor: move;
+}
+
+.k-edit:before {
+  content: "\f044";
+}
+.k-delete:before {
+  content: "\f014";
+}
+tbody[role="rowgroup"] td[role="gridcell"] .k-icon{
+    background-image:none;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: 17px;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+tbody[role="rowgroup"] td[role="gridcell"] .k-icon.k-edit, tbody[role="rowgroup"] td[role="gridcell"] .k-icon.k-delete{
+    padding-top:2px;
+}
+.fa.fa-plus.btn-section-field {
+    border: 1px solid #cccccc;
+    font-size: 12px;
+    padding: 6px 10px;
+}
+
+.k-grid-excel:before {
+  content: "\f1c3";
+}
+button.k-grid-excel {
+    background: none repeat scroll 0 0 #ffffff;
+    font-size: 14px;
+    padding: 9px 14px;
+}
+#SectionManagerGrid > table[role="treegrid"] > .k-grid-header > tr > .k-header:nth-child(2),
+#MenuCategoryGrid > table[role="grid"] > .k-grid-header > tr > .k-header:nth-child(3){
+    border-left:0px;
+}
+
+#details-container > h2 {
+    font-size: 18px;
+    margin-top: 0;
+}
+#MenuCategoryGrid.k-grid tbody tr{
+    cursor:default;
+}
+.k-state-selected .k-button, .k-state-selected .k-button span{color:#333333;}

@@ -1,0 +1,39 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@*@using BCS.Framework.WebExtensions.Label*@
+@{
+    //ViewBag.Title = "Register User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .dashboard-body > div {
+        margin-top: 30px;
+    }
+</style>
+<div class="clearfix dashboard-body" style="margin: 0 auto; -moz-border-radius: 2em">
+    <div class="col-xs-12 text-center" style="font-size: 25pt; color: rgb(85, 150, 207)">
+        <p>Congratulations, your account was created successfully!</p>
+    </div>
+    <div class="col-xs-12 text-justify" style="font-size: 12pt">
+        <p>You've completed Setting.</p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis cursus ligula neque, id porta enim veneatis quis. Cras lacus sapien, sagittis arisus et, egestas pulvinar nisl.
+            Quisque convallis, mauris vitae vehcula dictum, tellus leo dignissim metus, in sagittis elit lectus vitae dolor.
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in lectus auctor, elementum nunc ullamcorper, convallis leo.
+        </p>
+    </div>
+    <div class="col-xs-12 text-center" style="font-size: 20pt">
+        <p>Now let's define the default restaurant to link your budget.</p>
+    </div>
+    <div class="col-xs-12  text-center divLinkYourRestaurantFirst">
+        <p>@Html.Label("LINK YOUR RESTAURANT", new { @class = "btn btn-primary button", @style = "width:200px", @onclick = "linkRestaurant()" })</p>
+        <p>Your target COGS% and Labor %'s would populate from SSP</p>
+    </div>
+    <div class="col-xs-12 divLinkYourRestaurantSeconrd hidden">
+        @{
+            Html.RenderPartial("~/Views/LinkRestaurant/Index.cshtml");
+        }
+    </div>
+</div>

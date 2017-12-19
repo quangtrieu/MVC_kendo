@@ -1,0 +1,148 @@
+﻿@using BCS.Web.Models
+
+@{
+    ViewBag.Title = "Categories Settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="form-group clearfix dashboard-body" style="margin: 0 auto; -moz-border-radius: 2em">
+    <div class="col-xs-12 text-center margin-top-20">
+        @Html.Label("DEFAULT CATEGORIES SETTINGS", new { @style = "color: #428bca; font-size: 20pt;" })
+    </div>
+    <div class="col-xs-12 clearfix" style="height: 135px; background-color: #fff; box-shadow: 0px 0px 5px #888888; border-radius: 3px !important;">
+        <p class="col-xs-12 text-center margin-top-10" style="font-size: 15pt;">Let's define the default categories</p>
+        <p>All default categories setting of Budget Creator. You can override the setting later during build your own new budget.</p>
+        <ul>
+            <li>Change categories position by drag &amp; drop</li>
+            <li>Prime Cost appear in <span style="color: red;">red</span></li>
+        </ul>
+    </div>
+    <div class="col-xs-12 margin-top-20" style="height: 30px; background-color: #428bca; color: #FFF">
+        @Html.Label("Action", new { @style = "font-size: 15pt" })
+    </div>
+    <div class="col-xs-12 clearfix categories-setting-note" style="height: 100px; background-color: #fff; box-shadow: 0px 0px 5px #888888;">
+        <div class="col-xs-6 margin-top-15">
+            <p>Load the predefined categories?</p>
+            @Html.Label("RESTORE DEFAULT", new { @class = "btn btn-primary button", @onclick = "resetDefaultCategory();" })
+            @Html.Label("LOAD FROM TEMPLATE", new { @class = "btn btn-primary button", @onclick = "openLoadCategoryTemplate();" })
+            @if (ViewBag.RestCode != null)
+            {
+                <input type="hidden" id="restName" value="@ViewBag.RestName" />
+                @Html.Label("SYNC FROM SSP", new { @class = "btn btn-primary button", @onclick = "syncDataDefaultCategoryFromSSP('" + ViewBag.RestCode + "');" })
+            }
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <div>Note:</div>
+            <div>Change category position by drag &amp; drop</div>
+            <div>Check category to represent this category with percentage entry</div>
+            <div>Prime Cost appears in <span style="color: red;">red</span></div>
+        </div>
+    </div>
+    <div class="col-xs-12 categories-setting-area">
+        @{
+            var categoriesList = (ViewBag.CategoriesList as List<CategoryModel>);
+            var parentList = categoriesList.Where(p => p.ParentCategoryId == null || p.ParentCategoryId == 0).ToList<CategoryModel>();
+            for (int i = 0; i < parentList.Count; i++)
+            {
+                // print out childen is not tax cost
+                var childenList = categoriesList.Where(p => p.ParentCategoryId == parentList[i].CategoryId && p.IsTaxCost != true).OrderBy(p => p.SortOrder).ToList<CategoryModel>();
+                // print out childen is tax cost
+                var childenTaxCostList = categoriesList.Where(p => p.ParentCategoryId == parentList[i].CategoryId && p.IsTaxCost == true).OrderBy(p => p.SortOrder).ToList<CategoryModel>();
+
+                // print out parent categories
+                <div class="col-xs-6 categoies-tag">
+                    <div class="col-xs-12 margin-top-15 margin-bottom-10" style="border-bottom: 1px solid #A7A7A7;">
+                        <div class="col-xs-8" style="font-size: 14pt"><span>@parentList[i].CategoryName</span></div>
+                        <div class="col-xs-4 text-right">
+                        @if (parentList[i].CategoryName != BCS.Commons.BCSCommonData.CATEGORY_DEFAULT_PROFIT_LOSS_TEXT)
+                        {
+                            <label class="btn" onclick="editCategories(@parentList[i].CategoryId, '@parentList[i].CategoryName')"><span><i class="fa fa-edit"></i></span></label>
+                        }
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                    @{
+                        for (int j = 0; j < childenList.Count; j++)
+                        {
+                            var isPercentageVal = childenList[j].IsPercentage ? "": "display:none;";
+                            var isPrimeCostVal = childenList[j].IsPrimeCost ? "color: red" : "color: #000";
+                            var categoryName = childenList[j].CategoryName.Length < 40 ? childenList[j].CategoryName : childenList[j].CategoryName.Substring(0, 40);
+
+                            <div class="col-xs-3 categories-item">
+                                <div class="col-xs-12" style="display: inherit;margin: 0px -15px 0px -15px !important;">
+                                    <div class="col-xs-1">
+                                        @if (parentList[i].CategoryName != BCS.Commons.BCSCommonData.CATEGORY_DEFAULT_PROFIT_LOSS_TEXT)
+                                        {
+                                            <img src="~/css/images/checked-icon.jpg" style="@isPercentageVal" />
+                                        }
+                                    </div>
+                                    <div class="col-xs-11">
+                                        <span style="@isPrimeCostVal">@categoryName</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            if (j % 4 == 1)
+                            {
+                                <div class="col-xs-12 split-categories-area split-area-for-mobile"></div>
+                            }
+                            else if (j % 4 == 3)
+                            {
+                                <div class="col-xs-12 split-categories-area"></div>
+                            }
+                        }
+                    }
+                    </div>
+
+                    @if (parentList[i].CategoryName == BCS.Commons.BCSCommonData.CATEGORY_DEFAULT_PAYROLL_EXPENSES_TEXT)
+                    {
+                        <div class="col-xs-12 margin-top-15 margin-bottom-10" style="border-bottom: 1px solid #A7A7A7; font-size: 10pt; font-style: italic; font-weight: bold;">
+                            <div class="col-xs-8 margin-top-10"><span>@string.Format("{0} (IS TAX)", parentList[i].CategoryName)</span></div>
+                            <div class="col-xs-4 text-right">
+                                <label class="btn" onclick="editCategories(@parentList[i].CategoryId, '@parentList[i].CategoryName', true)"><span><i class="fa fa-edit"></i></span></label>
+                            </div>
+                        </div>
+                    }
+                    @if (childenTaxCostList.Count > 0)
+                    {
+                        <div class="col-xs-12" style="background-color: #fff; box-shadow: 0px 0px 5px #888888;">
+                        @{
+                            for (int j = 0; j < childenTaxCostList.Count; j++)
+                            {
+                                var isPercentageVal = childenTaxCostList[j].IsPercentage ? "" : "display:none;";
+                                var isPrimeCostVal = childenTaxCostList[j].IsPrimeCost ? "color: red" : "color: #000";
+                                var categoryName = childenTaxCostList[j].CategoryName.Length < 40 ? childenTaxCostList[j].CategoryName : childenTaxCostList[j].CategoryName.Substring(0, 40);
+
+                                <div class="col-xs-3 categories-item">
+                                    <div class="col-xs-12" style="display: inherit;margin: 0px -15px 0px -15px !important;">
+                                        <div class="col-xs-1">
+                                            <img src="~/css/images/icon-checked-bgwhite.png" style="@isPercentageVal" />
+                                        </div>
+                                        <div class="col-xs-11">
+                                            <span style="@isPrimeCostVal">@categoryName</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                if (j % 4 == 1)
+                                {
+                                    <div class="col-xs-12 split-categories-area split-area-for-mobile"></div>
+                                }
+                                else if (j % 4 == 3)
+                                {
+                                    <div class="col-xs-12 split-categories-area"></div>
+                                }
+                            }
+                        }
+                        </div>
+                    }
+                </div>
+
+                if (i % 2 == 1)
+                {
+                    <div class="col-xs-12"></div>
+                }
+            }
+        }
+    </div>
+</div>

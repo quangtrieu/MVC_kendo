@@ -1,0 +1,123 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using BCS.Framework.WebExtensions.Label
+@model BCS.Web.Models.RegisterModel
+@{
+    ViewBag.Title = "Sign Up - Budget Creator";
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+}
+<div class="col-xs-12">
+    <div class="form-group">
+        <br /><br /><br/>
+        <div class="text-center" style="font-size: 22pt; font-weight: normal; color: #FFF">CREATE AN ACCOUNT</div>
+        <br />
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="" style=" width:850px; margin: 0 auto;background: #FFF;-moz-border-radius: 2em">
+    <div class="row" style="padding: 10px;-moz-border-radius: 1em">
+        <div class="col-xs-7" style="border-right: 1px solid darkolivegreen">
+            <div class="form-group">
+                @Html.Label("lblInfo", "If you are a registered use, please enter your email and password.", new { @class = " col-xs-12 txt-right" })
+            </div>
+            @using (Html.BeginForm("Index", "Register", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "logon-form form-horizontal", id = "frm-register" }))
+            {
+                @Html.HiddenFor(m => m.RestCode)
+                @Html.HiddenFor(m => m.RestName)
+                @Html.HiddenFor(m => m.TokenId)
+                @Html.HiddenFor(m => m.SystemId)
+                <div class="error">
+                    @Html.ValidationSummary(true)
+                    @Html.AntiForgeryToken()
+                </div>
+                <div class="form-group">
+                    @Html.LabelForRequire(model => model.Email, new { @class = " col-xs-12 txt-right" })
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        @Html.TextBoxFor(model => model.Email, new { placeholder = "Email address", @class = "form-control", @maxlength = "255" })
+                        <span class="error">@Html.ValidationMessageFor(model => model.Email)</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelForRequire(model => model.FullName, new { @class = " col-xs-12 txt-right" })
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        @Html.TextBoxFor(model => model.FullName, new { placeholder = "FullName", @class = "form-control", @maxlength = "255" })
+                        <span class="error">@Html.ValidationMessageFor(model => model.FullName)</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelForRequire(model => model.UserName, new { @class = " col-xs-12 txt-right" })
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        @Html.TextBoxFor(model => model.UserName, new { placeholder = "User Name", @class = "form-control", @maxlength = "255" })
+                        <span class="error">@Html.ValidationMessageFor(model => model.UserName)</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelForRequire(model => model.Phone, new { @class = " col-xs-12 txt-right" })
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        @Html.TextBoxFor(model => model.Phone, new { placeholder = "Phone", @class = "form-control", @maxlength = "30" })
+                        <span class="error">@Html.ValidationMessageFor(model => model.Phone)</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelForRequire(model => model.Password, new { @class = " col-xs-12 txt-right" })
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        @Html.PasswordFor(model => model.Password, new { placeholder = "Password", @class = "form-control", @maxlength = "255" })
+                        <span class="error">@Html.ValidationMessageFor(model => model.Password)</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelForRequire(model => model.ConfirmPassword, new { @class = " col-xs-12 txt-right" })
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        @Html.PasswordFor(model => model.ConfirmPassword, new { placeholder = "Confirm Password", @class = "form-control", @maxlength = "255" })
+                        <span class="error">@Html.ValidationMessageFor(model => model.ConfirmPassword)</span>
+                    </div>
+                </div>
+                <br />
+                <div class="form-group text-center">
+                    <input type="submit" class="btn btn-primary button btnOk" id="btnRegister" value="CREATE ACCOUNT" style="width:150px" />
+                </div>
+            }
+        </div>
+
+        <div class="col-xs-5" >
+            <div class="form-group">
+                <b> Having trouble?</b> Feel free to contact us
+            </div>
+            <br />
+            <div class="form-group text-center">
+                <input type="button" class="btn btn-primary button btnOk" id="btnContactUs" value="CONTACT US" style="width:150px" onclick="showCommingSoon();" />
+            </div>
+            <div class="form-group"></div>
+            <div class="form-group"></div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnRegister").click(function () {
+            var form = $("#frm-register");
+            form.validate();
+            var isValid = form.valid();
+            if (isValid) {
+                return showProcessing();
+            }
+        });
+    });
+</script>
+

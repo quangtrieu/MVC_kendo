@@ -1,0 +1,829 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+SprightlySoftAWS
+</name>
+</assembly>
+<members>
+<member name="E:SprightlySoftAWS.S3.DownloadEstimate.ProgressUpdateEvent">
+	<summary>Fires repeatedly at the ProgressUpdateMilliseconds value.</summary>
+</member><member name="P:SprightlySoftAWS.S3.DownloadEstimate.CurrentKBpsSpeed">
+	<summary>Indicates the current speed of the transfer.</summary>
+</member><member name="P:SprightlySoftAWS.S3.DownloadEstimate.SecondsElapsed">
+	<summary>The number of seconds since the transfer started.</summary>
+</member><member name="P:SprightlySoftAWS.S3.DownloadEstimate.SecondsRemaining">
+	<summary>The estimated number of seconds remaining until the transfer is complete.</summary>
+</member><member name="P:SprightlySoftAWS.S3.DownloadEstimate.ProgressUpdateMilliseconds">
+	<summary>The number of milliseconds between raising the ProgressUpdateEvent.</summary>
+</member><member name="P:SprightlySoftAWS.S3.DownloadEstimate.AbortIfNoProgressChangedSeconds">
+	<summary>Aborts the operation if a ProgressChangedEvent has not been raised in the specified seconds.</summary>
+</member><member name="M:SprightlySoftAWS.S3.DownloadEstimate.DownloadFile(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.Boolean)">
+	<summary>Gets an object from Amazon S3 and saves it as a file.  While the download is taking place the current speed and estimated time remaining are calculated.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="Method">The request method.  For a download from S3 this is usually GET.</param>
+	<param name="ExtraRequestHeaders">A list of extra headers to send to Amazon.</param>
+	<param name="LocalFileName">The full path where the file will be saved.</param>
+	<param name="AppendToFile">Sets if an existing local file will be overwritten or appended to.</param>
+	<returns>Returns True if the download was successful.</returns>
+	<remarks>Only use this method if you will be using the CurrentKBpsSpeed, SecondsElapsed or SecondsRemaining properties.  If you do not need these properties use the DownloadFile method in the Download class.</remarks>
+</member><member name="T:SprightlySoftAWS.S3.DownloadEstimate">
+	<summary>Similar to the Download class but exposes extra properties.</summary>
+	<remarks>This class downloads a file and calculates the current speed and seconds remaining while the download is taking place.  If you do not need these properties use the Download class.</remarks>
+</member><member name="E:SprightlySoftAWS.S3.EncryptDecrypt.StateChangedEvent">
+	<summary>Fires when the value of the State property is changed.</summary>
+</member><member name="E:SprightlySoftAWS.S3.EncryptDecrypt.ProgressChangedEvent">
+	<summary>Fires when the value of the BytesTransfered property is changed.</summary>
+</member><member name="P:SprightlySoftAWS.S3.EncryptDecrypt.Version">
+	<summary>Gets the version number of the SprightlySoft S3 component.</summary>
+</member><member name="P:SprightlySoftAWS.S3.EncryptDecrypt.State">
+	<summary>Gets the current state of the component.</summary>
+</member><member name="P:SprightlySoftAWS.S3.EncryptDecrypt.BytesProcessed">
+	<summary>Returns the number of bytes that have been processed.</summary>
+</member><member name="P:SprightlySoftAWS.S3.EncryptDecrypt.BytesTotal">
+	<summary>Returns the number of bytes that should be processed.</summary>
+</member><member name="P:SprightlySoftAWS.S3.EncryptDecrypt.ErrorNumber">
+	<summary>A number that describes the last exception.</summary>
+</member><member name="P:SprightlySoftAWS.S3.EncryptDecrypt.ErrorDescription">
+	<summary>A message that describes the last exception.</summary>
+</member><member name="P:SprightlySoftAWS.S3.EncryptDecrypt.LogData">
+	<summary>Returns log information related to last method call.</summary>
+</member><member name="M:SprightlySoftAWS.S3.EncryptDecrypt.CreateInitializationVector">
+	<summary>Creates an initialization vector which will be used when encrypting.</summary>
+	<returns>Returns an initialization vector.</returns>
+	<remarks>An initialization vector makes the result of encryption different even though the secret key is the same.  You must share the encrypted data and initialization vector with the recipient.  They will use the encrypted data, initialization vector and secret key to decrypt.</remarks>
+</member><member name="M:SprightlySoftAWS.S3.EncryptDecrypt.CreateSecretKey">
+	<summary>Creates an secret key which will be used when encrypting.</summary>
+	<returns>Returns a secret key.</returns>
+	<remarks>A secret key is the password used to encrypt and decrypt.  You should not share the secret key.</remarks>
+</member><member name="M:SprightlySoftAWS.S3.EncryptDecrypt.EncryptTripleDESFromFile(System.String,System.String,System.String,System.String)">
+	<summary>Encrypts a file.</summary>
+	<param name="SourceFileName">The file that will be encrypted.</param>
+	<param name="DestinationFileName">A file to save the encryption result.</param>
+	<param name="SecretKey">The secret key used to encrypt the file.</param>
+	<param name="InitializationVector">The initialization vector used for encryption.</param>
+	<returns>Returns True if encryption was successful.</returns>
+	<remarks>The function uses Triple DES to encrypt a file.</remarks>
+</member><member name="M:SprightlySoftAWS.S3.EncryptDecrypt.DecryptTripleDESFromFile(System.String,System.String,System.String,System.String)">
+	<summary>Decrypts a file.</summary>
+	<param name="SourceFileName">The file that will be decrypted.</param>
+	<param name="DestinationFileName">A file to save the result of decryption.</param>
+	<param name="SecretKey">The secret key that was used to encrypt the file.</param>
+	<param name="InitializationVector">The initialization vector that was used to encrypt the file.</param>
+	<returns>Returns True if decryption was successful.</returns>
+</member><member name="M:SprightlySoftAWS.S3.EncryptDecrypt.Abort">
+	<summary>Aborts the current method.</summary>
+</member><member name="M:SprightlySoftAWS.S3.EncryptDecrypt.EncryptTripleDESFromString(System.String,System.String,System.String)">
+	<summary>Encrypts a string.</summary>
+	<param name="ClearString">The string that will be encrypted.</param>
+	<param name="SecretKey">The secret key used to encrypt the string.</param>
+	<param name="InitializationVector">The initialization vector used for encryption.</param>
+	<returns>Returns a string containing the result of encryption.</returns>
+</member><member name="M:SprightlySoftAWS.S3.EncryptDecrypt.DecryptTripleDESFromString(System.String,System.String,System.String)">
+	<summary>Decrypts a string.</summary>
+	<param name="EncryptedString">The string that will be decrypted.</param>
+	<param name="SecretKey">The secret key that was used to encrypt the string.</param>
+	<param name="InitializationVector">The initialization vector that was used to encrypt the string.</param>
+	<returns>Returns a string containing the result of decryption.</returns>
+</member><member name="T:SprightlySoftAWS.S3.EncryptDecrypt">
+	<summary>Provides methods to encrypt and decrypt files and strings.</summary>
+</member><member name="E:SprightlySoftAWS.REST.StateChangedEvent">
+	<summary>Fires when the value of the State property is changed.</summary>
+</member><member name="P:SprightlySoftAWS.REST.Version">
+	<summary>Gets the version number of the SprightlySoft S3 component.</summary>
+</member><member name="P:SprightlySoftAWS.REST.State">
+	<summary>Gets the current state of the component.</summary>
+</member><member name="P:SprightlySoftAWS.REST.ErrorNumber">
+	<summary>A number that describes the last exception.</summary>
+</member><member name="P:SprightlySoftAWS.REST.ErrorDescription">
+	<summary>A message that describes the last exception.</summary>
+</member><member name="P:SprightlySoftAWS.REST.Proxy">
+	<summary>Gets/Sets a System.Net.IWebProxy object that defines proxy settings.</summary>
+</member><member name="P:SprightlySoftAWS.REST.Credentials">
+	<summary>Gets/Sets a System.Net.ICredentials object that defines authentication information for the request.</summary>
+</member><member name="P:SprightlySoftAWS.REST.IgnoreSSLCertificateErrors">
+	<summary>Gets/Sets a value indicating if invalid SSL certificates should be allowed.</summary>
+</member><member name="P:SprightlySoftAWS.REST.AllowAutoRedirect">
+	<summary>Gets/Sets a value that indicates whether the request should follow redirection responses.</summary>
+</member><member name="P:SprightlySoftAWS.REST.TimeoutSeconds">
+	<summary>Gets/Sets the Timeout value.</summary>
+</member><member name="P:SprightlySoftAWS.REST.ReadWriteTimeoutSeconds">
+	<summary>Gets/Sets the ReadWriteTimeout value.</summary>
+</member><member name="P:SprightlySoftAWS.REST.LogData">
+	<summary>Returns log information related to last method call.</summary>
+</member><member name="P:SprightlySoftAWS.REST.ResponseStatusCode">
+	<summary>Returns the HTTP status code that was returned from Amazon.</summary>
+</member><member name="P:SprightlySoftAWS.REST.ResponseStatusDescription">
+	<summary>Returns the HTTP status description that was returned from Amazon.</summary>
+</member><member name="P:SprightlySoftAWS.REST.ResponseHeaders">
+	<summary>Returns a list of HTTP headers returned from Amazon.</summary>
+</member><member name="P:SprightlySoftAWS.REST.ResponseString">
+	<summary>Returns the response from Amazon's.</summary>
+</member><member name="P:SprightlySoftAWS.REST.ResponseStringFormatted">
+	<summary>Indents and formats the ResponseString if it is XML.</summary>
+</member><member name="P:SprightlySoftAWS.REST.RequestURL">
+	<summary>Returns the URL that was used to connect to Amazon. The URL is generated by the component and the value is read only. It is provided for logging purposes.</summary>
+</member><member name="P:SprightlySoftAWS.REST.RequestMethod">
+	<summary>Returns the HTTP method that was used to connect to Amazon. This is the method that was passed to the function. This value is read only and is provided for logging purposes.</summary>
+</member><member name="P:SprightlySoftAWS.REST.RequestHeaders">
+	<summary>Returns a list of HTTP headers that were sent to Amazon. These headers are a combination of the ExtraRequestHeaders passed to the function and headers generated by the component. These values are read only and are provided for logging purposes.</summary>
+</member><member name="M:SprightlySoftAWS.REST.MakeRequest(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String)">
+	<summary>Makes a REST requets.</summary>
+	<param name="RequestURL">The URL to make the request against.</param>
+	<param name="Method">The request method.  This is usually GET, PUT, POST, COPY, or DELETE.</param>
+	<param name="ExtraRequestHeaders">Extra headers to send in the request.</param>
+	<param name="SendData">The data to send when making a PUT or POST request.</param>
+	<returns>Returns True if the request was successful.</returns>
+</member><member name="M:SprightlySoftAWS.REST.Abort">
+	<summary>Aborts the current request.</summary>
+</member><member name="M:SprightlySoftAWS.REST.GetSignatureVersion2Value(System.String,System.String,System.String,System.String)">
+	<summary>Gets the signature value when the required SignatureVersion is 2.  This type of signature is used for EC2, SimpleDB, RDS, SQS, SNS and many other Amazon services.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY, or DELETE.</param>
+	<param name="SendData">The data you will be sending in a POST request.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The Signature value you will use in the query string of the URL you request against.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetSignatureVersion2Value(System.String,System.String,System.String,System.String,System.String@)">
+	<summary>Gets the signature value when the required SignatureVersion is 2.  This type of signature is used for EC2, SimpleDB, RDS, SQS, SNS and many other Amazon services.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY, or DELETE.</param>
+	<param name="SendData">The data you will be sending in a POST request.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="StringThatWasSigned">This parameter will contain the string that was hashed from the parameters you supplied.  It is useful if you are interested to see how the signature was calculated.</param>
+	<returns>The Signature value you will use in the query string of the URL you request against.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetCloudFrontAuthorizationValue(System.String,System.String,System.String)">
+	<summary>Gets the Authorization header value for a CloudFront request.</summary>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="AmzDate">The value you will pass in the x-amz-date header.</param>
+	<returns>The value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetFulfillmentWebServiceSignatureValue(System.String,System.String)">
+	<summary>Gets the signature value you will pass in an Amazon Fulfillment Web Service request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The Signature value you will use in the query string of the URL you request against.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetFulfillmentWebServiceSignatureValue(System.String,System.String,System.String@)">
+	<summary>Gets the signature value you will pass in an Amazon Fulfillment Web Service request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="StringThatWasSigned">This parameter will contain the string that was hashed from the parameters you supplied.  It is useful if you are interested to see how the signature was calculated.</param>
+	<returns>The Signature value you will use in the query string of the URL you request against.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetAlexaSignatureValue(System.String,System.String)">
+	<summary>Gets the signature value you will pass in an Alexa Web Information Service or Alexa Top Sites request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The Signature value you will use in the query string of the URL you request against.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetAlexaSignatureValue(System.String,System.String,System.String@)">
+	<summary>Gets the signature value you will pass in an Alexa Web Information Service or Alexa Top Sites request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="StringThatWasSigned">This parameter will contain the string that was hashed from the parameters you supplied.  It is useful if you are interested to see how the signature was calculated.</param>
+	<returns>The Signature value you will use in the query string of the URL you request against.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetMechanicalTurkSignatureValue(System.String,System.String)">
+	<summary>Gets the signature value you will pass in a Mechanical Turk request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The Signature value you will use in the query string of the URL you request against.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetMechanicalTurkSignatureValue(System.String,System.String,System.String@)">
+	<summary>Gets the signature value you will pass in a Mechanical Turk request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="StringThatWasSigned">This parameter will contain the string that was hashed from the parameters you supplied.  It is useful if you are interested to see how the signature was calculated.</param>
+	<returns>The Signature value you will use in the query string of the URL you request against.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetDevPaySignatureValue(System.String,System.String)">
+	<summary>Gets the signature value you will pass in a DevPay request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The Signature value you will use in the query string of the URL you request against.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetDevPaySignatureValue(System.String,System.String,System.String@)">
+	<summary>Gets the signature value you will pass in a DevPay request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="StringThatWasSigned">This parameter will contain the string that was hashed from the parameters you supplied.  It is useful if you are interested to see how the signature was calculated.</param>
+	<returns>The Signature value you will use in the query string of the URL you request against.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetS3AuthorizationValue(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String)">
+	<summary>Gets the Authorization header value for a S3 request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY, or DELETE.</param>
+	<param name="ExtraRequestHeaders">Extra headers you will be sending in the request.  One header must be x-amz-date.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetS3AuthorizationValue(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String,System.String@)">
+	<summary>Gets the Authorization header value for a S3 request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY, or DELETE.</param>
+	<param name="ExtraRequestHeaders">Extra headers you will be sending in the request.  One header must be x-amz-date.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="StringThatWasSigned">This parameter will contain the string that was hashed from the parameters you supplied.  It is useful if you are interested to see how the signature was calculated.</param>
+	<returns>The value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetS3AuthorizationValueByParts(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String)">
+	<summary>Gets the Authorization header value for a S3 request by specifying the components of the request.</summary>
+	<param name="BucketName">The bucket name you will make a request against.</param>
+	<param name="KeyName">The key name you will make a request against.</param>
+	<param name="QueryString">The query string you will include in the URL.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY, or DELETE.</param>
+	<param name="ExtraRequestHeaders">Extra headers you will be sending in the request.  One header must be x-amz-date.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetS3AuthorizationValueByParts(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String,System.String@)">
+	<summary>Gets the Authorization header value for a S3 request by specifying the components of the request.</summary>
+	<param name="BucketName">The bucket name you will make a request against.</param>
+	<param name="KeyName">The key name you will make a request against.</param>
+	<param name="QueryString">The query string you will include in the URL.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY, or DELETE.</param>
+	<param name="ExtraRequestHeaders">Extra headers you will be sending in the request.  One header must be x-amz-date.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="StringThatWasSigned">This parameter will contain the string that was hashed from the parameters you supplied.  It is useful if you are interested to see how the signature was calculated.</param>
+	<returns>The value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.REST.BuildS3RequestURL(System.Boolean,System.String,System.String,System.String,System.String)">
+	<summary>Builds the RequestURL you will use to contact Amazon S3.</summary>
+	<param name="UseSSL">Specifies whether the URL should use http or https.</param>
+	<param name="RequestEndpoint">The domain name you will make a request against.  This is usually s3.amazonaws.com, s3-us-west-1.amazonaws.com, or s3-ap-southeast-1.amazonaws.com.</param>
+	<param name="BucketName">The bucket name you will make a request against.</param>
+	<param name="KeyName">The key name you will make a request against.</param>
+	<param name="QueryString">The query string to include in the URL.</param>
+	<returns>A URL.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetAWS3AuthorizationValue(System.String,System.String,System.String)">
+	<summary>Gets the X-Amzn-Authorization header value for a Amazon Route 53 request.</summary>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="AmzDate">The value you will pass in the x-amz-date header.</param>
+	<returns>The value you will pass in the X-Amzn-Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetAWSSignatureVersion4Value(System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+	<summary>Gets the Signature Version 4 value which will be used in the Authorization header.</summary>
+	<param name="RequestHeaders">Headers you will be sending in the request. One header must be x-amz-date.</param>
+	<param name="ServiceURL">The URL you will be making the request against.</param>
+	<param name="ServiceName">The service are using. For example glacier.</param>
+	<param name="Region">The region you are using. For example us-east-1.</param>
+	<param name="RequestMethod">The request method. This is usually GET, PUT, POST, or DELETE.</param>
+	<param name="PostDataHash">The SHA-256 hash value of the data you will be sending.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The Signature Version 4 value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.REST.GetAWSSignatureVersion4Value(System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String@,System.String@)">
+	<summary>Gets the Signature Version 4 value which will be used in the Authorization header.</summary>
+	<param name="RequestHeaders">Headers you will be sending in the request. One header must be x-amz-date.</param>
+	<param name="ServiceURL">The URL you will be making the request against.</param>
+	<param name="ServiceName">The service are using. For example glacier.</param>
+	<param name="Region">The region you are using. For example us-east-1.</param>
+	<param name="RequestMethod">The request method. This is usually GET, PUT, POST, or DELETE.</param>
+	<param name="PostDataHash">The SHA-256 hash value of the data you will be sending.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="CanonicalString">This parameter will contain the canonical string that was generated. It is useful if you are interested to see how the signature was calculated.</param>
+	<param name="StringToSign">This parameter will contain the string that was signed. It is useful if you are interested to see how the signature was calculated.</param>
+	<returns>The Signature Version 4 value you will pass in the Authorization header.</returns>
+</member><member name="T:SprightlySoftAWS.REST">
+	<summary>Provides methods to preform a REST request.</summary>
+</member><member name="E:SprightlySoftAWS.S3.UploadEstimate.ProgressUpdateEvent">
+	<summary>Fires repeatedly at the ProgressUpdateMilliseconds value.</summary>
+</member><member name="P:SprightlySoftAWS.S3.UploadEstimate.CurrentKBpsSpeed">
+	<summary>Indicates the current speed of the transfer.</summary>
+</member><member name="P:SprightlySoftAWS.S3.UploadEstimate.SecondsElapsed">
+	<summary>The number of seconds since the transfer started.</summary>
+</member><member name="P:SprightlySoftAWS.S3.UploadEstimate.SecondsRemaining">
+	<summary>The estimated number of seconds remaining until the transfer is complete.</summary>
+</member><member name="P:SprightlySoftAWS.S3.UploadEstimate.ProgressUpdateMilliseconds">
+	<summary>The number of milliseconds between raising the ProgressUpdateEvent.</summary>
+</member><member name="P:SprightlySoftAWS.S3.UploadEstimate.AbortIfNoProgressChangedSeconds">
+	<summary>Aborts the operation if a ProgressChangedEvent has not been raised in the specified seconds.</summary>
+</member><member name="M:SprightlySoftAWS.S3.UploadEstimate.UploadFile(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String)">
+	<summary>Takes a files and puts it in Amazon S3.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="Method">The request method.  For an upload to S3 this is usually PUT.</param>
+	<param name="ExtraRequestHeaders">A list of extra headers to send to Amazon.</param>
+	<param name="LocalFileName">The full path of the file to upload.</param>
+	<returns>Returns True if the upload was successful.</returns>
+	<remarks>Only use this method if you will be using the CurrentKBpsSpeed, SecondsElapsed or SecondsRemaining properties.  If you do not need these properties use the UploadFile method in the Upload class.</remarks>
+</member><member name="M:SprightlySoftAWS.S3.UploadEstimate.UploadFile(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.Int64,System.Int64)">
+	<summary>Takes a part of a file and puts it in Amazon S3.  This is useful when using the Upload Part operation.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="Method">The request method.  For an upload to S3 this is usually PUT.</param>
+	<param name="ExtraRequestHeaders">A list of extra headers to send to Amazon.</param>
+	<param name="LocalFileName">The full path of the file to upload.</param>
+	<param name="ByteRangeStart">The byte index where you want to start uploading.</param>
+	<param name="ByteRangeEnd">The byte index where you want to finish uploading.</param>
+	<returns>Returns True if the upload was successful.</returns>
+	<remarks>Only use this method if you will be using the CurrentKBpsSpeed, SecondsElapsed or SecondsRemaining properties.  If you do not need these properties use the UploadFile method in the Upload class.</remarks>
+</member><member name="T:SprightlySoftAWS.S3.UploadEstimate">
+	<summary>Similar to the Upload class but exposes extra properties.</summary>
+	<remarks>This class uploads a file and calculates the current speed and seconds remaining while the upload is taking place.  If you do not need these properties use the Upload class.</remarks>
+</member><member name="E:SprightlySoftAWS.S3.CalculateHash.StateChangedEvent">
+	<summary>Fires when the value of the State property is changed.</summary>
+</member><member name="E:SprightlySoftAWS.S3.CalculateHash.ProgressChangedEvent">
+	<summary>Fires when the value of the BytesProcessed property is changed.</summary>
+</member><member name="P:SprightlySoftAWS.S3.CalculateHash.Version">
+	<summary>Gets the version of the SprightlySoft S3 component.</summary>
+</member><member name="P:SprightlySoftAWS.S3.CalculateHash.State">
+	<summary>Gets the current state of the component.</summary>
+</member><member name="P:SprightlySoftAWS.S3.CalculateHash.BytesProcessed">
+	<summary>Returns the number of bytes that have been processed.</summary>
+</member><member name="P:SprightlySoftAWS.S3.CalculateHash.BytesTotal">
+	<summary>Returns the number of bytes that should be processed.</summary>
+</member><member name="P:SprightlySoftAWS.S3.CalculateHash.ErrorNumber">
+	<summary>A number that describes the last exception.</summary>
+</member><member name="P:SprightlySoftAWS.S3.CalculateHash.ErrorDescription">
+	<summary>A message that describes the last exception.</summary>
+</member><member name="P:SprightlySoftAWS.S3.CalculateHash.LogData">
+	<summary>Returns log information related to last method call.</summary>
+</member><member name="M:SprightlySoftAWS.S3.CalculateHash.CalculateMD5FromFile(System.String)">
+	<summary>Calculates the MD5 hash of a file.</summary>
+	<param name="LocalFileName">The path to the local file.</param>
+	<returns>The MD5 hash value of the file.</returns>
+	<remarks>
+ See <see href="http://msdn.microsoft.com/en-us/library/system.security.cryptography.md5cryptoserviceprovider.aspx">http://msdn.microsoft.com/en-us/library/system.security.cryptography.md5cryptoserviceprovider.aspx</see>
+	</remarks>
+</member><member name="M:SprightlySoftAWS.S3.CalculateHash.CalculateMD5FromFile(System.String,System.Int64,System.Int64)">
+	<summary>Calculates the MD5 hash of a part of a file.</summary>
+	<param name="LocalFileName">The path to the local file.</param>
+	<param name="ByteRangeStart">The byte index where you want to start hashing.</param>
+	<param name="ByteRangeEnd">The byte index where you want to finish hashing.</param>
+	<returns>The MD5 hash value of the file.</returns>
+	<remarks>
+ See <see href="http://msdn.microsoft.com/en-us/library/system.security.cryptography.md5cryptoserviceprovider.aspx">http://msdn.microsoft.com/en-us/library/system.security.cryptography.md5cryptoserviceprovider.aspx</see>
+	</remarks>
+</member><member name="M:SprightlySoftAWS.S3.CalculateHash.CalculateETagFromFile(System.String)">
+	<summary>Calculates the ETag hash of a file.</summary>
+	<param name="LocalFileName">The path to the local file.</param>
+	<returns>The ETag hash value of the file.</returns>
+</member><member name="M:SprightlySoftAWS.S3.CalculateHash.CalculateETagFromFile(System.String,System.Int64,System.Int64)">
+	<summary>Calculates the ETag hash of a file.</summary>
+	<param name="LocalFileName">The path to the local file.</param>
+	<param name="ByteRangeStart">The byte index where you want to start hashing.</param>
+	<param name="ByteRangeEnd">The byte index where you want to finish hashing.</param>
+	<returns>The ETag hash value of the file.</returns>
+</member><member name="M:SprightlySoftAWS.S3.CalculateHash.Abort">
+	<summary>Aborts the current method.</summary>
+</member><member name="M:SprightlySoftAWS.S3.CalculateHash.CalculateMD5FromString(System.String)">
+	<summary>Calculates the MD5 hash of a string.</summary>
+	<param name="SourceString">The string to be hashed.</param>
+	<returns>The MD5 hash value of the string.</returns>
+</member><member name="M:SprightlySoftAWS.S3.CalculateHash.CalculateETagFromString(System.String)">
+	<summary>Calculates the ETag hash of a string.</summary>
+	<param name="SourceString">The string to be hashed.</param>
+	<returns>The ETag hash value of the string.</returns>
+</member><member name="M:SprightlySoftAWS.S3.CalculateHash.CalculateSHA256FromFile(System.String)">
+	<summary>Calculates the SHA-256 hash of a file.</summary>
+	<param name="LocalFileName">The path to the local file.</param>
+	<returns>The SHA-256 hash value of the file.</returns>
+</member><member name="M:SprightlySoftAWS.S3.CalculateHash.CalculateSHA256FromFile(System.String,System.Int64,System.Int64)">
+	<summary>Calculates the SHA-256 hash of a file.</summary>
+	<param name="LocalFileName">The path to the local file.</param>
+	<param name="ByteRangeStart">The byte index where you want to start hashing.</param>
+	<param name="ByteRangeEnd">The byte index where you want to finish hashing.</param>
+	<returns>The SHA-256 hash value of the file.</returns>
+</member><member name="M:SprightlySoftAWS.S3.CalculateHash.CalculateSHA256FromString(System.String)">
+	<summary>Calculates the SHA-256 hash of a string.</summary>
+	<param name="SourceString">The string to be hashed.</param>
+	<returns>The SHA-256 hash value of the string.</returns>
+</member><member name="M:SprightlySoftAWS.S3.CalculateHash.CalculateSHA256TreeHashFromFile(System.String)">
+	<summary>Calculates the SHA-256 tree hash of a file.</summary>
+	<param name="LocalFileName">The path to the local file.</param>
+	<returns>The SHA-256 tree hash value of the file.</returns>
+</member><member name="M:SprightlySoftAWS.S3.CalculateHash.CalculateSHA256TreeHashFromFile(System.String,System.Int64,System.Int64)">
+	<summary>Calculates the SHA-256 tree hash of a file.</summary>
+	<param name="LocalFileName">The path to the local file.</param>
+	<param name="ByteRangeStart">The byte index where you want to start hashing.</param>
+	<param name="ByteRangeEnd">The byte index where you want to finish hashing.</param>
+	<returns>The SHA-256 tree hash value of the file.</returns>
+</member><member name="T:SprightlySoftAWS.S3.CalculateHash">
+	<summary>Provides methods to calculate the hash of a file.</summary>
+</member><member name="M:SprightlySoftAWS.S3.Helper.FormatByteSize(System.Int64)">
+	<summary>Converts a number of bytes to kilobytes, megabytes, or gigabytes.</summary>
+	<param name="MySize">The number of bytes.</param>
+	<returns>A string indicating the size.</returns>
+	<remarks>See <see href="http://msdn.microsoft.com/en-us/library/bb759974(VS.85).aspx">MSDN: StrFormatByteSizeA Function</see></remarks>
+</member><member name="M:SprightlySoftAWS.S3.Helper.GetDisplayTypeForFolder">
+	<summary>Gets the system's description for a folder.</summary>
+	<returns>The description for a folder.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Helper.GetDisplayTypeForFile(System.String)">
+	<summary>Gets the system's description for a specified file extension.</summary>
+	<param name="FileExtension">The extension of a file.  Example: ".txt"</param>
+	<returns>A string with the description of the extension.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Helper.GetIconByPath(System.String,System.Boolean)">
+	<summary>Gets the system icon for an item.</summary>
+	<param name="ItemPath">The path to the item.  This can be the path to a file, folder, or drive.</param>
+	<param name="SmallIcon">Set to True if you would like a 16 x 16 pixel icon.  Set to False if you would like a 32 x 32 pixle icon.</param>
+	<returns>A bitmap of the icon for the item.</returns>
+	<remarks>See <see href="http://msdn.microsoft.com/en-us/library/bb762179(VS.85).aspx">MSDN: SHGetFileInfo Function</see></remarks>
+</member><member name="M:SprightlySoftAWS.S3.Helper.GetIconByExtension(System.String,System.Boolean)">
+	<summary>Gets the system icon for a specified file extension.</summary>
+	<param name="FileExtension">The extension to look up.  Example: ".txt"</param>
+	<param name="SmallIcon">Set to True if you would like a 16 x 16 pixel icon.  Set to False if you would like a 32 x 32 pixle icon.</param>
+	<returns>A bitmap of the icon for the extension.</returns>
+	<remarks>See <see href="http://msdn.microsoft.com/en-us/library/bb762179(VS.85).aspx">MSDN: SHGetFileInfo Function</see></remarks>
+</member><member name="M:SprightlySoftAWS.S3.Helper.ConvertETagToMD5(System.String)">
+	<summary>Converts an ETag hash into a MD5 hash.</summary>
+	<param name="ETag">A hash in ETag format.</param>
+	<returns>The hash in MD5 format.</returns>
+	<remarks>This function is useful it took a long time to calculate an ETag hash and you want to quickly convert it to a MD5 hash.</remarks>
+</member><member name="M:SprightlySoftAWS.S3.Helper.ConvertMD5ToETag(System.String)">
+	<summary>Converts a MD5 hash into an ETag hash.</summary>
+	<param name="MD5">A hash in MD5 format.</param>
+	<returns>The hash in ETag format.</returns>
+	<remarks>This function is useful it took a long time to calculate an MD5 hash and you want to quickly convert it to a ETag hash.</remarks>
+</member><member name="M:SprightlySoftAWS.S3.Helper.FormatDateRFC1123(System.DateTime)">
+	<summary>Returns a date in RFC 1123 format.</summary>
+	<param name="InputDate">The date.</param>
+	<returns>The date in RFC 1123 format.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Helper.FormatDateISO8601(System.DateTime)">
+	<summary>Returns a date in ISO 8601 format.</summary>
+	<param name="InputDate">The date.</param>
+	<returns>The date in ISO 8601 format.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Helper.GetActiveTimeBias">
+	<summary>Gets the ActiveTimeBias registry value.</summary>
+	<returns>The difference in minutes between Greenwich Mean Time and the local time.</returns>
+	<remarks>This is useful to determine the current time zone.</remarks>
+</member><member name="M:SprightlySoftAWS.S3.Helper.StringToBase64(System.String)">
+	<summary>Encodes a string into Base64 format.</summary>
+	<param name="PlainString">The string to be encoded.</param>
+	<returns>The string in Base64 format.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Helper.Base64ToString(System.String)">
+	<summary>Decodes a Base64 string.</summary>
+	<param name="Base64String">The string in Base64 format.</param>
+	<returns>The decoded string.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Helper.GetContentTypesDictionary">
+	<summary>Returns a dictionary of file extensions and associated content types.</summary>
+	<returns>A dictionary object containing extensions and associated content types.</returns>
+	<remarks>The dictionary contains all values in Microsoft's IIS 7.</remarks>
+</member><member name="M:SprightlySoftAWS.S3.Helper.BuildExpiresURL(System.Boolean,System.String,System.String,System.String,System.String,System.DateTime,System.String,System.String)">
+	<summary>Creates an authentication URL used to retrieve an object that is not public.</summary>
+	<param name="UseSSL">Sets if the URL will use http or https.</param>
+	<param name="RequestEndpoint">Sets the Amazon S3 domain name in the URL.  This is usually s3.amazonaws.com.</param>
+	<param name="BucketName">The bucket name where the object resides.</param>
+	<param name="KeyName">The key name of the object to download.</param>
+	<param name="QueryString">A query string to add to the URL.  Set to x-amz-request-payer=requester if you want to create an authentication URL for a requester pays bucket.  You can also use versionId=[YOUR_VERSION_ID] to generate a URL for a specific version.</param>
+	<param name="Expires">The date the URL is valid until.</param>
+	<param name="AWSAccessKeyId">The Amazon Access Key ID to use.</param>
+	<param name="AWSSecretAccessKey">The Amazon Secret Access Key to use.</param>
+	<returns>An authenticated URL.</returns>
+	<remarks>See <see href="http://docs.amazonwebservices.com/AmazonS3/latest/S3_QSAuth.html">Amazon: Query String Authentication</see> and <see href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/RESTAuthentication.html">Amazon: Query String Request Authentication Alternative</see>.</remarks>
+</member><member name="T:SprightlySoftAWS.S3.Helper">
+	<summary>Contains methods that do not fit in other classes.</summary>
+</member><member name="E:SprightlySoftAWS.S3.Download.StateChangedEvent">
+	<summary>Fires when the value of the State property is changed.</summary>
+</member><member name="E:SprightlySoftAWS.S3.Download.ProgressChangedEvent">
+	<summary>Fires when the value of the BytesTransfered property is changed.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.Version">
+	<summary>Gets the version number of the SprightlySoft S3 component.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.State">
+	<summary>Gets the current state of the component.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.BytesTransfered">
+	<summary>The number of bytes that have been downloaded.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.BytesTotal">
+	<summary>The total number of bytes to download.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.LimitKBpsSpeed">
+	<summary>Gets/Sets the maximum download speed.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.ErrorNumber">
+	<summary>A number that describes the last exception.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.ErrorDescription">
+	<summary>A message that describes the last exception.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.Proxy">
+	<summary>Gets/Sets a System.Net.IWebProxy object that defines proxy settings.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.BufferLength">
+	<summary>The size of chunks that will be downloaded.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.TimeoutSeconds">
+	<summary>Gets/Sets the Timeout value.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.ReadWriteTimeoutSeconds">
+	<summary>Gets/Sets the ReadWriteTimeout value.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.ResponseString">
+	<summary>Returns Amazon's response if it was included.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.ResponseStringFormatted">
+	<summary>Indents and formats the ResponseString if it is XML.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.ResponseStatusCode">
+	<summary>Returns the HTTP status code that was returned from Amazon.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.ResponseStatusDescription">
+	<summary>Returns the HTTP status description that was returned from Amazon.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.ResponseHeaders">
+	<summary>Returns a list of HTTP headers returned from Amazon.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.LogData">
+	<summary>Returns log information related to last method call.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.RequestURL">
+	<summary>Returns the URL that was used to connect to Amazon. The URL is generated by the component and the value is read only. It is provided for logging purposes.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.RequestMethod">
+	<summary>Returns the HTTP method that was used to connect to Amazon. This is the method that was passed to the function. This value is read only and is provided for logging purposes.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Download.RequestHeaders">
+	<summary>Returns a list of HTTP headers that were sent to Amazon. These headers are a combination of the ExtraRequestHeaders passed to the function and headers generated by the component. These values are read only and are provided for logging purposes.</summary>
+</member><member name="M:SprightlySoftAWS.S3.Download.DownloadFile(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.Boolean)">
+	<summary>Gets an object from Amazon S3 and saves it as a file.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="Method">The request method.  For a download from S3 this is usually GET.</param>
+	<param name="ExtraRequestHeaders">A list of extra headers to send to Amazon.</param>
+	<param name="LocalFileName">The full path where the file will be saved.</param>
+	<param name="AppendToFile">Sets if an existing local file will be overwritten or appended to.</param>
+	<returns>Returns True if the download was successful.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Download.Abort">
+	<summary>Aborts the current method.</summary>
+</member><member name="M:SprightlySoftAWS.S3.Download.GetS3AuthorizationValue(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String)">
+	<summary>Gets the Authorization header value for a S3 request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY or DELETE.</param>
+	<param name="ExtraRequestHeaders">Extra headers you will be sending in the request.  One header must be x-amz-date.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Download.GetS3AuthorizationValue(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String,System.String@)">
+	<summary>Gets the Authorization header value for a S3 request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY or DELETE.</param>
+	<param name="ExtraRequestHeaders">Extra headers you will be sending in the request.  One header must be x-amz-date.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="StringThatWasSigned">This parameter will contain the string that was hashed from the parameters you supplied.  It is useful if you are interested to see how the signature was calculated.</param>
+	<returns>The value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Download.GetS3AuthorizationValueByParts(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String)">
+	<summary>Gets the Authorization header value for a S3 request by specifying the components of the request.</summary>
+	<param name="BucketName">The bucket name you will make a request against.</param>
+	<param name="KeyName">The key name you will make a request against.</param>
+	<param name="QueryString">The query string you will include in the URL.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY or DELETE.</param>
+	<param name="ExtraRequestHeaders">Extra headers you will be sending in the request.  One header must be x-amz-date.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Download.GetS3AuthorizationValueByParts(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String,System.String@)">
+	<summary>Gets the Authorization header value for a S3 request by specifying the components of the request.</summary>
+	<param name="BucketName">The bucket name you will make a request against.</param>
+	<param name="KeyName">The key name you will make a request against.</param>
+	<param name="QueryString">The query string you will include in the URL.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY or DELETE.</param>
+	<param name="ExtraRequestHeaders">Extra headers you will be sending in the request.  One header must be x-amz-date.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="StringThatWasSigned">This parameter will contain the string that was hashed from the parameters you supplied.  It is useful if you are interested to see how the signature was calculated.</param>
+	<returns>The value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Download.BuildS3RequestURL(System.Boolean,System.String,System.String,System.String,System.String)">
+	<summary>Builds the RequestURL you will use to contact Amazon S3.</summary>
+	<param name="UseSSL">Specifies whether the URL should use http or https.</param>
+	<param name="RequestEndpoint">The domain name you will make a request against.  This is usually s3.amazonaws.com, s3-us-west-1.amazonaws.com, or s3-ap-southeast-1.amazonaws.com.</param>
+	<param name="BucketName">The bucket name you will make a request against.</param>
+	<param name="KeyName">The key name you will make a request against.</param>
+	<param name="QueryString">The query string to include in the URL.</param>
+	<returns>A URL.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Download.GetAWSSignatureVersion4Value(System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+	<summary>Gets the Signature Version 4 value which will be used in the Authorization header.</summary>
+	<param name="RequestHeaders">Headers you will be sending in the request. One header must be x-amz-date.</param>
+	<param name="ServiceURL">The URL you will be making the request against.</param>
+	<param name="ServiceName">The service are using. For example glacier.</param>
+	<param name="Region">The region you are using. For example us-east-1.</param>
+	<param name="RequestMethod">The request method. This is usually GET, PUT, POST, or DELETE.</param>
+	<param name="PostDataHash">The SHA-256 hash value of the data you will be sending.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The Signature Version 4 value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Download.GetAWSSignatureVersion4Value(System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String@,System.String@)">
+	<summary>Gets the Signature Version 4 value which will be used in the Authorization header.</summary>
+	<param name="RequestHeaders">Headers you will be sending in the request. One header must be x-amz-date.</param>
+	<param name="ServiceURL">The URL you will be making the request against.</param>
+	<param name="ServiceName">The service are using. For example glacier.</param>
+	<param name="Region">The region you are using. For example us-east-1.</param>
+	<param name="RequestMethod">The request method. This is usually GET, PUT, POST, or DELETE.</param>
+	<param name="PostDataHash">The SHA-256 hash value of the data you will be sending.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="CanonicalString">This parameter will contain the canonical string that was generated. It is useful if you are interested to see how the signature was calculated.</param>
+	<param name="StringToSign">This parameter will contain the string that was signed. It is useful if you are interested to see how the signature was calculated.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The Signature Version 4 value you will pass in the Authorization header.</returns>
+</member><member name="T:SprightlySoftAWS.S3.Download">
+	<summary>Provides a method to download a file from Amazon S3.</summary>
+</member><member name="E:SprightlySoftAWS.S3.Upload.StateChangedEvent">
+	<summary>Fires when the value of the State property is changed.</summary>
+</member><member name="E:SprightlySoftAWS.S3.Upload.ProgressChangedEvent">
+	<summary>Fires when the value of the BytesTransfered property is changed.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.Version">
+	<summary>Gets the version number of the SprightlySoft S3 component.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.State">
+	<summary>Gets the current state of the component.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.BytesTransfered">
+	<summary>The number of bytes that have been downloaded.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.BytesTotal">
+	<summary>The total number of bytes to download.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.LimitKBpsSpeed">
+	<summary>Gets/Sets the maximum upload speed.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.ErrorNumber">
+	<summary>A number that describes the last exception.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.ErrorDescription">
+	<summary>A message that describes the last exception.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.Proxy">
+	<summary>Gets/Sets a System.Net.IWebProxy object that defines proxy settings.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.BufferLength">
+	<summary>The size of chunks that will be uploaded.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.TimeoutSeconds">
+	<summary>Gets/Sets the Timeout value.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.ReadWriteTimeoutSeconds">
+	<summary>Gets/Sets the ReadWriteTimeout value.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.ResponseString">
+	<summary>Returns the response from Amazon's.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.ResponseStringFormatted">
+	<summary>Indents and formats the ResponseString if it is XML.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.ResponseStatusCode">
+	<summary>Returns the HTTP status code that was returned from Amazon.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.ResponseStatusDescription">
+	<summary>Returns the HTTP status description that was returned from Amazon.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.ResponseHeaders">
+	<summary>Returns a list of HTTP headers returned from Amazon.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.LogData">
+	<summary>Returns log information related to last method call.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.RequestURL">
+	<summary>Returns the URL that was used to connect to Amazon. The URL is generated by the component and the value is read only. It is provided for logging purposes.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.RequestMethod">
+	<summary>Returns the HTTP method that was used to connect to Amazon. This is the method that was passed to the function. This value is read only and is provided for logging purposes.</summary>
+</member><member name="P:SprightlySoftAWS.S3.Upload.RequestHeaders">
+	<summary>Returns a list of HTTP headers that were sent to Amazon. These headers are a combination of the ExtraRequestHeaders passed to the function and headers generated by the component. These values are read only and are provided for logging purposes.</summary>
+</member><member name="M:SprightlySoftAWS.S3.Upload.UploadFile(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String)">
+	<summary>Takes a file and puts it in Amazon S3.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="Method">The request method.  For an upload to S3 this is usually PUT.</param>
+	<param name="ExtraRequestHeaders">A list of extra headers to send to Amazon.</param>
+	<param name="LocalFileName">The full path of the file to upload.</param>
+	<returns>Returns True if the upload was successful.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Upload.UploadFile(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.Int64,System.Int64)">
+	<summary>Takes a part of a file and puts it in Amazon S3.  This is useful when using the Upload Part operation.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="Method">The request method.  For an upload to S3 this is usually PUT.</param>
+	<param name="ExtraRequestHeaders">A list of extra headers to send to Amazon.</param>
+	<param name="LocalFileName">The full path of the file to upload.</param>
+	<param name="ByteRangeStart">The byte index where you want to start uploading.</param>
+	<param name="ByteRangeEnd">The byte index where you want to finish uploading.</param>
+	<returns>Returns True if the upload was successful.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Upload.UploadFile(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.IO.Stream@)">
+	<summary>Takes a stream and uploads it to a file in Amazon S3.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="Method">The request method.  For an upload to S3 this is usually PUT.</param>
+	<param name="ExtraRequestHeaders">A list of extra headers to send to Amazon.</param>
+	<param name="SourceStream">The stream to upload.</param>
+	<returns>Returns True if the upload was successful.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Upload.UploadFile(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.IO.Stream@,System.Int64,System.Int64)">
+	<summary>Takes a stream and uploads it to a file in Amazon S3..  This is useful when using the Upload Part operation.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="Method">The request method.  For an upload to S3 this is usually PUT.</param>
+	<param name="ExtraRequestHeaders">A list of extra headers to send to Amazon.</param>
+	<param name="SourceStream">The stream to upload.</param>
+	<param name="ByteRangeStart">The byte index where you want to start uploading.</param>
+	<param name="ByteRangeEnd">The byte index where you want to finish uploading.</param>
+	<returns>Returns True if the upload was successful.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Upload.Abort">
+	<summary>Aborts the current method.</summary>
+</member><member name="M:SprightlySoftAWS.S3.Upload.GetS3AuthorizationValue(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String)">
+	<summary>Gets the Authorization header value for a S3 request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY or DELETE.</param>
+	<param name="ExtraRequestHeaders">Extra headers you will be sending in the request.  One header must be x-amz-date.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Upload.GetS3AuthorizationValue(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String,System.String@)">
+	<summary>Gets the Authorization header value for a S3 request.</summary>
+	<param name="RequestURL">The URL you will be making the request against. This includes the query string.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY or DELETE.</param>
+	<param name="ExtraRequestHeaders">Extra headers you will be sending in the request.  One header must be x-amz-date.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="StringThatWasSigned">This parameter will contain the string that was hashed from the parameters you supplied.  It is useful if you are interested to see how the signature was calculated.</param>
+	<returns>The value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Upload.GetS3AuthorizationValueByParts(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String)">
+	<summary>Gets the Authorization header value for a S3 request by specifying the components of the request.</summary>
+	<param name="BucketName">The bucket name you will make a request against.</param>
+	<param name="KeyName">The key name you will make a request against.</param>
+	<param name="QueryString">The query string you will include in the URL.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY or DELETE.</param>
+	<param name="ExtraRequestHeaders">Extra headers you will be sending in the request.  One header must be x-amz-date.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Upload.GetS3AuthorizationValueByParts(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String,System.String@)">
+	<summary>Gets the Authorization header value for a S3 request by specifying the components of the request.</summary>
+	<param name="BucketName">The bucket name you will make a request against.</param>
+	<param name="KeyName">The key name you will make a request against.</param>
+	<param name="QueryString">The query string you will include in the URL.</param>
+	<param name="RequestMethod">The request method.  This is usually GET, PUT, POST, COPY or DELETE.</param>
+	<param name="ExtraRequestHeaders">Extra headers you will be sending in the request.  One header must be x-amz-date.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<param name="StringThatWasSigned">This parameter will contain the string that was hashed from the parameters you supplied.  It is useful if you are interested to see how the signature was calculated.</param>
+	<returns>The value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Upload.BuildS3RequestURL(System.Boolean,System.String,System.String,System.String,System.String)">
+	<summary>Builds the RequestURL you will use to contact Amazon S3.</summary>
+	<param name="UseSSL">Specifies whether the URL should use http or https.</param>
+	<param name="RequestEndpoint">The domain name you will make a request against.  This is usually s3.amazonaws.com, s3-us-west-1.amazonaws.com, or s3-ap-southeast-1.amazonaws.com.</param>
+	<param name="BucketName">The bucket name you will make a request against.</param>
+	<param name="KeyName">The key name you will make a request against.</param>
+	<param name="QueryString">The query string to include in the URL.</param>
+	<returns>A URL.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Upload.GetAWSSignatureVersion4Value(System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+	<summary>Gets the Signature Version 4 value which will be used in the Authorization header.</summary>
+	<param name="RequestHeaders">Headers you will be sending in the request. One header must be x-amz-date.</param>
+	<param name="ServiceURL">The URL you will be making the request against.</param>
+	<param name="ServiceName">The service are using. For example glacier.</param>
+	<param name="Region">The region you are using. For example us-east-1.</param>
+	<param name="RequestMethod">The request method. This is usually GET, PUT, POST, or DELETE.</param>
+	<param name="PostDataHash">The SHA-256 hash value of the data you will be sending.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The Signature Version 4 value you will pass in the Authorization header.</returns>
+</member><member name="M:SprightlySoftAWS.S3.Upload.GetAWSSignatureVersion4Value(System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String@,System.String@)">
+	<summary>Gets the Signature Version 4 value which will be used in the Authorization header.</summary>
+	<param name="RequestHeaders">Headers you will be sending in the request. One header must be x-amz-date.</param>
+	<param name="ServiceURL">The URL you will be making the request against.</param>
+	<param name="ServiceName">The service are using. For example glacier.</param>
+	<param name="Region">The region you are using. For example us-east-1.</param>
+	<param name="RequestMethod">The request method. This is usually GET, PUT, POST, or DELETE.</param>
+	<param name="PostDataHash">The SHA-256 hash value of the data you will be sending.</param>
+	<param name="AWSAccessKeyId">Your Amazon access key ID.</param>
+	<param name="CanonicalString">This parameter will contain the canonical string that was generated. It is useful if you are interested to see how the signature was calculated.</param>
+	<param name="StringToSign">This parameter will contain the string that was signed. It is useful if you are interested to see how the signature was calculated.</param>
+	<param name="AWSSecretAccessKey">Your Amazon secret access key.</param>
+	<returns>The Signature Version 4 value you will pass in the Authorization header.</returns>
+</member><member name="T:SprightlySoftAWS.S3.Upload">
+	<summary>Provides a method to upload a file to Amazon S3.</summary>
+</member><member name="E:SprightlySoftAWS.S3.ListBucket.StateChangedEvent">
+	<summary>Fires when the value of the State property is changed.</summary>
+</member><member name="E:SprightlySoftAWS.S3.ListBucket.ProgressChangedEvent">
+	<summary>Fires when a page has been processed.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.Version">
+	<summary>Gets the version number of the SprightlySoft S3 component.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.State">
+	<summary>Gets the current state of the component.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.ErrorNumber">
+	<summary>A number that describes the last exception.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.ErrorDescription">
+	<summary>A message that describes the last exception.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.Proxy">
+	<summary>Gets/Sets a System.Net.IWebProxy object that defines proxy settings.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.LogData">
+	<summary>Returns log information related to last method call.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.ResponseStatusCode">
+	<summary>Returns the HTTP status code that was returned from Amazon.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.ResponseStatusDescription">
+	<summary>Returns the HTTP status description that was returned from Amazon.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.ResponseHeaders">
+	<summary>Returns a list of HTTP headers returned from Amazon.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.ResponseString">
+	<summary>Returns Amazon's response if it was included.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.ResponseStringFormatted">
+	<summary>Indents and formats the ResponseString if it is XML.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.RequestURL">
+	<summary>Returns the URL that was used to connect to Amazon. The URL is generated by the component and the value is read only. It is provided for logging purposes.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.RequestMethod">
+	<summary>Returns the HTTP method that was used to connect to Amazon. This is the method that was passed to the function. This value is read only and is provided for logging purposes.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.RequestHeaders">
+	<summary>Returns a list of HTTP headers that were sent to Amazon. These headers are a combination of the ExtraRequestHeaders passed to the function and headers generated by the component. These values are read only and are provided for logging purposes.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.BucketItemsArrayList">
+	<summary>An ArrayList of BucketItemObjects that represent the items in the bucket.</summary>
+</member><member name="M:SprightlySoftAWS.S3.ListBucket.ListBucket(System.Boolean,System.String,System.String,System.String,System.String,System.String,System.String)">
+	<summary>Lists all items in a bucket.  Amazon's Get Bucket function only returns 1000 keys at a time.  This function will return all keys by making 
+ several Get Bucket calls.  When a Get Bucket call is complete information about each key will be added to a BucketItemObject and that BucketItemObject
+ will be added to the BucketItemsArrayList.  When the result of a Get Bucket has been completed the ProgressChangedEvent is raised and the another 
+ Get Bucket call is made if required.</summary>
+	<param name="UseSSL">Sets if the URL will use http or https.</param>
+	<param name="RequestEndpoint">Sets the Amazon S3 domain name in the URL.  This is usually s3.amazonaws.com.</param>
+	<param name="BucketName">The bucket name the request will be made against.</param>
+	<param name="Delimiter">The character that separates folders in a path.  Use a forward slash (/) if you are listing folders and leave the delimiter empty if you want to return all keys for a given prefix.</param>
+	<param name="Prefix">Only return keys that start with a given prefix.  Leave the prefix empty if you want to return all keys in the bucket.</param>
+	<param name="AWSAccessKeyId">The Amazon Access Key ID to use.</param>
+	<param name="AWSSecretAccessKey">The Amazon Secret Access Key to use.</param>
+	<returns>Returns True if the operation was successful.</returns>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.BucketItemObject.IsFolder">
+	<summary>Set to true if the key represents a folder.  IsFolder will always be false if the delimiter in ListBucket is empty.  IsFolder is determined by the ListBucketResult/CommonPrefixes node in the XML response from a Get Bucket call.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.BucketItemObject.BucketName">
+	<summary>The bucket name where the item resides.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.BucketItemObject.KeyName">
+	<summary>The key name of the item.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.BucketItemObject.DisplayName">
+	<summary>The name of the item that is used for display purposes.  The DisplayName does not contain the path to the item.  The DisplayName is only different that the KeyName is a delimiter is used in ListBucket.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.BucketItemObject.Size">
+	<summary>The size of the item in bytes.  Folders do not have a size and their value is set to -1.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.BucketItemObject.LastModified">
+	<summary>Amazon's last modified date of the item.  Folders do not have a date and their value is set to Date.MinValue.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.BucketItemObject.ETag">
+	<summary>The ETag of the item.  Folders do not have an ETag and their value is set to empty.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.BucketItemObject.OwnerID">
+	<summary>The OwnerID of the item.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.BucketItemObject.OwnerName">
+	<summary>The OwnerName of the item.</summary>
+</member><member name="P:SprightlySoftAWS.S3.ListBucket.BucketItemObject.StorageClass">
+	<summary>The StorageClass of the item.  The possible values are STANDARD and REDUCED_REDUNDANCY.</summary>
+</member><member name="T:SprightlySoftAWS.S3.ListBucket.BucketItemObject">
+	<summary>A class that represents an item in a bucket.</summary>
+</member><member name="T:SprightlySoftAWS.S3.ListBucket">
+	<summary>A class for making the listing of a bucket easy.</summary>
+</member><member name="P:SprightlySoftAWS.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:SprightlySoftAWS.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:SprightlySoftAWS.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+</members>
+</doc>

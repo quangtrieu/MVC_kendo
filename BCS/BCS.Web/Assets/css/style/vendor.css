@@ -1,0 +1,43 @@
+﻿.k-edit:before {
+  content: "\f044";
+}
+.k-delete:before {
+  content: "\f014";
+}
+tbody[role="rowgroup"] td[role="gridcell"] .k-icon{
+    background-image:none;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.fa.fa-plus.btn-section-field {
+    border: 1px solid #cccccc;
+    font-size: 12px;
+    padding: 6px 10px;
+}
+
+.k-grid-excel:before {
+  content: "\f1c3";
+}
+button.k-grid-excel {
+    background: none repeat scroll 0 0 #ffffff;
+    font-size: 14px;
+    padding: 9px 14px;
+}
+
+.vendorIDField, th[data-field="VendorID"]{display:block;}
+
+.k-menu-vertical .k-sort-asc, .k-menu-vertical .k-sort-desc{display:none !important;}
+#VendorGrid > table[role="treegrid"] > .k-grid-header > tr > .k-header:nth-child(3){
+    border-left:0px;
+}
+.k-item.k-state-default.k-first[role="menuitem"] .k-link {
+    display: none;
+}
+.k-state-selected .k-button, .k-state-selected .k-button span{color:#333333;}
+.btn-edit-vendor .k-icon.k-edit {
+    padding-top: 2px;
+}

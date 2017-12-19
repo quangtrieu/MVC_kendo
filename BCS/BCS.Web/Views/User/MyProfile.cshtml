@@ -1,0 +1,76 @@
+﻿@using System.Collections.Concurrent
+@using BCS.Framework.WebExtensions.Label
+@model BCS.Web.Models.UserModel
+
+@using (Html.BeginForm("SaveMyProfile", "User", FormMethod.Post, new { role = "form", id = "frmSaveMyProfile" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(m => m.UserId)
+    @Html.HiddenFor(m => m.SystemId)
+    @Html.HiddenFor(m => m.RoleId)
+    @Html.HiddenFor(m => m.Active)
+    @Html.HiddenFor(m => m.UserName)
+    @Html.HiddenFor(m => m.Password)
+    @Html.HiddenFor(m => m.LastedDateLogin)
+    @Html.HiddenFor(m => m.DeletedFlg)
+    @Html.HiddenFor(m => m.ForgotCode)
+    @Html.HiddenFor(m => m.ForgotExpired)
+    @Html.HiddenFor(m => m.CreatedDate)
+    @Html.HiddenFor(m => m.CreatedUserId)
+    @Html.HiddenFor(m => m.UpdatedDate)
+    @Html.HiddenFor(m => m.UpdatedUserId)
+    <div class="col-xs-12" style="height: auto; background-color: #fff; box-shadow: 0px 0px 5px #888888; border-radius: 3px !important;">
+        <div class="col-xs-12 text-left">
+            <div class="col-xs-12 text-left" style="padding-top:10px; padding-bottom:10px;">
+                @Html.Label("Personal Details", new { @style = "font-size: 16pt; color: rgb(15, 18, 21)" })
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-xs-3" style="">
+                    @Html.LabelFor(m => m.UserName, new { @class = "control-label" })
+                </div>
+                <div class="col-xs-8">
+                    <label>@Model.UserName</label>
+                </div>
+            </div>
+
+            <div class="form-group clearfix">
+                <div class="col-xs-3" style="padding-top: 6px;">
+                    @Html.LabelForRequire(m => m.FullName, new { @class = "control-label" })
+                </div>
+                <div class="col-xs-8 fullNameInput">
+                    @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", id = "txtFullName" })
+                    <span class='error'></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 text-left">
+            <div class="col-xs-12 text-left" style="padding-top:10px; padding-bottom:10px;">
+                @Html.Label("Contact Information", new { @style = "font-size: 16pt; color: rgb(15, 18, 21)" })
+            </div>
+            <div class="form-group clearfix">
+                <div class="col-xs-3" style="padding-top: 6px;">
+                    @Html.LabelForRequire(m => m.Email, new { @class = "control-label" })
+                </div>
+                <div class="col-xs-8 EmailInput">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", id = "txtEmail" })
+                    <span class='error'></span>
+                </div>
+            </div>
+
+            <div class="form-group clearfix" style="padding-top: 10px; padding-bottom: 10px;">
+                <div class="col-xs-3" style="padding-top: 6px;">
+                    @Html.LabelForRequire(m => m.Phone, new { @class = "control-label" })
+                </div>
+                <div class="col-xs-8 PhoneInput">
+                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", id = "txtPhone" })
+                    <span class='error'></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 text-right modal-footer" style="padding-top:18px;">
+        <a class="btn btn-accept-no" style="width: 90px;"><i class="fa fa-remove"></i> Cancel</a>
+        <a class="btn btn-primary k-grid-update" style="width: 90px;"><i class="fa fa-save"></i> Save</a>
+    </div>
+}

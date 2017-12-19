@@ -1,0 +1,1933 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{40E05A44-1BB9-43E6-AC49-E5602D82BAA3}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BCS.Web</RootNamespace>
+    <AssemblyName>BCS.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="antlr.runtime">
+      <HintPath>..\References\antlr.runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Castle.Facilities.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.WcfIntegration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Castle.Facilities.WcfIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Services.Logging.Log4netIntegration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Castle.Services.Logging.Log4netIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML, Version=0.76.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.76.0\lib\net40-client\ClosedXML.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\packages\Common.Logging.3.0.0\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core">
+      <HintPath>..\packages\Common.Logging.Core.3.0.0\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Commons.Web.Mvc.PrecompiledViews, Version=1.0.5.0, Culture=neutral, PublicKeyToken=b66b1a10e1d96b4d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Commons.Web.Mvc.PrecompiledViews.dll</HintPath>
+    </Reference>
+    <Reference Include="Dapper">
+      <HintPath>..\References\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\References\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.0.5.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.0.5\lib\net20\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp, Version=4.1.2.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Kendo.Mvc, Version=2015.1.318.545, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Kendo.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\References\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\References\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\References\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\References\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\References\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz, Version=2.3.3.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Quartz.dll</HintPath>
+    </Reference>
+    <Reference Include="Recaptcha.Web">
+      <HintPath>..\References\Recaptcha.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Cors">
+      <HintPath>..\References\System.Web.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Owin">
+      <HintPath>..\References\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Providers">
+      <HintPath>..\References\System.Web.Providers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="Twilio.Api">
+      <HintPath>..\packages\Twilio.4.0.3\lib\3.5\Twilio.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_LocalResources\AppRes1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AppRes.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BudgetController.cs" />
+    <Compile Include="Controllers\CategoriesSettingController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\LinkRestaurantController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RegisterController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Installers\ControllersInstaller.cs" />
+    <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\BudgetItemModel.cs" />
+    <Compile Include="Models\BudgetModel.cs" />
+    <Compile Include="Models\BudgetTabHeaderModel.cs" />
+    <Compile Include="Models\BudgetTabModel.cs" />
+    <Compile Include="Models\CategoryModel.cs" />
+    <Compile Include="Models\CategorySettingModel.cs" />
+    <Compile Include="Models\CommonDataModel.cs" />
+    <Compile Include="Models\DashboardModel.cs" />
+    <Compile Include="Models\HeaderItemModel.cs" />
+    <Compile Include="Models\MappingBudgetModel.cs" />
+    <Compile Include="Models\MappingModel.cs" />
+    <Compile Include="Models\ResetPasswordModel.cs" />
+    <Compile Include="Models\RegisterModel.cs" />
+    <Compile Include="Models\RestActiveCodeModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebUtils\BCSWebUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\css\base\commutator.css" />
+    <Content Include="Assets\css\base\fixIE.css" />
+    <Content Include="Assets\css\base\main.css" />
+    <Content Include="Assets\css\base\nonIE.css" />
+    <Content Include="Assets\css\base\notification.css" />
+    <Content Include="Assets\css\base\popup.css" />
+    <Content Include="Assets\css\style\common.css" />
+    <Content Include="Assets\css\style\components.css" />
+    <Content Include="Assets\css\style\custom.css" />
+    <Content Include="Assets\css\style\empoyeesmanager.css" />
+    <Content Include="Assets\css\style\login.css" />
+    <Content Include="Assets\css\style\managerlog.css" />
+    <Content Include="Assets\css\style\masterSchedule.css" />
+    <Content Include="Assets\css\style\orders.css" />
+    <Content Include="Assets\css\style\purchase_allotment.css" />
+    <Content Include="Assets\css\style\restaurantdoc.css" />
+    <Content Include="Assets\css\style\schedule.css" />
+    <Content Include="Assets\css\style\targetAndSales.css" />
+    <Content Include="Assets\css\style\usermanager.css" />
+    <Content Include="Assets\css\style\vendor.css" />
+    <Content Include="Assets\css\treeview\treecustom.css" />
+    <Content Include="Assets\fonts\cabin-bold-webfont.svg" />
+    <Content Include="Assets\fonts\cabin-medium-webfont.svg" />
+    <Content Include="Assets\fonts\cabin-regular-webfont.svg" />
+    <Content Include="Assets\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Assets\img\ajax-loading.gif" />
+    <Content Include="Assets\img\ajax-modal-loading.gif" />
+    <Content Include="Assets\img\arrow-down.png" />
+    <Content Include="Assets\img\avatar.png" />
+    <Content Include="Assets\img\avatar3_small.jpg" />
+    <Content Include="Assets\img\avatar3_small.png" />
+    <Content Include="Assets\img\bg.jpg" />
+    <Content Include="Assets\img\Excel-icon.png" />
+    <Content Include="Assets\img\expert-logo.png" />
+    <Content Include="Assets\img\food-dish.png" />
+    <Content Include="Assets\img\hor-menu-red-arrow.png" />
+    <Content Include="Assets\img\icon-collapsel.png" />
+    <Content Include="Assets\img\icon-color-close.png" />
+    <Content Include="Assets\img\icon-color.png" />
+    <Content Include="Assets\img\icon-img-down.png" />
+    <Content Include="Assets\img\icon-img-up.png" />
+    <Content Include="Assets\img\icon\ajax-loader.gif" />
+    <Content Include="Assets\img\icon\box\phone.png" />
+    <Content Include="Assets\img\icon\button\add_16.png" />
+    <Content Include="Assets\img\icon\button\add_16_hover.png" />
+    <Content Include="Assets\img\icon\button\add_24.png" />
+    <Content Include="Assets\img\icon\button\add_24_hover.png" />
+    <Content Include="Assets\img\icon\button\add_32.png" />
+    <Content Include="Assets\img\icon\button\add_32_hover.png" />
+    <Content Include="Assets\img\icon\button\add_36.png" />
+    <Content Include="Assets\img\icon\button\add_36_hover.png" />
+    <Content Include="Assets\img\icon\button\add_new_16.png" />
+    <Content Include="Assets\img\icon\button\btn-mov-down.png" />
+    <Content Include="Assets\img\icon\button\btn-mov-left.png" />
+    <Content Include="Assets\img\icon\button\btn-mov-lefts.png" />
+    <Content Include="Assets\img\icon\button\btn-mov-right.png" />
+    <Content Include="Assets\img\icon\button\btn-mov-rights.png" />
+    <Content Include="Assets\img\icon\button\btn-mov-up.png" />
+    <Content Include="Assets\img\icon\button\close_16.png" />
+    <Content Include="Assets\img\icon\button\close_16_hover.png" />
+    <Content Include="Assets\img\icon\button\close_24.png" />
+    <Content Include="Assets\img\icon\button\close_24_hover.png" />
+    <Content Include="Assets\img\icon\button\close_32.png" />
+    <Content Include="Assets\img\icon\button\close_32_hover.png" />
+    <Content Include="Assets\img\icon\button\close_36.png" />
+    <Content Include="Assets\img\icon\button\close_36_hover.png" />
+    <Content Include="Assets\img\icon\button\collapse_16.png" />
+    <Content Include="Assets\img\icon\button\expand_16.png" />
+    <Content Include="Assets\img\icon\button\filter_16.png" />
+    <Content Include="Assets\img\icon\button\filter_16_hover.png" />
+    <Content Include="Assets\img\icon\button\filter_24.png" />
+    <Content Include="Assets\img\icon\button\filter_24_hover.png" />
+    <Content Include="Assets\img\icon\button\filter_32.png" />
+    <Content Include="Assets\img\icon\button\filter_32_hover.png" />
+    <Content Include="Assets\img\icon\button\filter_36.png" />
+    <Content Include="Assets\img\icon\button\filter_36_hover.png" />
+    <Content Include="Assets\img\icon\button\slider.png" />
+    <Content Include="Assets\img\icon\button\star_disable.png" />
+    <Content Include="Assets\img\icon\button\star_disable_16.png" />
+    <Content Include="Assets\img\icon\button\star_enable.png" />
+    <Content Include="Assets\img\icon\button\star_enable_16.png" />
+    <Content Include="Assets\img\icon\caret.png" />
+    <Content Include="Assets\img\icon\chart-s17459a7006.png" />
+    <Content Include="Assets\img\icon\cloneaccount.gif" />
+    <Content Include="Assets\img\icon\compaign\campaign_progress.png" />
+    <Content Include="Assets\img\icon\compaign\campaign_started.png" />
+    <Content Include="Assets\img\icon\email.gif" />
+    <Content Include="Assets\img\icon\flags\ad.png" />
+    <Content Include="Assets\img\icon\flags\ae.png" />
+    <Content Include="Assets\img\icon\flags\af.png" />
+    <Content Include="Assets\img\icon\flags\ag.png" />
+    <Content Include="Assets\img\icon\flags\ai.png" />
+    <Content Include="Assets\img\icon\flags\al.png" />
+    <Content Include="Assets\img\icon\flags\am.png" />
+    <Content Include="Assets\img\icon\flags\ao.png" />
+    <Content Include="Assets\img\icon\flags\aq.png" />
+    <Content Include="Assets\img\icon\flags\ar.png" />
+    <Content Include="Assets\img\icon\flags\as.png" />
+    <Content Include="Assets\img\icon\flags\at.png" />
+    <Content Include="Assets\img\icon\flags\au.png" />
+    <Content Include="Assets\img\icon\flags\aw.png" />
+    <Content Include="Assets\img\icon\flags\ax.png" />
+    <Content Include="Assets\img\icon\flags\az.png" />
+    <Content Include="Assets\img\icon\flags\ba.png" />
+    <Content Include="Assets\img\icon\flags\bb.png" />
+    <Content Include="Assets\img\icon\flags\bd.png" />
+    <Content Include="Assets\img\icon\flags\be.png" />
+    <Content Include="Assets\img\icon\flags\bf.png" />
+    <Content Include="Assets\img\icon\flags\bg.png" />
+    <Content Include="Assets\img\icon\flags\bh.png" />
+    <Content Include="Assets\img\icon\flags\bi.png" />
+    <Content Include="Assets\img\icon\flags\bj.png" />
+    <Content Include="Assets\img\icon\flags\bl.png" />
+    <Content Include="Assets\img\icon\flags\bm.png" />
+    <Content Include="Assets\img\icon\flags\bn.png" />
+    <Content Include="Assets\img\icon\flags\bo.png" />
+    <Content Include="Assets\img\icon\flags\bq.png" />
+    <Content Include="Assets\img\icon\flags\br.png" />
+    <Content Include="Assets\img\icon\flags\bs.png" />
+    <Content Include="Assets\img\icon\flags\bt.png" />
+    <Content Include="Assets\img\icon\flags\bv.png" />
+    <Content Include="Assets\img\icon\flags\bw.png" />
+    <Content Include="Assets\img\icon\flags\by.png" />
+    <Content Include="Assets\img\icon\flags\bz.png" />
+    <Content Include="Assets\img\icon\flags\ca.png" />
+    <Content Include="Assets\img\icon\flags\cc.png" />
+    <Content Include="Assets\img\icon\flags\cd.png" />
+    <Content Include="Assets\img\icon\flags\cf.png" />
+    <Content Include="Assets\img\icon\flags\cg.png" />
+    <Content Include="Assets\img\icon\flags\ch.png" />
+    <Content Include="Assets\img\icon\flags\ci.png" />
+    <Content Include="Assets\img\icon\flags\ck.png" />
+    <Content Include="Assets\img\icon\flags\cl.png" />
+    <Content Include="Assets\img\icon\flags\cm.png" />
+    <Content Include="Assets\img\icon\flags\cn.png" />
+    <Content Include="Assets\img\icon\flags\co.png" />
+    <Content Include="Assets\img\icon\flags\cr.png" />
+    <Content Include="Assets\img\icon\flags\cu.png" />
+    <Content Include="Assets\img\icon\flags\cv.png" />
+    <Content Include="Assets\img\icon\flags\cw.png" />
+    <Content Include="Assets\img\icon\flags\cx.png" />
+    <Content Include="Assets\img\icon\flags\cy.png" />
+    <Content Include="Assets\img\icon\flags\cz.png" />
+    <Content Include="Assets\img\icon\flags\de.png" />
+    <Content Include="Assets\img\icon\flags\dj.png" />
+    <Content Include="Assets\img\icon\flags\dk.png" />
+    <Content Include="Assets\img\icon\flags\dm.png" />
+    <Content Include="Assets\img\icon\flags\do.png" />
+    <Content Include="Assets\img\icon\flags\dz.png" />
+    <Content Include="Assets\img\icon\flags\ec.png" />
+    <Content Include="Assets\img\icon\flags\ee.png" />
+    <Content Include="Assets\img\icon\flags\eg.png" />
+    <Content Include="Assets\img\icon\flags\eh.png" />
+    <Content Include="Assets\img\icon\flags\er.png" />
+    <Content Include="Assets\img\icon\flags\es.png" />
+    <Content Include="Assets\img\icon\flags\et.png" />
+    <Content Include="Assets\img\icon\flags\fi.png" />
+    <Content Include="Assets\img\icon\flags\fj.png" />
+    <Content Include="Assets\img\icon\flags\fk.png" />
+    <Content Include="Assets\img\icon\flags\flags.png" />
+    <Content Include="Assets\img\icon\flags\fm.png" />
+    <Content Include="Assets\img\icon\flags\fo.png" />
+    <Content Include="Assets\img\icon\flags\fr.png" />
+    <Content Include="Assets\img\icon\flags\ga.png" />
+    <Content Include="Assets\img\icon\flags\gb.png" />
+    <Content Include="Assets\img\icon\flags\gd.png" />
+    <Content Include="Assets\img\icon\flags\ge.png" />
+    <Content Include="Assets\img\icon\flags\gf.png" />
+    <Content Include="Assets\img\icon\flags\gg.png" />
+    <Content Include="Assets\img\icon\flags\gh.png" />
+    <Content Include="Assets\img\icon\flags\gi.png" />
+    <Content Include="Assets\img\icon\flags\gl.png" />
+    <Content Include="Assets\img\icon\flags\gm.png" />
+    <Content Include="Assets\img\icon\flags\gn.png" />
+    <Content Include="Assets\img\icon\flags\gp.png" />
+    <Content Include="Assets\img\icon\flags\gq.png" />
+    <Content Include="Assets\img\icon\flags\gr.png" />
+    <Content Include="Assets\img\icon\flags\gs.png" />
+    <Content Include="Assets\img\icon\flags\gt.png" />
+    <Content Include="Assets\img\icon\flags\gu.png" />
+    <Content Include="Assets\img\icon\flags\gw.png" />
+    <Content Include="Assets\img\icon\flags\gy.png" />
+    <Content Include="Assets\img\icon\flags\hk.png" />
+    <Content Include="Assets\img\icon\flags\hm.png" />
+    <Content Include="Assets\img\icon\flags\hn.png" />
+    <Content Include="Assets\img\icon\flags\hr.png" />
+    <Content Include="Assets\img\icon\flags\ht.png" />
+    <Content Include="Assets\img\icon\flags\hu.png" />
+    <Content Include="Assets\img\icon\flags\id.png" />
+    <Content Include="Assets\img\icon\flags\ie.png" />
+    <Content Include="Assets\img\icon\flags\il.png" />
+    <Content Include="Assets\img\icon\flags\im.png" />
+    <Content Include="Assets\img\icon\flags\in.png" />
+    <Content Include="Assets\img\icon\flags\io.png" />
+    <Content Include="Assets\img\icon\flags\iq.png" />
+    <Content Include="Assets\img\icon\flags\ir.png" />
+    <Content Include="Assets\img\icon\flags\is.png" />
+    <Content Include="Assets\img\icon\flags\it.png" />
+    <Content Include="Assets\img\icon\flags\je.png" />
+    <Content Include="Assets\img\icon\flags\jm.png" />
+    <Content Include="Assets\img\icon\flags\jo.png" />
+    <Content Include="Assets\img\icon\flags\jp.png" />
+    <Content Include="Assets\img\icon\flags\ke.png" />
+    <Content Include="Assets\img\icon\flags\kg.png" />
+    <Content Include="Assets\img\icon\flags\kh.png" />
+    <Content Include="Assets\img\icon\flags\ki.png" />
+    <Content Include="Assets\img\icon\flags\km.png" />
+    <Content Include="Assets\img\icon\flags\kn.png" />
+    <Content Include="Assets\img\icon\flags\kp.png" />
+    <Content Include="Assets\img\icon\flags\kr.png" />
+    <Content Include="Assets\img\icon\flags\kw.png" />
+    <Content Include="Assets\img\icon\flags\ky.png" />
+    <Content Include="Assets\img\icon\flags\kz.png" />
+    <Content Include="Assets\img\icon\flags\la.png" />
+    <Content Include="Assets\img\icon\flags\lb.png" />
+    <Content Include="Assets\img\icon\flags\lc.png" />
+    <Content Include="Assets\img\icon\flags\li.png" />
+    <Content Include="Assets\img\icon\flags\lk.png" />
+    <Content Include="Assets\img\icon\flags\lr.png" />
+    <Content Include="Assets\img\icon\flags\ls.png" />
+    <Content Include="Assets\img\icon\flags\lt.png" />
+    <Content Include="Assets\img\icon\flags\lu.png" />
+    <Content Include="Assets\img\icon\flags\lv.png" />
+    <Content Include="Assets\img\icon\flags\ly.png" />
+    <Content Include="Assets\img\icon\flags\ma.png" />
+    <Content Include="Assets\img\icon\flags\mc.png" />
+    <Content Include="Assets\img\icon\flags\md.png" />
+    <Content Include="Assets\img\icon\flags\me.png" />
+    <Content Include="Assets\img\icon\flags\mf.png" />
+    <Content Include="Assets\img\icon\flags\mg.png" />
+    <Content Include="Assets\img\icon\flags\mh.png" />
+    <Content Include="Assets\img\icon\flags\mk.png" />
+    <Content Include="Assets\img\icon\flags\ml.png" />
+    <Content Include="Assets\img\icon\flags\mm.png" />
+    <Content Include="Assets\img\icon\flags\mn.png" />
+    <Content Include="Assets\img\icon\flags\mo.png" />
+    <Content Include="Assets\img\icon\flags\mp.png" />
+    <Content Include="Assets\img\icon\flags\mq.png" />
+    <Content Include="Assets\img\icon\flags\mr.png" />
+    <Content Include="Assets\img\icon\flags\ms.png" />
+    <Content Include="Assets\img\icon\flags\mt.png" />
+    <Content Include="Assets\img\icon\flags\mu.png" />
+    <Content Include="Assets\img\icon\flags\mv.png" />
+    <Content Include="Assets\img\icon\flags\mw.png" />
+    <Content Include="Assets\img\icon\flags\mx.png" />
+    <Content Include="Assets\img\icon\flags\my.png" />
+    <Content Include="Assets\img\icon\flags\mz.png" />
+    <Content Include="Assets\img\icon\flags\na.png" />
+    <Content Include="Assets\img\icon\flags\nc.png" />
+    <Content Include="Assets\img\icon\flags\ne.png" />
+    <Content Include="Assets\img\icon\flags\nf.png" />
+    <Content Include="Assets\img\icon\flags\ng.png" />
+    <Content Include="Assets\img\icon\flags\ni.png" />
+    <Content Include="Assets\img\icon\flags\nl.png" />
+    <Content Include="Assets\img\icon\flags\no.png" />
+    <Content Include="Assets\img\icon\flags\np.png" />
+    <Content Include="Assets\img\icon\flags\nr.png" />
+    <Content Include="Assets\img\icon\flags\nu.png" />
+    <Content Include="Assets\img\icon\flags\nz.png" />
+    <Content Include="Assets\img\icon\flags\om.png" />
+    <Content Include="Assets\img\icon\flags\pa.png" />
+    <Content Include="Assets\img\icon\flags\pe.png" />
+    <Content Include="Assets\img\icon\flags\pf.png" />
+    <Content Include="Assets\img\icon\flags\pg.png" />
+    <Content Include="Assets\img\icon\flags\ph.png" />
+    <Content Include="Assets\img\icon\flags\pk.png" />
+    <Content Include="Assets\img\icon\flags\pl.png" />
+    <Content Include="Assets\img\icon\flags\pm.png" />
+    <Content Include="Assets\img\icon\flags\pn.png" />
+    <Content Include="Assets\img\icon\flags\pr.png" />
+    <Content Include="Assets\img\icon\flags\ps.png" />
+    <Content Include="Assets\img\icon\flags\pt.png" />
+    <Content Include="Assets\img\icon\flags\pw.png" />
+    <Content Include="Assets\img\icon\flags\py.png" />
+    <Content Include="Assets\img\icon\flags\qa.png" />
+    <Content Include="Assets\img\icon\flags\re.png" />
+    <Content Include="Assets\img\icon\flags\ro.png" />
+    <Content Include="Assets\img\icon\flags\rs.png" />
+    <Content Include="Assets\img\icon\flags\ru.png" />
+    <Content Include="Assets\img\icon\flags\rw.png" />
+    <Content Include="Assets\img\icon\flags\sa.png" />
+    <Content Include="Assets\img\icon\flags\sb.png" />
+    <Content Include="Assets\img\icon\flags\sc.png" />
+    <Content Include="Assets\img\icon\flags\sd.png" />
+    <Content Include="Assets\img\icon\flags\se.png" />
+    <Content Include="Assets\img\icon\flags\sg.png" />
+    <Content Include="Assets\img\icon\flags\sh.png" />
+    <Content Include="Assets\img\icon\flags\si.png" />
+    <Content Include="Assets\img\icon\flags\sj.png" />
+    <Content Include="Assets\img\icon\flags\sk.png" />
+    <Content Include="Assets\img\icon\flags\sl.png" />
+    <Content Include="Assets\img\icon\flags\sm.png" />
+    <Content Include="Assets\img\icon\flags\sn.png" />
+    <Content Include="Assets\img\icon\flags\so.png" />
+    <Content Include="Assets\img\icon\flags\sr.png" />
+    <Content Include="Assets\img\icon\flags\ss.png" />
+    <Content Include="Assets\img\icon\flags\st.png" />
+    <Content Include="Assets\img\icon\flags\sv.png" />
+    <Content Include="Assets\img\icon\flags\sx.png" />
+    <Content Include="Assets\img\icon\flags\sy.png" />
+    <Content Include="Assets\img\icon\flags\sz.png" />
+    <Content Include="Assets\img\icon\flags\tc.png" />
+    <Content Include="Assets\img\icon\flags\td.png" />
+    <Content Include="Assets\img\icon\flags\tf.png" />
+    <Content Include="Assets\img\icon\flags\tg.png" />
+    <Content Include="Assets\img\icon\flags\th.png" />
+    <Content Include="Assets\img\icon\flags\tj.png" />
+    <Content Include="Assets\img\icon\flags\tk.png" />
+    <Content Include="Assets\img\icon\flags\tl.png" />
+    <Content Include="Assets\img\icon\flags\tm.png" />
+    <Content Include="Assets\img\icon\flags\tn.png" />
+    <Content Include="Assets\img\icon\flags\to.png" />
+    <Content Include="Assets\img\icon\flags\tr.png" />
+    <Content Include="Assets\img\icon\flags\tt.png" />
+    <Content Include="Assets\img\icon\flags\tv.png" />
+    <Content Include="Assets\img\icon\flags\tw.png" />
+    <Content Include="Assets\img\icon\flags\tz.png" />
+    <Content Include="Assets\img\icon\flags\ua.png" />
+    <Content Include="Assets\img\icon\flags\ug.png" />
+    <Content Include="Assets\img\icon\flags\uk.png" />
+    <Content Include="Assets\img\icon\flags\um.png" />
+    <Content Include="Assets\img\icon\flags\us.png" />
+    <Content Include="Assets\img\icon\flags\uy.png" />
+    <Content Include="Assets\img\icon\flags\uz.png" />
+    <Content Include="Assets\img\icon\flags\va.png" />
+    <Content Include="Assets\img\icon\flags\vc.png" />
+    <Content Include="Assets\img\icon\flags\ve.png" />
+    <Content Include="Assets\img\icon\flags\vg.png" />
+    <Content Include="Assets\img\icon\flags\vi.png" />
+    <Content Include="Assets\img\icon\flags\vn.png" />
+    <Content Include="Assets\img\icon\flags\vu.png" />
+    <Content Include="Assets\img\icon\flags\wf.png" />
+    <Content Include="Assets\img\icon\flags\ws.png" />
+    <Content Include="Assets\img\icon\flags\ye.png" />
+    <Content Include="Assets\img\icon\flags\yt.png" />
+    <Content Include="Assets\img\icon\flags\za.png" />
+    <Content Include="Assets\img\icon\flags\zm.png" />
+    <Content Include="Assets\img\icon\flags\zw.png" />
+    <Content Include="Assets\img\icon\form\checked_16.png" />
+    <Content Include="Assets\img\icon\form\checked_24.png" />
+    <Content Include="Assets\img\icon\form\checked_32.png" />
+    <Content Include="Assets\img\icon\form\checked_bg_16.png" />
+    <Content Include="Assets\img\icon\form\checked_bg_24.png" />
+    <Content Include="Assets\img\icon\form\checked_bg_32.png" />
+    <Content Include="Assets\img\icon\form\choised_16.png" />
+    <Content Include="Assets\img\icon\form\choised_24.png" />
+    <Content Include="Assets\img\icon\form\choised_32.png" />
+    <Content Include="Assets\img\icon\form\uncheck_16.png" />
+    <Content Include="Assets\img\icon\form\uncheck_24.png" />
+    <Content Include="Assets\img\icon\form\uncheck_32.png" />
+    <Content Include="Assets\img\icon\form\uncheck_bg_16.png" />
+    <Content Include="Assets\img\icon\form\uncheck_bg_24.png" />
+    <Content Include="Assets\img\icon\form\uncheck_bg_32.png" />
+    <Content Include="Assets\img\icon\form\unchoise_16.png" />
+    <Content Include="Assets\img\icon\form\unchoise_24.png" />
+    <Content Include="Assets\img\icon\form\unchoise_32.png" />
+    <Content Include="Assets\img\icon\global\crm-icon-ba.png" />
+    <Content Include="Assets\img\icon\global\crm-icon-www.png" />
+    <Content Include="Assets\img\icon\global\facebook.png" />
+    <Content Include="Assets\img\icon\global\gplus.png" />
+    <Content Include="Assets\img\icon\global\icon-clone.png" />
+    <Content Include="Assets\img\icon\global\icon-collap-above.png" />
+    <Content Include="Assets\img\icon\global\icon-default.png" />
+    <Content Include="Assets\img\icon\global\icon-doc.png" />
+    <Content Include="Assets\img\icon\global\icon-excel.png" />
+    <Content Include="Assets\img\icon\global\icon-expand-down.png" />
+    <Content Include="Assets\img\icon\global\icon-file-attach.png" />
+    <Content Include="Assets\img\icon\global\icon-image.png" />
+    <Content Include="Assets\img\icon\global\icon-map-point.png" />
+    <Content Include="Assets\img\icon\global\icon-pdf.png" />
+    <Content Include="Assets\img\icon\global\icon-phone.png" />
+    <Content Include="Assets\img\icon\global\icon-rar.png" />
+    <Content Include="Assets\img\icon\global\icon-zip.png" />
+    <Content Include="Assets\img\icon\global\icon_calendar.png" />
+    <Content Include="Assets\img\icon\global\linkedin.png" />
+    <Content Include="Assets\img\icon\global\twitter.png" />
+    <Content Include="Assets\img\icon\icon-assign-record.png" />
+    <Content Include="Assets\img\icon\icon-collapsel.png" />
+    <Content Include="Assets\img\icon\icon-location.png" />
+    <Content Include="Assets\img\icon\icon.png" />
+    <Content Include="Assets\img\icon\importing.gif" />
+    <Content Include="Assets\img\icon\indicator.gif" />
+    <Content Include="Assets\img\icon\Jcrop.gif" />
+    <Content Include="Assets\img\icon\layout-s093740a7a7.png" />
+    <Content Include="Assets\img\icon\layout_1.png" />
+    <Content Include="Assets\img\icon\layout_2.png" />
+    <Content Include="Assets\img\icon\layout_3.png" />
+    <Content Include="Assets\img\icon\lock.png" />
+    <Content Include="Assets\img\icon\maps.png" />
+    <Content Include="Assets\img\icon\nav\account.png" />
+    <Content Include="Assets\img\icon\nav\account_hover.png" />
+    <Content Include="Assets\img\icon\nav\calendar.png" />
+    <Content Include="Assets\img\icon\nav\calendar_hover.png" />
+    <Content Include="Assets\img\icon\nav\campaign.png" />
+    <Content Include="Assets\img\icon\nav\campaign_hover.png" />
+    <Content Include="Assets\img\icon\nav\contact.png" />
+    <Content Include="Assets\img\icon\nav\contact_hover.png" />
+    <Content Include="Assets\img\icon\nav\dashboard.png" />
+    <Content Include="Assets\img\icon\nav\dashboard_hover.png" />
+    <Content Include="Assets\img\icon\nav\defect.png" />
+    <Content Include="Assets\img\icon\nav\defect_hover.png" />
+    <Content Include="Assets\img\icon\nav\document.png" />
+    <Content Include="Assets\img\icon\nav\document_hover.png" />
+    <Content Include="Assets\img\icon\nav\history.png" />
+    <Content Include="Assets\img\icon\nav\history_hover.png" />
+    <Content Include="Assets\img\icon\nav\knowled.png" />
+    <Content Include="Assets\img\icon\nav\knowled_hover.png" />
+    <Content Include="Assets\img\icon\nav\mail.png" />
+    <Content Include="Assets\img\icon\nav\mail_hover.png" />
+    <Content Include="Assets\img\icon\nav\oppo.png" />
+    <Content Include="Assets\img\icon\nav\oppo_hover.png" />
+    <Content Include="Assets\img\icon\nav\report.png" />
+    <Content Include="Assets\img\icon\nav\report_hover.png" />
+    <Content Include="Assets\img\icon\nav\sales.png" />
+    <Content Include="Assets\img\icon\nav\sales_hover.png" />
+    <Content Include="Assets\img\icon\nav\service.png" />
+    <Content Include="Assets\img\icon\nav\service_hover.png" />
+    <Content Include="Assets\img\icon\nav\task.png" />
+    <Content Include="Assets\img\icon\nav\task_hover.png" />
+    <Content Include="Assets\img\icon\nav\ticket.png" />
+    <Content Include="Assets\img\icon\nav\ticket_hover.png" />
+    <Content Include="Assets\img\icon\nav\toggle.png" />
+    <Content Include="Assets\img\icon\nav\toggle_1.png" />
+    <Content Include="Assets\img\icon\reload-data.GIF" />
+    <Content Include="Assets\img\icon\sprite-white.png" />
+    <Content Include="Assets\img\icon\sprite.png" />
+    <Content Include="Assets\img\icon\top\account.png" />
+    <Content Include="Assets\img\icon\top\account_hover.png" />
+    <Content Include="Assets\img\icon\top\advanced.png" />
+    <Content Include="Assets\img\icon\top\chat.png" />
+    <Content Include="Assets\img\icon\top\chat_hover.png" />
+    <Content Include="Assets\img\icon\top\history.png" />
+    <Content Include="Assets\img\icon\top\history_hover.png" />
+    <Content Include="Assets\img\icon\top\list.png" />
+    <Content Include="Assets\img\icon\top\list_hover.png" />
+    <Content Include="Assets\img\icon\top\shortcut.png" />
+    <Content Include="Assets\img\icon\top\shortcut_hover.png" />
+    <Content Include="Assets\img\icon\_ajax-loader.gif" />
+    <Content Include="Assets\img\images\GetAvatar.jpg" />
+    <Content Include="Assets\img\inbox-nav-arrow-blue.png" />
+    <Content Include="Assets\img\loading-spinner-blue.gif" />
+    <Content Include="Assets\img\loading-spinner-default.gif" />
+    <Content Include="Assets\img\loading-spinner-grey.gif" />
+    <Content Include="Assets\img\loading.gif" />
+    <Content Include="Assets\img\login\bg-cyan.jpg" />
+    <Content Include="Assets\img\login\bg-login.png" />
+    <Content Include="Assets\img\login\login-botton.png" />
+    <Content Include="Assets\img\login\login_bg - Copy.png" />
+    <Content Include="Assets\img\login\login_bg.png" />
+    <Content Include="Assets\img\login\SMARTSystemsPro-text-214x26.png" />
+    <Content Include="Assets\img\logo.png" />
+    <Content Include="Assets\img\menu-toggler.png" />
+    <Content Include="Assets\img\no-avatar.jpg" />
+    <Content Include="Assets\img\pdf-icon.png" />
+    <Content Include="Assets\img\processing.gif" />
+    <Content Include="Assets\img\remove-icon-small.png" />
+    <Content Include="Assets\img\search_icon_light.png" />
+    <Content Include="Assets\img\sidebar-menu-arrow-reverse.png" />
+    <Content Include="Assets\img\sidebar-menu-arrow-right.png" />
+    <Content Include="Assets\img\sidebar-menu-arrow.png" />
+    <Content Include="Assets\img\sidebar_arrow_icon_light.png" />
+    <Content Include="Assets\img\sidebar_arrow_icon_light_rtl.png" />
+    <Content Include="Assets\img\sidebar_inline_toggler_icon_blue.jpg" />
+    <Content Include="Assets\img\sidebar_inline_toggler_icon_darkblue.jpg" />
+    <Content Include="Assets\img\sidebar_inline_toggler_icon_default.jpg" />
+    <Content Include="Assets\img\sidebar_inline_toggler_icon_grey.jpg" />
+    <Content Include="Assets\img\sidebar_inline_toggler_icon_light.jpg" />
+    <Content Include="Assets\img\sidebar_inline_toggler_icon_light2.jpg" />
+    <Content Include="Assets\img\sidebar_toggler_icon_blue.png" />
+    <Content Include="Assets\img\sidebar_toggler_icon_darkblue.png" />
+    <Content Include="Assets\img\sidebar_toggler_icon_default.png" />
+    <Content Include="Assets\img\sidebar_toggler_icon_grey.png" />
+    <Content Include="Assets\img\sidebar_toggler_icon_light.png" />
+    <Content Include="Assets\img\sidebar_toggler_icon_light2.png" />
+    <Content Include="Assets\img\small-logo-1.png" />
+    <Content Include="Assets\img\small-logo.png" />
+    <Content Include="Assets\img\login\SMARTSystemsPro-logo-46x46.png" />
+    <Content Include="Assets\img\SMARTSystemsPro-text-214x26.png" />
+    <Content Include="Assets\img\SSPReportLogo.png" />
+    <Content Include="Assets\img\useravatar.png" />
+    <Content Include="Assets\js\base\base.js" />
+    <Content Include="Assets\js\base\jquery.cookie.js" />
+    <Content Include="Assets\js\base\idleTimeout.js" />
+    <Content Include="Assets\js\base\jquery.ui.touch-punch.min.js" />
+    <Content Include="Assets\js\base\MaxLengthText.js" />
+    <Content Include="Assets\js\base\jszip.min.js" />
+    <Content Include="Assets\js\base\SetaBase.js" />
+    <Content Include="Assets\js\base\setaJs.js" />
+    <Content Include="Assets\js\base\setaJs.modules.js" />
+    <Content Include="Assets\js\controller\budgetController.js" />
+    <Content Include="Assets\js\controller\categoriesSettingController.js" />
+    <Content Include="Assets\js\controller\dashboardController.js" />
+    <Content Include="Assets\js\controller\importActualNumber.js" />
+    <Content Include="Assets\js\controller\linkRestaurantController.js" />
+    <Content Include="Assets\js\controller\reviewBudgetDetail.js" />
+    <Content Include="Assets\js\controller\securityController.js" />
+    <Content Include="Assets\js\controller\myprofileController.js" />
+    <Content Include="Assets\js\controller\homeController.js" />
+    <Content Include="Assets\js\controller\roleController.js" />
+    <Content Include="Assets\js\controller\targetAndSales.js" />
+    <Content Include="Assets\js\controller\userController.js" />
+    <Content Include="Assets\js\jquery-idleTimeout.js" />
+    <Content Include="Assets\js\scripts\default.js" />
+    <Content Include="Assets\js\scripts\layout.js" />
+    <Content Include="Assets\js\scripts\ratingBase.js" />
+    <Content Include="Assets\js\treeview\AjaxBase.js" />
+    <Content Include="Assets\plugin\AngularJs\angular.min.js" />
+    <Content Include="Assets\plugin\bootstrap3-editable\css\bootstrap-editable.css" />
+    <Content Include="Assets\plugin\bootstrap3-editable\css\bootstrap-editable.custom.css" />
+    <Content Include="Assets\plugin\bootstrap3-editable\img\clear.png" />
+    <Content Include="Assets\plugin\bootstrap3-editable\img\loading.gif" />
+    <Content Include="Assets\plugin\bootstrap3-editable\js\bootstrap-editable.js" />
+    <Content Include="Assets\plugin\bootstrap3-editable\js\bootstrap-editable.min.js" />
+    <Content Include="Assets\plugin\bootstrap\css\bootstrap-datetimepicker.min.css" />
+    <Content Include="Assets\plugin\bootstrap\css\bootstrap-select.css" />
+    <Content Include="Assets\plugin\bootstrap\css\bootstrap-theme.css" />
+    <Content Include="Assets\plugin\bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="Assets\plugin\bootstrap\css\bootstrap.css" />
+    <Content Include="Assets\plugin\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Assets\plugin\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Assets\plugin\bootstrap\js\bootstrap-datetimepicker.js" />
+    <Content Include="Assets\plugin\bootstrap\js\bootstrap-hover-dropdown.js" />
+    <Content Include="Assets\plugin\bootstrap\js\bootstrap-hover-dropdown.min.js" />
+    <Content Include="Assets\plugin\bootstrap\js\bootstrap-select.js" />
+    <Content Include="Assets\plugin\bootstrap\js\bootstrap.js" />
+    <Content Include="Assets\plugin\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Assets\plugin\bootstrap\js\metronic.js" />
+    <Content Include="Assets\plugin\bootstrap\js\moment.min.js" />
+    <Content Include="Assets\plugin\bootstrap\js\npm.js" />
+    <Content Include="Assets\plugin\custom\darkblue.css" />
+    <Content Include="Assets\plugin\custom\img\sidebar_toggler_icon_darkblue.png" />
+    <Content Include="Assets\plugin\custom\layout.css" />
+    <Content Include="Assets\plugin\download\jQuery.download.js" />
+    <Content Include="Assets\plugin\download\jquery.fileDownload.js" />
+    <Content Include="Assets\plugin\font-awesome\css\font-awesome.css" />
+    <Content Include="Assets\plugin\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Assets\plugin\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Assets\plugin\jquery.form\jquery.form.min.js" />
+    <Content Include="Assets\plugin\jquery.session\jquery.session.js" />
+    <Content Include="Assets\plugin\jquery\css\images\animated-overlay.gif" />
+    <Content Include="Assets\plugin\jquery\css\images\ui-bg_flat_0_000000_40x100.png" />
+    <Content Include="Assets\plugin\jquery\css\images\ui-bg_flat_100_ffffff_40x100.png" />
+    <Content Include="Assets\plugin\jquery\css\images\ui-bg_flat_55_ffffff_40x100.png" />
+    <Content Include="Assets\plugin\jquery\css\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Assets\plugin\jquery\css\images\ui-bg_highlight-hard_100_f9f9f9_1x100.png" />
+    <Content Include="Assets\plugin\jquery\css\images\ui-bg_highlight-soft_50_dddddd_1x100.png" />
+    <Content Include="Assets\plugin\jquery\css\images\ui-bg_inset-hard_100_f9f9f9_1x100.png" />
+    <Content Include="Assets\plugin\jquery\css\images\ui-icons_0c5972_256x240.png" />
+    <Content Include="Assets\plugin\jquery\css\images\ui-icons_666666_256x240.png" />
+    <Content Include="Assets\plugin\jquery\css\images\ui-icons_717171_256x240.png" />
+    <Content Include="Assets\plugin\jquery\css\images\ui-icons_f90007_256x240.png" />
+    <Content Include="Assets\plugin\jquery\css\jquery-ui-1.10.3.custom.css" />
+    <Content Include="Assets\plugin\jquery\css\jquery-ui-1.10.3.custom.min.css" />
+    <Content Include="Assets\plugin\jquery\js\jquery-1.9.1.js" />
+    <Content Include="Assets\plugin\jquery\js\jquery-ui-1.10.3.custom.js" />
+    <Content Include="Assets\plugin\jquery\js\jquery-ui-1.10.3.custom.min.js" />
+    <Content Include="Assets\plugin\jquery\js\jquery-ui-sliderAccess.js" />
+    <Content Include="Assets\plugin\jquery\js\jquery.cookie.js" />
+    <Content Include="Assets\plugin\jquery\js\jquery.min.js" />
+    <Content Include="Assets\plugin\kendoui\css\Black\editor.png" />
+    <Content Include="Assets\plugin\kendoui\css\Black\imagebrowser.png" />
+    <Content Include="Assets\plugin\kendoui\css\Black\indeterminate.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Black\loading-image.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Black\loading.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Black\loading_2x.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Black\markers.png" />
+    <Content Include="Assets\plugin\kendoui\css\Black\markers_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Black\slider-h.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Black\slider-v.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Black\sprite.png" />
+    <Content Include="Assets\plugin\kendoui\css\Black\sprite_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\BlueOpal\editor.png" />
+    <Content Include="Assets\plugin\kendoui\css\BlueOpal\imagebrowser.png" />
+    <Content Include="Assets\plugin\kendoui\css\BlueOpal\indeterminate.gif" />
+    <Content Include="Assets\plugin\kendoui\css\BlueOpal\loading-image.gif" />
+    <Content Include="Assets\plugin\kendoui\css\BlueOpal\loading.gif" />
+    <Content Include="Assets\plugin\kendoui\css\BlueOpal\loading_2x.gif" />
+    <Content Include="Assets\plugin\kendoui\css\BlueOpal\markers.png" />
+    <Content Include="Assets\plugin\kendoui\css\BlueOpal\markers_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\BlueOpal\slider-h.gif" />
+    <Content Include="Assets\plugin\kendoui\css\BlueOpal\slider-v.gif" />
+    <Content Include="Assets\plugin\kendoui\css\BlueOpal\sprite.png" />
+    <Content Include="Assets\plugin\kendoui\css\BlueOpal\sprite_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Bootstrap\editor.png" />
+    <Content Include="Assets\plugin\kendoui\css\Bootstrap\imagebrowser.png" />
+    <Content Include="Assets\plugin\kendoui\css\Bootstrap\indeterminate.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Bootstrap\loading-image.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Bootstrap\loading.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Bootstrap\loading_2x.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Bootstrap\markers.png" />
+    <Content Include="Assets\plugin\kendoui\css\Bootstrap\markers_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Bootstrap\slider-h.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Bootstrap\slider-v.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Bootstrap\sprite.png" />
+    <Content Include="Assets\plugin\kendoui\css\Bootstrap\sprite_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Default\editor.png" />
+    <Content Include="Assets\plugin\kendoui\css\Default\imagebrowser.png" />
+    <Content Include="Assets\plugin\kendoui\css\Default\indeterminate.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Default\loading-image.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Default\loading.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Default\loading_2x.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Default\markers.png" />
+    <Content Include="Assets\plugin\kendoui\css\Default\markers_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Default\slider-h.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Default\slider-v.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Default\sprite.png" />
+    <Content Include="Assets\plugin\kendoui\css\Default\sprite_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Flat\editor.png" />
+    <Content Include="Assets\plugin\kendoui\css\Flat\imagebrowser.png" />
+    <Content Include="Assets\plugin\kendoui\css\Flat\indeterminate.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Flat\loading-image.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Flat\loading.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Flat\loading_2x.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Flat\markers.png" />
+    <Content Include="Assets\plugin\kendoui\css\Flat\markers_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Flat\slider-h.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Flat\slider-v.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Flat\sprite.png" />
+    <Content Include="Assets\plugin\kendoui\css\Flat\sprite_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\HighContrast\editor.png" />
+    <Content Include="Assets\plugin\kendoui\css\HighContrast\imagebrowser.png" />
+    <Content Include="Assets\plugin\kendoui\css\HighContrast\indeterminate.gif" />
+    <Content Include="Assets\plugin\kendoui\css\HighContrast\loading-image.gif" />
+    <Content Include="Assets\plugin\kendoui\css\HighContrast\loading.gif" />
+    <Content Include="Assets\plugin\kendoui\css\HighContrast\loading_2x.gif" />
+    <Content Include="Assets\plugin\kendoui\css\HighContrast\markers.png" />
+    <Content Include="Assets\plugin\kendoui\css\HighContrast\markers_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\HighContrast\slider-h.gif" />
+    <Content Include="Assets\plugin\kendoui\css\HighContrast\slider-v.gif" />
+    <Content Include="Assets\plugin\kendoui\css\HighContrast\sprite.png" />
+    <Content Include="Assets\plugin\kendoui\css\HighContrast\sprite_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\images\back.png" />
+    <Content Include="Assets\plugin\kendoui\css\images\kendoui.svg" />
+    <Content Include="Assets\plugin\kendoui\css\images\wp8_icons.png" />
+    <Content Include="Assets\plugin\kendoui\css\images\wp8_inverseicons.png" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.black.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.black.mobile.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.blueopal.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.blueopal.mobile.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.bootstrap.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.bootstrap.mobile.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.common-bootstrap.core.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.common-bootstrap.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.common.core.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.common.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.dataviz.black.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.dataviz.blueopal.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.dataviz.bootstrap.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.dataviz.default.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.dataviz.flat.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.dataviz.highcontrast.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.dataviz.metro.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.dataviz.metroblack.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.dataviz.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.dataviz.mobile.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.dataviz.moonlight.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.dataviz.silver.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.dataviz.uniform.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.default.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.default.mobile.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.flat.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.flat.mobile.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.highcontrast.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.highcontrast.mobile.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.metro.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.metro.mobile.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.metroblack.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.metroblack.mobile.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.mobile.all.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.mobile.android.dark.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.mobile.android.light.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.mobile.blackberry.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.mobile.common.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.mobile.flat.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.mobile.ios.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.mobile.meego.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.mobile.wp8.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.moonlight.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.moonlight.mobile.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.rtl.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.silver.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.silver.mobile.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.uniform.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\kendo.uniform.mobile.min.css" />
+    <Content Include="Assets\plugin\kendoui\css\MetroBlack\editor.png" />
+    <Content Include="Assets\plugin\kendoui\css\MetroBlack\imagebrowser.png" />
+    <Content Include="Assets\plugin\kendoui\css\MetroBlack\indeterminate.gif" />
+    <Content Include="Assets\plugin\kendoui\css\MetroBlack\loading-image.gif" />
+    <Content Include="Assets\plugin\kendoui\css\MetroBlack\loading.gif" />
+    <Content Include="Assets\plugin\kendoui\css\MetroBlack\loading_2x.gif" />
+    <Content Include="Assets\plugin\kendoui\css\MetroBlack\markers.png" />
+    <Content Include="Assets\plugin\kendoui\css\MetroBlack\markers_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\MetroBlack\slider-h.gif" />
+    <Content Include="Assets\plugin\kendoui\css\MetroBlack\slider-v.gif" />
+    <Content Include="Assets\plugin\kendoui\css\MetroBlack\sprite.png" />
+    <Content Include="Assets\plugin\kendoui\css\MetroBlack\sprite_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Metro\editor.png" />
+    <Content Include="Assets\plugin\kendoui\css\Metro\imagebrowser.png" />
+    <Content Include="Assets\plugin\kendoui\css\Metro\indeterminate.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Metro\loading-image.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Metro\loading.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Metro\loading_2x.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Metro\markers.png" />
+    <Content Include="Assets\plugin\kendoui\css\Metro\markers_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Metro\slider-h.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Metro\slider-v.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Metro\sprite.png" />
+    <Content Include="Assets\plugin\kendoui\css\Metro\sprite_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Moonlight\editor.png" />
+    <Content Include="Assets\plugin\kendoui\css\Moonlight\imagebrowser.png" />
+    <Content Include="Assets\plugin\kendoui\css\Moonlight\indeterminate.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Moonlight\loading-image.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Moonlight\loading.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Moonlight\loading_2x.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Moonlight\markers.png" />
+    <Content Include="Assets\plugin\kendoui\css\Moonlight\markers_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Moonlight\slider-h.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Moonlight\slider-v.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Moonlight\sprite.png" />
+    <Content Include="Assets\plugin\kendoui\css\Moonlight\sprite_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Silver\editor.png" />
+    <Content Include="Assets\plugin\kendoui\css\Silver\imagebrowser.png" />
+    <Content Include="Assets\plugin\kendoui\css\Silver\indeterminate.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Silver\loading-image.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Silver\loading.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Silver\loading_2x.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Silver\markers.png" />
+    <Content Include="Assets\plugin\kendoui\css\Silver\markers_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Silver\slider-h.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Silver\slider-v.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Silver\sprite.png" />
+    <Content Include="Assets\plugin\kendoui\css\Silver\sprite_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\brushed-metal.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\dots1.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\dots10.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\dots11.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\dots12.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\dots13.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\dots2.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\dots3.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\dots4.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\dots5.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\dots6.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\dots7.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\dots8.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\dots9.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\glass-lighter.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\glass.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\highlight.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\hsv-gradient.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\hue.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\leather1.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\leather2.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\noise.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\stripe1.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\stripe2.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\stripe3.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\stripe4.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\stripe5.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\stripe6.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\transparency.png" />
+    <Content Include="Assets\plugin\kendoui\css\textures\transtexture.png" />
+    <Content Include="Assets\plugin\kendoui\css\Uniform\editor.png" />
+    <Content Include="Assets\plugin\kendoui\css\Uniform\imagebrowser.png" />
+    <Content Include="Assets\plugin\kendoui\css\Uniform\indeterminate.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Uniform\loading-image.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Uniform\loading.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Uniform\loading_2x.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Uniform\markers.png" />
+    <Content Include="Assets\plugin\kendoui\css\Uniform\markers_2x.png" />
+    <Content Include="Assets\plugin\kendoui\css\Uniform\slider-h.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Uniform\slider-v.gif" />
+    <Content Include="Assets\plugin\kendoui\css\Uniform\sprite.png" />
+    <Content Include="Assets\plugin\kendoui\css\Uniform\sprite_2x.png" />
+    <Content Include="Assets\plugin\kendoui\js\angular.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.af-ZA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.af.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.am-ET.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.am.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-AE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-BH.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-DZ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-EG.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-IQ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-JO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-KW.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-LB.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-LY.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-MA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-OM.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-QA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-SA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-SY.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-TN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar-YE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ar.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.arn-CL.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.arn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.as-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.as.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.az-Cyrl-AZ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.az-Cyrl.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.az-Latn-AZ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.az-Latn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.az.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ba-RU.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ba.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.be-BY.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.be.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.bg-BG.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.bg.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.bn-BD.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.bn-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.bn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.bo-CN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.bo.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.br-FR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.br.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.bs-Cyrl-BA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.bs-Cyrl.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.bs-Latn-BA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.bs-Latn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.bs.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ca-ES.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ca.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.co-FR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.co.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.cs-CZ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.cs.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.cy-GB.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.cy.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.da-DK.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.da.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.de-AT.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.de-CH.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.de-DE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.de-LI.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.de-LU.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.de.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.dsb-DE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.dsb.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.dv-MV.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.dv.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.el-GR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.el.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-029.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-AU.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-BZ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-CA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-GB.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-IE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-JM.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-MY.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-NZ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-PH.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-SG.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-TT.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-US.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-ZA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en-ZW.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.en.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-AR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-BO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-CL.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-CO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-CR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-DO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-EC.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-ES.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-GT.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-HN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-MX.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-NI.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-PA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-PE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-PR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-PY.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-SV.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-US.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-UY.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es-VE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.es.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.et-EE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.et.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.eu-ES.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.eu.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fa-IR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fa.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fi-FI.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fi.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fil-PH.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fil.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fo-FO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fo.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fr-BE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fr-CA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fr-CH.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fr-FR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fr-LU.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fr-MC.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fr.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fy-NL.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.fy.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ga-IE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ga.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.gd-GB.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.gd.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.gl-ES.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.gl.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.gsw-FR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.gsw.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.gu-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.gu.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ha-Latn-NG.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ha-Latn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ha.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.he-IL.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.he.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.hi-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.hi.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.hr-BA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.hr-HR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.hr.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.hsb-DE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.hsb.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.hu-HU.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.hu.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.hy-AM.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.hy.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.id-ID.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.id.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ig-NG.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ig.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ii-CN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ii.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.is-IS.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.is.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.it-CH.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.it-IT.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.it.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.iu-Cans-CA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.iu-Cans.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.iu-Latn-CA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.iu-Latn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.iu.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ja-JP.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ja.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ka-GE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ka.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.kk-KZ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.kk.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.kl-GL.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.kl.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.km-KH.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.km.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.kn-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.kn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ko-KR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ko.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.kok-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.kok.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ky-KG.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ky.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.lb-LU.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.lb.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.lo-LA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.lo.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.lt-LT.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.lt.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.lv-LV.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.lv.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.mi-NZ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.mi.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.mk-MK.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.mk.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ml-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ml.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.mn-Cyrl.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.mn-MN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.mn-Mong-CN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.mn-Mong.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.mn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.moh-CA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.moh.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.mr-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.mr.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ms-BN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ms-MY.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ms.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.mt-MT.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.mt.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.nb-NO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.nb.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ne-NP.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ne.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.nl-BE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.nl-NL.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.nl.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.nn-NO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.nn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.no.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.nso-ZA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.nso.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.oc-FR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.oc.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.or-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.or.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.pa-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.pa.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.pl-PL.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.pl.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.prs-AF.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.prs.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ps-AF.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ps.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.pt-BR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.pt-PT.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.pt.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.qut-GT.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.qut.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.quz-BO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.quz-EC.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.quz-PE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.quz.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.rm-CH.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.rm.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ro-RO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ro.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ru-RU.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ru-UA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ru.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.rw-RW.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.rw.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sa-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sa.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sah-RU.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sah.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.se-FI.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.se-NO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.se-SE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.se.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.si-LK.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.si.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sk-SK.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sk.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sl-SI.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sl.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sma-NO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sma-SE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sma.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.smj-NO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.smj-SE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.smj.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.smn-FI.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.smn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sms-FI.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sms.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sq-AL.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sq.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sr-Cyrl-BA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sr-Cyrl-CS.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sr-Cyrl-ME.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sr-Cyrl-RS.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sr-Cyrl.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sr-Latn-BA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sr-Latn-CS.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sr-Latn-ME.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sr-Latn-RS.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sr-Latn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sr.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sv-FI.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sv-SE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sv.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sw-KE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.sw.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.syr-SY.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.syr.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ta-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ta.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.te-IN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.te.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tg-Cyrl-TJ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tg-Cyrl.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tg.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.th-TH.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.th.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tk-TM.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tk.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tn-ZA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tr-TR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tr.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tt-RU.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tt.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tzm-Latn-DZ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tzm-Latn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.tzm.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ug-CN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ug.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.uk-UA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.uk.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ur-PK.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.ur.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.uz-Cyrl-UZ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.uz-Cyrl.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.uz-Latn-UZ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.uz-Latn.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.uz.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.vi-VN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.vi.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.wo-SN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.wo.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.xh-ZA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.xh.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.yo-NG.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.yo.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.zh-CHS.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.zh-CHT.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.zh-CN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.zh-Hans.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.zh-Hant.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.zh-HK.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.zh-MO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.zh-SG.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.zh-TW.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.zh.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.zu-ZA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\cultures\kendo.culture.zu.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\jquery.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.all.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.angular.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.aspnetmvc.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.autocomplete.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.binder.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.button.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.calendar.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.colorpicker.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.columnmenu.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.columnsorter.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.combobox.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.core.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.data.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.data.odata.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.data.signalr.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.data.xml.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.barcode.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.canvas.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.chart.funnel.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.chart.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.chart.polar.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.core.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.diagram.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.drawing.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.gauge.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.map.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.mobile.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.qrcode.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.sparkline.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.stock.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.svg.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.themes.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.treemap.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.vml.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.datepicker.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.datetimepicker.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dom.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.draganddrop.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dropdownlist.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.editable.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.editor.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.filebrowser.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.filtercell.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.filtermenu.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.fx.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.gantt.list.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.gantt.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.gantt.timeline.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.grid.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.groupable.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.imagebrowser.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.list.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.listview.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.maskedtextbox.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.menu.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.actionsheet.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.application.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.button.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.buttongroup.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.drawer.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.listview.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.loader.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.modalview.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.navbar.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.pane.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.popover.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.scroller.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.scrollview.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.shim.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.splitview.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.switch.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.tabstrip.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.view.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.multiselect.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.notification.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.numerictextbox.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.pager.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.panelbar.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.pivot.configurator.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.pivot.fieldmenu.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.pivotgrid.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.popup.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.progressbar.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.reorderable.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.resizable.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.router.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.scheduler.agendaview.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.scheduler.dayview.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.scheduler.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.scheduler.monthview.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.scheduler.recurrence.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.scheduler.view.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.selectable.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.slider.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.sortable.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.splitter.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.tabstrip.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.timepicker.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.timezones.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.toolbar.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.tooltip.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.touch.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.treeview.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.upload.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.userevents.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.validator.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.view.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.web.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.window.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.bg-BG.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.cs-CZ.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.da-DK.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.de-DE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.en-US.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.es-ES.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.fr-FR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.it-IT.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.nl-NL.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.pl-PL.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.pt-BR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.pt-PT.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.ro-RO.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.ru-RU.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.sv-SE.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.tr-TR.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.uk-UA.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.zh-CN.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.zh-HK.min.js" />
+    <Content Include="Assets\plugin\kendoui\js\messages\kendo.messages.zh-TW.min.js" />
+    <Content Include="Assets\plugin\mutiselect\jquery.multiselect.filter.css" />
+    <Content Include="Assets\plugin\mutiselect\jquery.multiselect.filter.js" />
+    <Content Include="Assets\plugin\noty\jquery.noty.js" />
+    <Content Include="Assets\plugin\noty\layouts\bottom.js" />
+    <Content Include="Assets\plugin\noty\layouts\bottomCenter.js" />
+    <Content Include="Assets\plugin\noty\layouts\bottomLeft.js" />
+    <Content Include="Assets\plugin\noty\layouts\bottomRight.js" />
+    <Content Include="Assets\plugin\noty\layouts\center.js" />
+    <Content Include="Assets\plugin\noty\layouts\centerLeft.js" />
+    <Content Include="Assets\plugin\noty\layouts\centerRight.js" />
+    <Content Include="Assets\plugin\noty\layouts\inline.js" />
+    <Content Include="Assets\plugin\noty\layouts\top.js" />
+    <Content Include="Assets\plugin\noty\layouts\topCenter.js" />
+    <Content Include="Assets\plugin\noty\layouts\topLeft.js" />
+    <Content Include="Assets\plugin\noty\layouts\topRight.js" />
+    <Content Include="Assets\plugin\noty\promise.js" />
+    <Content Include="Assets\plugin\noty\themes\default.js" />
+    <Content Include="Assets\plugin\bootstrap\css\bootstrap-theme.css.map" />
+    <Content Include="Assets\plugin\bootstrap\css\bootstrap.css.map" />
+    <Content Include="Assets\plugin\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Assets\plugin\jquery\js\jquery-ui-1.10.3.custom.min.js.map" />
+    <Content Include="App_Data\TemplateCategory\Air_Condition_Repair_Installation_Chart_of_Accounts.xlsx" />
+    <Content Include="App_Data\TemplateCategory\Artist_Chart_Of_Accounts.xlsx" />
+    <Content Include="App_Data\TemplateCategory\Financial_Services_Chart_of_Accounts.xlsx" />
+    <Content Include="App_Data\TemplateCategory\Hair_Salon_w_Clothing_Inventory_Chart of Accounts.xlsx" />
+    <Content Include="App_Data\TemplateCategory\Jewelry_Store_and_Manufacturer_Chart of Accounts.xlsx" />
+    <Content Include="App_Data\TemplateCategory\Landscape_Company_Chart of Accounts.xlsx" />
+    <Content Include="App_Data\TemplateCategory\Non-Profit_Chart_of_Accounts.xlsx" />
+    <Content Include="App_Data\TemplateCategory\Pest_Control_Chart_of_Accounts.xlsx" />
+    <Content Include="App_Data\TemplateCategory\Stone_Service_Chart_of_Accounts_w_Employee_Leasing.xlsx" />
+    <None Include="Assets\plugin\validation\jquery.validate-vsdoc.js" />
+    <Content Include="Assets\plugin\price\jquery.formatCurrency-1.4.0.js" />
+    <Content Include="Assets\plugin\session-time-out\store.min.js" />
+    <Content Include="Assets\plugin\signalR\jquery.signalR-2.2.0.js" />
+    <Content Include="Assets\plugin\signalR\jquery.signalR-2.2.0.min.js" />
+    <Content Include="Assets\plugin\timepickeraddon\timePicker-addon.css" />
+    <Content Include="Assets\plugin\timepickeraddon\timepickeraddon.js" />
+    <Content Include="Assets\plugin\treeview\css\style.css" />
+    <Content Include="Assets\plugin\treeview\images\32px.png" />
+    <Content Include="Assets\plugin\treeview\images\32px1.png" />
+    <Content Include="Assets\plugin\treeview\images\40px.png" />
+    <Content Include="Assets\plugin\treeview\images\throbber.gif" />
+    <Content Include="Assets\plugin\treeview\js\jstree.js" />
+    <Content Include="Assets\plugin\treeview\js\jstree.min.js" />
+    <Content Include="Assets\plugin\treeview\prints\images\feature-1.jpg" />
+    <Content Include="Assets\plugin\treeview\prints\images\feature-2.jpg" />
+    <Content Include="Assets\plugin\treeview\prints\images\feature-3.jpg" />
+    <Content Include="Assets\plugin\treeview\prints\images\feature-4.jpg" />
+    <Content Include="Assets\plugin\treeview\prints\images\gallery-1.jpg" />
+    <Content Include="Assets\plugin\treeview\prints\images\gallery-2.jpg" />
+    <Content Include="Assets\plugin\treeview\prints\images\gallery-3.jpg" />
+    <Content Include="Assets\plugin\treeview\prints\images\gallery-4.jpg" />
+    <Content Include="Assets\plugin\treeview\prints\images\icon-close.png" />
+    <Content Include="Assets\plugin\treeview\prints\images\icon-print.png" />
+    <Content Include="Assets\plugin\treeview\prints\jquery.print-preview.js" />
+    <Content Include="Assets\plugin\treeview\prints\jquery.tools.min.js" />
+    <Content Include="Assets\plugin\treeview\prints\print-preview.css" />
+    <Content Include="Assets\plugin\treeview\prints\print.css" />
+    <Content Include="Assets\plugin\validation\jquery.validate.js" />
+    <Content Include="Assets\plugin\validation\jquery.validate.kendo.js" />
+    <Content Include="Assets\plugin\validation\jquery.validate.min.js" />
+    <Content Include="Assets\plugin\validation\jquery.validate.unobtrusive.js" />
+    <Content Include="Assets\plugin\validation\jquery.validate.unobtrusive.min.js" />
+    <Content Include="css\images\animated-overlay.gif" />
+    <Content Include="css\images\bg.jpg" />
+    <Content Include="css\images\checked-icon.jpg" />
+    <Content Include="css\images\icon-checked-bgwhite.png" />
+    <Content Include="css\images\ui-bg_flat_0_000000_40x100.png" />
+    <Content Include="css\images\ui-bg_flat_100_ffffff_40x100.png" />
+    <Content Include="css\images\ui-bg_flat_55_ffffff_40x100.png" />
+    <Content Include="css\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="css\images\ui-bg_highlight-hard_100_f9f9f9_1x100.png" />
+    <Content Include="css\images\ui-bg_highlight-soft_50_dddddd_1x100.png" />
+    <Content Include="css\images\ui-bg_inset-hard_100_f9f9f9_1x100.png" />
+    <Content Include="css\images\ui-icons_0c5972_256x240.png" />
+    <Content Include="css\images\ui-icons_666666_256x240.png" />
+    <Content Include="css\images\ui-icons_717171_256x240.png" />
+    <Content Include="css\images\ui-icons_f90007_256x240.png" />
+    <Content Include="css\jquery-ui-1.10.3.custom.css" />
+    <Content Include="css\jquery-ui-1.10.3.custom.min.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="appSettings.config">
+      <SubType>Designer</SubType>
+      <TransformOnBuild>true</TransformOnBuild>
+    </Content>
+    <Content Include="Assets\fonts\ARIALUNI.TTF" />
+    <Content Include="Assets\fonts\cabin-bold-webfont.eot" />
+    <Content Include="Assets\fonts\cabin-bold-webfont.ttf" />
+    <Content Include="Assets\fonts\cabin-bold-webfont.woff" />
+    <Content Include="Assets\fonts\cabin-medium-webfont.eot" />
+    <Content Include="Assets\fonts\cabin-medium-webfont.ttf" />
+    <Content Include="Assets\fonts\cabin-medium-webfont.woff" />
+    <Content Include="Assets\fonts\cabin-regular-webfont.eot" />
+    <Content Include="Assets\fonts\cabin-regular-webfont.ttf" />
+    <Content Include="Assets\fonts\cabin-regular-webfont.woff" />
+    <Content Include="Assets\fonts\cabin-regular-webfont.woff2" />
+    <Content Include="Assets\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Assets\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Assets\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Assets\plugin\bootstrap3-editable\js\bootstrap-editable.min.js.map" />
+    <Content Include="Assets\plugin\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Assets\plugin\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Assets\plugin\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Assets\plugin\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Assets\plugin\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Assets\plugin\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Assets\plugin\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="Assets\plugin\font-awesome\less\bordered-pulled.less" />
+    <Content Include="Assets\plugin\font-awesome\less\core.less" />
+    <Content Include="Assets\plugin\font-awesome\less\fixed-width.less" />
+    <Content Include="Assets\plugin\font-awesome\less\font-awesome.less" />
+    <Content Include="Assets\plugin\font-awesome\less\icons.less" />
+    <Content Include="Assets\plugin\font-awesome\less\larger.less" />
+    <Content Include="Assets\plugin\font-awesome\less\list.less" />
+    <Content Include="Assets\plugin\font-awesome\less\mixins.less" />
+    <Content Include="Assets\plugin\font-awesome\less\path.less" />
+    <Content Include="Assets\plugin\font-awesome\less\rotated-flipped.less" />
+    <Content Include="Assets\plugin\font-awesome\less\spinning.less" />
+    <Content Include="Assets\plugin\font-awesome\less\stacked.less" />
+    <Content Include="Assets\plugin\font-awesome\less\variables.less" />
+    <Content Include="Assets\plugin\font-awesome\scss\font-awesome.scss" />
+    <Content Include="Assets\plugin\font-awesome\scss\_bordered-pulled.scss" />
+    <Content Include="Assets\plugin\font-awesome\scss\_core.scss" />
+    <Content Include="Assets\plugin\font-awesome\scss\_fixed-width.scss" />
+    <Content Include="Assets\plugin\font-awesome\scss\_icons.scss" />
+    <Content Include="Assets\plugin\font-awesome\scss\_larger.scss" />
+    <Content Include="Assets\plugin\font-awesome\scss\_list.scss" />
+    <Content Include="Assets\plugin\font-awesome\scss\_mixins.scss" />
+    <Content Include="Assets\plugin\font-awesome\scss\_path.scss" />
+    <Content Include="Assets\plugin\font-awesome\scss\_rotated-flipped.scss" />
+    <Content Include="Assets\plugin\font-awesome\scss\_spinning.scss" />
+    <Content Include="Assets\plugin\font-awesome\scss\_stacked.scss" />
+    <Content Include="Assets\plugin\font-awesome\scss\_variables.scss" />
+    <Content Include="Assets\plugin\kendoui\css\images\KendoUI.ttf" />
+    <Content Include="Assets\plugin\kendoui\css\images\KendoUI.woff" />
+    <Content Include="Assets\plugin\kendoui\js\angular.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\jquery.min.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.all.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.angular.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.aspnetmvc.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.autocomplete.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.binder.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.button.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.calendar.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.colorpicker.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.columnmenu.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.columnsorter.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.combobox.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.core.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.data.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.data.odata.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.data.signalr.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.data.xml.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.barcode.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.canvas.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.chart.funnel.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.chart.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.chart.polar.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.core.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.diagram.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.drawing.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.gauge.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.map.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.mobile.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.qrcode.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.sparkline.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.stock.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.svg.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.themes.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.treemap.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dataviz.vml.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.datepicker.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.datetimepicker.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dom.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.draganddrop.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.dropdownlist.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.editable.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.editor.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.filebrowser.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.filtercell.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.filtermenu.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.fx.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.gantt.list.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.gantt.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.gantt.timeline.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.grid.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.groupable.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.imagebrowser.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.list.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.listview.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.maskedtextbox.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.menu.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.actionsheet.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.application.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.button.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.buttongroup.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.drawer.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.listview.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.loader.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.modalview.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.navbar.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.pane.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.popover.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.scroller.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.scrollview.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.shim.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.splitview.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.switch.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.tabstrip.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.mobile.view.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.multiselect.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.notification.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.numerictextbox.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.pager.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.panelbar.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.pivot.configurator.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.pivot.fieldmenu.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.pivotgrid.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.popup.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.progressbar.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.reorderable.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.resizable.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.router.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.scheduler.agendaview.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.scheduler.dayview.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.scheduler.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.scheduler.monthview.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.scheduler.recurrence.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.scheduler.view.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.selectable.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.slider.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.sortable.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.splitter.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.tabstrip.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.timepicker.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.toolbar.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.tooltip.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.touch.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.treeview.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.upload.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.userevents.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.validator.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.view.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.web.min.js.map" />
+    <Content Include="Assets\plugin\kendoui\js\kendo.window.min.js.map" />
+    <Content Include="link.txt" />
+    <Content Include="MailTemplates\ForgotPassword.txt" />
+    <Content Include="Views\Shared\NotFound.cshtml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="log4net.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_header.cshtml" />
+    <Content Include="Views\Shared\_sidebar.cshtml" />
+    <Content Include="Views\Shared\_footer.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Properties\SlowCheetah\SlowCheetah.Transforms.targets" />
+    <Content Include="Views\Shared\_AccessDenied.cshtml" />
+    <Content Include="Views\Shared\LayoutPage.cshtml" />
+    <Content Include="Views\Register\Index.cshtml" />
+    <Content Include="Views\Home\Result.cshtml" />
+    <Content Include="Views\User\MyProfile.cshtml" />
+    <Content Include="Views\User\ChangePassword.cshtml" />
+    <Content Include="Views\User\ChangeResult.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutNewBudget.cshtml" />
+    <Content Include="Views\Shared\_SubMenuFirst.cshtml" />
+    <Content Include="Views\Shared\_SubMenuSeconrd.cshtml" />
+    <Content Include="Views\HelpSetting\_LinkToYourRestaurant.cshtml" />
+    <Content Include="Views\LinkRestaurant\Index.cshtml" />
+    <Content Include="Views\LinkRestaurant\ConfigRestaurant.cshtml" />
+    <Content Include="Views\Budget\ViewLinkToYourRestaurant.cshtml" />
+    <Content Include="Views\CategoriesSetting\Index.cshtml" />
+    <Content Include="Views\CategoriesSetting\_ViewEditCategories.cshtml" />
+    <Content Include="Views\Budget\Index.cshtml" />
+    <Content Include="Views\Budget\CategorySetting.cshtml" />
+    <Content Include="Views\HelpSetting\_CategorySetting.cshtml" />
+    <Content Include="Views\Budget\_ViewEditCategorySetting.cshtml" />
+    <Content Include="Views\Budget\BudgetLength.cshtml" />
+    <Content Include="Views\HelpSetting\_BudgetLength.cshtml" />
+    <Content Include="Views\Budget\InputMethod.cshtml" />
+    <Content Include="Views\HelpSetting\_InputMethodHelp.cshtml" />
+    <Content Include="Views\Budget\ViewGoodJobCategorySetting.cshtml" />
+    <Content Include="Views\Shared\_LayoutTagetAndSales.cshtml" />
+    <Content Include="Views\Shared\_SubMenuBottom.cshtml" />
+    <Content Include="Views\Budget\ViewTagetAndSales.cshtml" />
+    <Content Include="Views\HelpSetting\_TagetAndSalesHelp.cshtml" />
+    <Content Include="Views\Budget\Mapping.cshtml" />
+    <Content Include="Views\Budget\ImportActualNumber.cshtml" />
+    <None Include="Properties\PublishProfiles\bcs.alpha.publish.pubxml" />
+    <Content Include="Views\Budget\_ViewVarianceReport.cshtml" />
+    <Content Include="packages.config" />
+    <Content Include="Views\Budget\ReviewBudgetDetail.cshtml" />
+    <Content Include="Views\Budget\_ViewVarianceReportSetting.cshtml" />
+    <Content Include="Views\Budget\_ViewTemplateCategory.cshtml" />
+    <Content Include="Views\CategoriesSetting\_ViewTemplateCategory.cshtml" />
+    <Content Include="Views\Budget\_ViewEditBudgetBySection.cshtml" />
+    <Content Include="Views\User\_ViewEditUser.cshtml" />
+    <Content Include="Views\User\_ViewSwitchUser.cshtml" />
+    <Content Include="Views\Home\ViewAccessDenied.cshtml" />
+    <Content Include="Views\Dashboard\ViewRecycleBin.cshtml" />
+    <None Include="Web.Demo.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Staging.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Alpha.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\plugin\dialog\" />
+    <Folder Include="Assets\plugin\prints\images\" />
+    <Folder Include="Documents\" />
+    <Folder Include="Log\" />
+    <Folder Include="Uploads\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BCS.Framework\BCS.Framework.csproj">
+      <Project>{36546059-04b9-492b-89d8-6480f4758ebd}</Project>
+      <Name>BCS.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BCS\BCS.csproj">
+      <Project>{b1acc514-1b86-44f6-b3a1-3e118288d6cf}</Project>
+      <Name>BCS</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="App_LocalResources\AppRes.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppRes1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Demo|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Qa|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'QaMi|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'alpha|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>35954</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:2018/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

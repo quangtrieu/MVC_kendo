@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Restaurant Settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="clearfix dashboard-body" style="margin: 0 auto; -moz-border-radius: 2em">
+    @{
+        if (string.IsNullOrEmpty(ViewBag.IsNotShow))
+        {
+            <div class="col-xs-12 margin-top-20 text-center" style="font-size: 25pt; color: rgb(85, 150, 207)">
+                <p>Congratulations, your account was created successfully!</p>
+            </div>
+        }
+    }
+
+    <div class="col-xs-12 margin-top-20 text-justify" style="font-size: 12pt">
+        <p>You've completed Settings.</p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis cursus ligula neque, id porta enim veneatis quis. Cras lacus sapien, sagittis arisus et, egestas pulvinar nisl.
+            Quisque convallis, mauris vitae vehcula dictum, tellus leo dignissim metus, in sagittis elit lectus vitae dolor.
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in lectus auctor, elementum nunc ullamcorper, convallis leo.
+        </p>
+    </div>
+    <div class="col-xs-12 margin-top-20 text-center" style="font-size: 20pt">
+        <p>Now let's define the default restaurant to link your budget.</p>
+    </div>
+
+    <div class="col-xs-12 text-right">
+        <div class="col-xs-5">
+            @Html.Label("Select your Restaurant", new { @style = "font-size: 12pt; font-weight: bold; margin-top: 5px;" })
+        </div>
+        <div class="col-xs-7">
+            @Html.Label("ADD SSP RESTAURANT", new { @class = "btn btn-primary button", @onclick = "addReferenceRestaurant()" })
+        </div>
+    </div>
+    <div class="col-xs-12">
+        @{var listRest = ViewBag.RestaurantList;}
+        @if (listRest != null)
+        {
+            <table style="margin: 0 auto;">
+                <tr>
+                    <th width="150px">Rest Code</th>
+                    <th>Rest Name</th>
+                </tr>
+                <tr>
+                    <td>@Html.RadioButton("DefaultRestCode", "NotDefault") Not Link</td>
+                    <td>Not link to a restaurant</td>
+                </tr>
+                @foreach (BCS.Web.Models.RestActiveCodeModel item in listRest)
+                {
+                    <tr>
+                        <td>@Html.RadioButton("DefaultRestCode", item.RestCode, item.IsDefault.Value) @item.RestCode</td>
+                        <td>@item.RestName</td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>

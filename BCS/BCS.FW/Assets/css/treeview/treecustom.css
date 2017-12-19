@@ -1,0 +1,251 @@
+﻿
+
+
+/************Tree View**************/
+#container { min-width:320px; margin:0px auto 0 auto; background:white; border-radius:0px; padding:0px; overflow:hidden; }
+#tree, #treeFolder { float:left; width:100%; border-right:1px solid silver; overflow:auto; padding:0px 0;height: 100% !important; }
+#data { margin-left:320px; }
+#data textarea { margin:0; padding:0; height:100%; width:100%; border:0; background:white; display:block; line-height:18px; resize:none; }
+#data, #code { font: normal normal normal 12px/18px 'Consolas', monospace !important; }
+.jstree-default-small .jstree-node {
+    line-height: 36px !important;
+}
+/*#tree .folder { background:url('../../img/file_sprite.png') right bottom no-repeat; }
+#tree .file { background:url('../../img/file_sprite.png') 0 0 no-repeat; }*/
+#tree .file-pdf, #treeFolder .file-pdf { background-position: -32px 0 }
+#tree .file-as, #treeFolder .file-as { background-position: -36px 0 }
+#tree .file-c,#treeFolder .file-c { background-position: -72px -0px }
+#tree .file-iso,#treeFolder .file-iso { background-position: -108px -0px }
+#tree .file-htm, #tree .file-html, #tree .file-xml, #tree .file-xsl,#treeFolder .file-htm, #treeFolder .file-html, #treeFolder .file-xml, #treeFolder .file-xsl { background-position: -126px -0px }
+#tree .file-cf,#treeFolder .file-cf  { background-position: -162px -0px }
+#tree .file-cpp,#treeFolder .file-cpp { background-position: -216px -0px }
+#tree .file-cs,#treeFolder .file-cs { background-position: -236px -0px }
+#tree .file-sql,#treeFolder .file-sql { background-position: -272px -0px }
+#tree .file-xls, #treeFolder .file-xlsx { background-position: -362px -0px }
+#tree .file-h,#treeFolder .file-h  { background-position: -488px -0px }
+#tree .file-crt, #tree .file-pem, #tree .file-cer ,#treeFolder .file-crt, #treeFolder .file-pem, #treeFolder .file-cer { background-position: -452px -18px }
+#tree .file-php ,#treeFolder .file-php { background-position: -108px -18px }
+#tree .file-jpg, #tree .file-jpeg, #tree .file-png, #tree .file-gif, #tree .file-bmp,#treeFolder .file-jpg, #tretreeFoldere .file-jpeg, #treeFolder .file-png, #treeFolder .file-gif, #treeFolder .file-bmp { background-position: -126px -18px }
+#tree .file-ppt, #tree .file-pptx,#treeFolder .file-ppt, #treeFolder .file-pptx { background-position: -144px -18px }
+#tree .file-rb,#treeFolder .file-rb { background-position: -180px -18px }
+#tree .file-text, #tree .file-txt, #tree .file-md, #tree .file-log, #tree .file-htaccess,#treeFolder .file-text, #treeFolder .file-txt, #treeFolder .file-md, #treeFolder .file-log, #treeFolder .file-htaccess  { background-position: -254px -18px }
+#tree .file-doc, #tree .file-docx,#treeFolder .file-doc, #treeFolder .file-docx { background-position: -362px -18px }
+#tree .file-zip, #tree .file-gz, #tree .file-tar, #tree .file-rar,#treeFolder .file-zip, #treeFolder .file-gz, #treeFolder .file-tar, #treeFolder .file-rar { background-position: -416px -18px }
+#tree .file-js,#treeFolder .file-js { background-position: -434px -18px }
+#tree .file-css,#treeFolder .file-css { background-position: -144px -0px }
+#tree .file-fla,#treeFolder .file-fla { background-position: -398px -0px }
+#tree .jstree-icon.folder, #treeFolder .jstree-icon.folder{color:#FACC2E;font-size: 16px;}
+#tree .jstree-icon.file,#treeFolder .jstree-icon.file{font-size: 16px;}
+.main-category-setup .checkbox{padding-left:20px !important;}
+
+.hight-light{border:1px #FF0000 solid !important;}
+/*.form-horizontal{display:none;}*/
+
+/********Custom icon file*********/
+.main-category-setup.col-sm-12 {
+    padding-left: 0;
+}
+.k-tool-icon.k-print:before {
+  content: "\f1c1";
+}
+.modal.in .modal-dialog{z-index:99999;}
+.modal-footer {
+    margin: 0 auto;
+    padding: 10px;
+}
+/****Youtube*****/
+#popupYoutube{display:none;}
+.input-link-youtube .form-group:nth-child(1) {
+    padding-left: 0;
+}
+.checkbox-inline {
+    display: block;
+    float: left;
+    font-size: 100%;
+    line-height: 1.8em;
+    margin: 0 auto !important;
+    width: 45%;
+}
+#youtube-tool > i{
+    color:#444;
+    font-size:20px;
+}
+#youtube-tool{
+    line-height: 40px;
+    position: relative;
+    opacity: 0.7;
+}
+#youtube-tool:hover{
+    opacity:1.0;
+}
+.jstree-children > li {
+    line-height: 2.2em !important;
+}
+.input-group.col-sm-3 {
+    margin: 10px 0 22px;
+}
+.help-search > button{width:100%;}
+
+#searchHelp {
+    background: none repeat scroll 0 0 #ffffff;
+    box-shadow: 0 0 5px 2px #909090;
+    height: 97%;
+    left: 10px;
+    position: absolute;
+    top: 10px;
+    bottom:10px;
+    width: 450px;
+    z-index: 9999;
+    display:none;
+}
+
+.control-button > h3{float:left;margin:0 auto;padding:15px;}
+.control-button > a {
+    float: right;
+    padding: 15px;
+}
+.control-button > a > i {
+    font-size: 25px;
+}
+.clearfix{clear:both;}
+#searchHelp.expand .help-search-wrapper{opacity:0}
+body #searchHelp.expand{width:120px !important;height:70px !important;}
+body #searchHelp.expand .control-button > h3 {
+    float: none !important;
+    font-size: 17px;
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
+}
+#searchHelp.expand .control-button > a {
+    float: right;
+    padding: 3px;
+    width: 35%;
+}
+.control-button{width:100%;overflow:hidden;cursor:all-scroll;}
+.ui-resizable-handle.ui-resizable-se.ui-icon-gripsmall-diagonal-se{
+    bottom: 0;
+    cursor: se-resize;
+    display: block;
+    position: absolute;
+    right: 0;
+}
+.ui-icon-gripsmall-diagonal-se:before {
+  content: "\f065" !important;
+}
+.tabbable-child{clear:both;}
+#help-index .input-group {
+    margin-bottom: 20px;
+}
+.tabbable > .nav.nav-tabs > li {
+    background: none repeat scroll 0 0 #2b3643;
+}
+.tabbable > .nav.nav-tabs > li a{color:#FFFFFF;}
+.tabbable > .nav.nav-tabs > li.active > a {
+    margin-right: 0 !important;color:#333333;
+}
+.tabbable-child > .nav.nav-tabs > li a{
+    padding:2px 25px;font-weight:bold;
+}
+.help-search-wrapper, .tabbable > .tab-content{height:100%;}
+.tabbable{height:85%;}
+.tabbable > .tab-content{overflow:auto;}
+
+/***Detail Help***/
+.content-main-detail-help {
+    background: none repeat scroll 0 0 #ffffff;
+    box-shadow: 0 0 5px 2px #909090;
+    display: none;
+    min-height: 20%;
+    height:93%;
+    left: 480px;
+    right:10px;
+    position: absolute;
+    top: 10px;
+    width: auto;
+    z-index: 10000;
+    padding:20px;
+}
+.main-content-show.tab-content {
+    height: 80%;
+    overflow: auto;
+}
+.control-button-content {
+    display: table;
+    margin: 10px 0;
+    position: relative;
+    width: 100%;
+    cursor: all-scroll;
+}
+.control-button-content > h3 {
+    float: left;
+    margin: 0 auto;
+    padding: 10px;
+}
+.control-button-content > a {
+    float: right;
+    padding: 10px;
+}
+
+.control-button-content > a > i {
+    font-size: 20px;
+}
+.list-group-item > i {
+    padding-right: 5px;
+}
+.tabbable-child .popover-content{
+    padding:0px 10px;
+}
+.tabbable-child ul > li.list-group-item{cursor:pointer;}
+#content-node-detail.expand{
+    height: 70px !important;
+    width: 120px !important;
+    min-height: 0 !important;
+    padding:0px;
+}
+body #content-node-detail.expand .control-button-content > h3 {
+    float: none !important;
+    font-size: 17px;
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
+}
+#content-node-detail.expand .control-button-content > a {
+    float: right;
+    padding: 3px;
+    width: 25%;
+}
+#content-node-detail.expand .control-button-content > div.print-button-div i {
+    font-size: 18px;
+    padding-right: 2px;
+    padding-top: 4px;
+}
+
+#content-node-detail.expand .help-search-wrapper{
+     opacity: 0;
+}
+.menu-tab-show ul li > i{
+    cursor:pointer;
+    position:absolute;
+    top:0px;
+    right:0px;
+    display:none;
+}
+.menu-tab-show ul li.active > i{display:block;}
+.k-tool-group span.k-widget.k-combobox.k-header.k-editor-widget, .k-tool-group span.k-widget.k-colorpicker.k-header.k-editor-widget {
+    display: block !important;
+    float: left;
+    overflow: hidden;
+    width: 180px !important;
+}
+.k-tool-group:nth-child(10) {
+    clear: both;
+}
+.k-colorpicker .k-picker-wrap{line-height:2.3em;}
+.k-print {
+    background-position: -288px -264px;
+}
+.input-group-btn {
+    border: 1px solid #e5e5e5;
+}
+.input-group-btn .btn.btn-default{border:none;}

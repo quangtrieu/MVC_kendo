@@ -1,0 +1,29 @@
+﻿@using Kendo.Mvc.UI
+
+<div class="demo-section k-content">
+    <h4>Find a User</h4>
+
+    @(Html.Kendo().ComboBox()
+        .Name("switchUserComboBox")
+        .Placeholder("Select user")
+        .DataTextField("UserName")
+        .DataValueField("UserId")
+        .HtmlAttributes(new { style = "width:100%;" })
+        .Filter("contains")
+        .AutoBind(false)
+        .MinLength(3)
+        .DataSource(source =>
+        {
+            source.Read(read =>
+            {
+                read.Action("GetUsers", "User");
+            })
+            .ServerFiltering(false);
+        })
+    )
+</div>
+<div class="col-xs-12"><span id="switchUserPopupMessage" class="error"></span></div>
+<div class="col-xs-12 text-right modal-footer" style="padding-top:18px;">
+    @Html.Label("Cancel", new { @id = "act-accept-no", @class = "btn btn-accept-no", @style = "width: 100px" })
+    @Html.Label("Switch", new { @id = "act-accept-yes", @class = "btn btn-primary", @style = "width: 100px" })
+</div>

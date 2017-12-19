@@ -1,0 +1,48 @@
+﻿@using Kendo.Mvc.UI
+
+<style>
+    .k-grid-content {
+        height: 710px;
+    }
+</style>
+
+<div class="form-group col-xs-12 clearfix" style="margin: 0 auto; -moz-border-radius: 2em">
+    <div class="col-xs-12">
+        <div class="col-xs-4" style="padding: 5px; width: 20%">
+            @Html.Label("Template name: ", new { @style = "font-size: 14pt;" })
+        </div>
+        <div class="col-xs-8" style="padding: 0; width: 80%">
+            @(Html.Kendo().DropDownList()
+                .Name("TemplateFileList")
+                .DataTextField("Text")
+                .DataValueField("Value")
+                .BindTo(ViewBag.FileNameList)
+            )
+        </div>
+    </div>
+
+    <div class="col-xs-12 clearfix" style="height: 755px;">
+        <div id="TemplateCategoryGrid"></div>
+    </div>
+
+    <div class="col-xs-12" style="padding: 0px;">
+        <div class="col-xs-8">@Html.Label("*Be aware, when you click LOAD button, ALL data in your budget details will be lost!", new { @style = "color: red; margin-top: 7px" })</div>
+        <div class="col-xs-4 text-right">
+            @Html.Label("CANCEL", new { @id = "act-accept-no", @class = "btn btn-accept-no", @style = "width: 100px" })
+            @Html.Label("LOAD", new { @id = "act-accept-yes", @class = "btn btn-primary", @style = "width: 100px" })
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#TemplateFileList').on('change', function () {
+            loadDataFromTemplate(this.value);
+        });
+
+        setTimeout(function () {
+            $('#TemplateFileList').trigger('change');
+        }, 500)
+
+    });
+</script>

@@ -1,0 +1,15 @@
+﻿.header-purchase {
+    padding-bottom: 30px;
+}
+.header-purchase > div {
+    padding-bottom: 20px;
+}
+.header-purchase > div .k-widget.k-combobox.k-header {
+    display: block;
+    min-width: 21.55%;
+}
+.k-animation-container > div > ul.k-menu-vertical > li.k-item{
+    display:none;
+}
+.k-animation-container > div > ul.k-menu-vertical > li.k-item:last-child{display:block;}
+#PurchaseAllotmentGrid{overflow:hidden;}

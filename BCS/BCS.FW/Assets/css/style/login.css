@@ -1,0 +1,65 @@
+﻿
+.logon-ui {
+    
+    border: 1px solid #C3C3C3;
+    position: relative;
+    margin: 0 auto;
+    font-family: Lucida Grande, Lucida Sans, Arial, sans-serif;
+    font-size: 1.1em;
+    width: 500px;
+    background: rgb(247, 247, 247);
+	border: 1px solid rgba(147, 184, 189,0.8);
+	box-shadow:	
+		0pt 2px 5px rgba(105, 108, 109,  0.7),	
+		0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
+	border-radius: 5px;
+    margin-top: 200px;
+}
+.txt-right{ text-align: right;padding-right: 3px; margin-top: 3px;}
+.txt-left{ text-align: left;padding-left: 3px; margin-top: 3px;}
+.logon-ui .logon-header {
+    background-size: cover;
+    background-color: #F3F3F3;
+    height: 50px;
+    border-bottom: 1px solid #C3C3C3;
+}
+
+.logon-ui h4.logon-title {
+    font-size: 14px;
+    color:#333;
+    font-weight: bold;
+}
+
+.logon-ui .logon-logo {
+    text-align: center;
+    height: 220px;
+    padding: 8px 0px;
+}
+
+.logon-ui .logon-desc {
+    text-align: center;
+    line-height: 25px;
+    height: 70px;
+}
+
+.logon-ui .logon-form {
+      padding: 0px 15px !important;
+}
+
+.logon-ui .logon-toolbar {
+    background-size: cover;
+    background-color: #F3F3F3;
+    height: 35px;
+    border-top: 1px solid #C3C3C3;
+    padding: 10px 0px;
+    margin-bottom: 0px !important;
+}
+
+.logon-ui .validation-summary-errors li{
+    color: red !important;
+    list-style-type: none;
+}
+
+.logon-toolbar .forgot-pass, .logon-toolbar .ready-login {
+  padding: 8px 0px 0 12px;
+}

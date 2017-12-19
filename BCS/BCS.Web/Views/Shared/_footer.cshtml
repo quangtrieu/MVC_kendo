@@ -1,0 +1,17 @@
+﻿@using BCS.Framework.Web
+@if (@Session.CurrentUser() == null)
+{
+    <div style="color: #FFF">
+        <div class="page-footer-inner info-line-footer" style="padding-top: 15px;padding-bottom: 15px">
+            Copyright © @DateTime.Now.Year Budget Creator. All Rights Reserved. <span style="text-decoration: underline">Conditions of Use</span>
+        </div>    
+    </div>
+}
+else
+{
+    <div class="page-footer-inner info-line-footer" style="padding-top: 10px; text-align: left;">
+        Copyright © @DateTime.Now.Year Budget Creator. All Rights Reserved. <span style="text-decoration: underline">Conditions of Use</span>
+    </div>
+}
+
+
